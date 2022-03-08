@@ -1,0 +1,12 @@
+.taskFooter {
+  & > p {
+    margin: 0;
+    font-size: 0.75rem;
+    width: fit-content;
+    margin-right: 0.1rem;
+
+    & > i {
+      font-size: 0.6rem;
+    }
+  }
+}
