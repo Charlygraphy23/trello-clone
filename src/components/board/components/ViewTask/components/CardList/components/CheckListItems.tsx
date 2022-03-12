@@ -1,5 +1,12 @@
 import TextAreaCombo from 'core/TextAreaCombo';
-import React, { useCallback, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  // eslint-disable-next-line prettier/prettier
+  useState
+} from 'react';
 
 type CheckListItemType = {
   data: {
@@ -9,8 +16,13 @@ type CheckListItemType = {
 };
 
 const CheckListItems = ({ data }: CheckListItemType) => {
-  // eslint-disable-next-line no-undef
-  const blurRef = useRef<NodeJS.Timeout>(null);
+  const TextAreaComboIds = useMemo(
+    () => ({
+      textarea: `CheckListItems_text${data.id}`,
+      submitButton: `CheckListItems_submit${data.id}`,
+    }),
+    [data.id]
+  );
   const [showTextarea, setShowTextarea] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -20,13 +32,11 @@ const CheckListItems = ({ data }: CheckListItemType) => {
     if (value) {
       setShowTextarea(value);
     } else {
-      // @ts-expect-error
-      blurRef.current = setTimeout(() => setShowTextarea(value), 100);
+      setShowTextarea(value);
     }
   }, []);
 
   const handelSave = useCallback(() => {
-    if (blurRef.current) clearTimeout(blurRef.current);
     textareaRef.current?.focus();
   }, []);
 
@@ -46,8 +56,31 @@ const CheckListItems = ({ data }: CheckListItemType) => {
     []
   );
 
+  const handleEvent = useCallback(
+    (e) => {
+      const hasId = [
+        TextAreaComboIds.submitButton,
+        TextAreaComboIds.textarea,
+      ].includes(e.target?.id);
+      handleShowTextarea(hasId);
+    },
+    [
+      TextAreaComboIds.submitButton,
+      TextAreaComboIds.textarea,
+      handleShowTextarea,
+    ]
+  );
+
+  useLayoutEffect(() => {
+    document.addEventListener('click', handleEvent, true);
+
+    return () => {
+      document.removeEventListener('click', handleEvent, true);
+    };
+  }, [handleEvent]);
+
   return (
-    <div className='checkListItems row m-0 mt-3' onClick={handleListClick}>
+    <div className='checkListItems row m-0' onClick={handleListClick}>
       <div className='col-1 p-0 d-flex'>
         <input type='checkbox' className='mt-1' />
       </div>
@@ -59,10 +92,10 @@ const CheckListItems = ({ data }: CheckListItemType) => {
             ref={textareaRef}
             buttonText='Save'
             value={checkListName}
-            onBlurCapture={() => handleShowTextarea(false)}
-            onClose={() => handleShowTextarea(false)}
             onSubmit={handelSave}
             onClick={handleTextAreaClick}
+            textAreaId={TextAreaComboIds.textarea}
+            submitButtonId={TextAreaComboIds.submitButton}
           />
         ) : (
           <div className='d-flex justify-content-between '>

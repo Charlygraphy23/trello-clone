@@ -15,11 +15,14 @@ const TextAreaCombo = (
     readOnly,
     onSubmit,
     onClick,
+    textAreaId,
+    submitButtonId,
   }: TextAreaComboType,
   ref: Ref<HTMLTextAreaElement>
 ) => (
   <div className={`textAramCombo ${className}`} style={style}>
     <textarea
+      id={textAreaId}
       ref={ref}
       onBlur={onBlurCapture}
       onFocusCapture={onFocusCapture}
@@ -34,6 +37,7 @@ const TextAreaCombo = (
     {!readOnly && (
       <div className='d-flex textAramCombo__footer align-items-center'>
         <button
+          id={submitButtonId}
           type='button'
           className='bg__primary text-white'
           onClick={onSubmit}

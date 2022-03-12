@@ -1,4 +1,4 @@
-@import 'config/style/colors.scss';
+@import "config/style/colors";
 
 .viewTask {
   width: 100%;
@@ -9,6 +9,7 @@
       border-radius: 4px;
       padding: 1.2em 2.5em;
       position: relative;
+      min-height: 50rem;
 
       .close__icon {
         position: absolute;
@@ -146,6 +147,129 @@
           textarea {
             background-color: $background_color2;
             border: 1px solid rgba(black, 0.1);
+          }
+        }
+      }
+
+      .commentSection {
+        margin-top: 1rem;
+        $avatarGap: 0.5rem;
+
+        .commentSection__title {
+          color: $task_title_color;
+          font-weight: 600;
+          margin: 0;
+        }
+
+        .commentSection__showDetails {
+          &:hover {
+            background-color: rgba(black, 0.1);
+          }
+        }
+
+        .commentSection__comment {
+          display: flex;
+          margin-top: 1rem;
+
+          .textarea__wrapper {
+            width: 100%;
+            background-color: white;
+            margin-left: $avatarGap;
+            border-radius: 3px;
+            border: 1px solid rgba(black, 0.1);
+            overflow: hidden;
+
+            &.add_shadow {
+              box-shadow: 0px 5px 5px rgba(black, 0.1);
+            }
+
+            textarea {
+              height: 2rem;
+              font-size: 0.9rem;
+              overflow: hidden;
+            }
+
+            button {
+              background-color: $button_color_1;
+              color: white;
+              font-size: 0.9rem;
+              margin: 0.5rem;
+              margin-top: 1rem;
+
+              display: none;
+            }
+
+            & > textarea:focus + button {
+              display: block;
+            }
+
+            & > textarea:not(:placeholder-shown) + button {
+              display: block;
+            }
+          }
+        }
+
+        .userComments {
+          margin-top: 1rem;
+          display: flex;
+
+          .userComments__body {
+            margin-left: $avatarGap;
+            padding-top: 0.2rem;
+
+            .userComments__title {
+              font-size: 0.9rem;
+              margin-bottom: 0.1rem;
+
+              span:first-child {
+                font-weight: 800;
+                margin-right: 0.4rem;
+                color: $task_title_color;
+              }
+
+              span:last-child {
+                margin-right: 0.4rem;
+                font-size: 0.8rem;
+                color: $heading__color;
+              }
+            }
+
+            .userComments__text {
+              padding: 0.5em 1em;
+              background-color: white;
+              border: 1px solid rgba(black, 0.1);
+              line-height: 20px;
+              font-size: 0.9rem;
+              border-radius: 5px;
+            }
+          }
+        }
+      }
+
+      .cardOptions {
+        display: flex;
+        flex-direction: column;
+
+        .cardOptions__title {
+          font-weight: 600;
+          font-size: 0.7rem;
+          color: $heading__color;
+          margin-bottom: 0.5rem;
+        }
+
+        button {
+          text-align: left;
+          margin-bottom: 0.5rem;
+          color: $heading__color;
+          font-size: 0.9rem;
+          background-color: $background_color2;
+
+          span {
+            margin-left: 0.3rem;
+          }
+
+          &:hover {
+            background-color: rgba(black, 0.1);
           }
         }
       }

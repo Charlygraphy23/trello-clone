@@ -1,11 +1,24 @@
 import TextAreaCombo from 'core/TextAreaCombo';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  // eslint-disable-next-line prettier/prettier
+  useState
+} from 'react';
 import CardProgress from './components/CardProgress';
 import CheckListItems from './components/CheckListItems';
 
 const CheckList = () => {
-  // eslint-disable-next-line no-undef
-  const blurRef = useRef<NodeJS.Timeout>(null);
+  const TextAreaComboIds = useMemo(
+    () => ({
+      textarea: 'CheckList_text',
+      submitButton: 'CheckList_submit',
+    }),
+    []
+  );
+
   const [showNewItemCheckList, setShowNewItemCheckList] = useState(false);
   const checkListTextareaRef = useRef<HTMLTextAreaElement>(null);
   const [checkListData, setCheckListData] = useState<any[]>([]);
@@ -20,18 +33,14 @@ const CheckList = () => {
       if (value === true) {
         setShowNewItemCheckList(value);
       } else {
-        // @ts-expect-error
-        blurRef.current = setTimeout(() => {
-          setShowNewItemCheckList(value);
-          clearAll();
-        }, 100);
+        clearAll();
+        setShowNewItemCheckList(value);
       }
     },
     [clearAll]
   );
 
   const handleAddItemCheckList = useCallback(() => {
-    if (blurRef.current) clearTimeout(blurRef.current);
     checkListTextareaRef.current?.focus();
 
     if (!textareaValue) return;
@@ -51,10 +60,29 @@ const CheckList = () => {
     []
   );
 
-  useEffect(() => {
-    if (showNewItemCheckList && checkListTextareaRef.current)
-      checkListTextareaRef.current.focus();
-  }, [showNewItemCheckList]);
+  const handleEvent = useCallback(
+    (e) => {
+      const hasId = [
+        TextAreaComboIds.submitButton,
+        TextAreaComboIds.textarea,
+      ].includes(e.target?.id);
+      handleItemCheckList(hasId);
+      console.log(hasId);
+    },
+    [
+      TextAreaComboIds.submitButton,
+      TextAreaComboIds.textarea,
+      handleItemCheckList,
+    ]
+  );
+
+  useLayoutEffect(() => {
+    document.addEventListener('click', handleEvent, true);
+
+    return () => {
+      document.removeEventListener('click', handleEvent, true);
+    };
+  }, [handleEvent]);
 
   return (
     <div className='checkList'>
@@ -83,10 +111,10 @@ const CheckList = () => {
           ref={checkListTextareaRef}
           buttonText='Add'
           onChange={handleChange}
-          onBlurCapture={() => handleItemCheckList(false)}
-          onClose={() => handleItemCheckList(false)}
           onSubmit={handleAddItemCheckList}
           value={textareaValue}
+          textAreaId={TextAreaComboIds.textarea}
+          submitButtonId={TextAreaComboIds.submitButton}
         />
       )}
 
@@ -96,7 +124,10 @@ const CheckList = () => {
             type='button'
             className='bg__secondary text__primary addNewItem'
             style={{ fontSize: '0.9rem' }}
-            onClick={() => handleItemCheckList(true)}
+            onClick={() => {
+              checkListTextareaRef.current?.focus();
+              handleItemCheckList(true);
+            }}
           >
             Add an item
           </button>

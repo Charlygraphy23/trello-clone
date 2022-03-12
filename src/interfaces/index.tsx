@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import React from 'react';
 
@@ -15,4 +16,17 @@ export interface TextAreaComboType {
   readOnly?: boolean;
   onSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLTextAreaElement>) => void;
+  textAreaId: string;
+  submitButtonId: string;
+}
+
+export interface DropDownType {
+  buttonId: string;
+  buttonText: string;
+  title: string;
+  children: JSX.Element;
+  buttonClass?: string;
+  className?: string;
+  style?: React.CSSProperties;
+  icon?: JSX.Element;
 }

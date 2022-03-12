@@ -1,26 +1,67 @@
 import TextAreaCombo from 'core/TextAreaCombo';
-import React, { useCallback, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  // eslint-disable-next-line prettier/prettier
+  useState
+} from 'react';
 
 const DescriptionSection = () => {
+  const TextAreaComboIds = useMemo(
+    () => ({
+      textarea: 'DescriptionSection_text',
+      submitButton: 'DescriptionSection_submit',
+    }),
+    []
+  );
+
   const [readOnly, setReadOnly] = useState(true);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  let blurTimeout: any = null;
-
   const handleFocus = useCallback(() => {
     setReadOnly(false);
   }, []);
 
-  const handleBlur = useCallback((e: React.FocusEvent<HTMLTextAreaElement>) => {
-    e.preventDefault();
+  // const handleBlur = useCallback(
+  //   (e: React.FocusEvent<HTMLTextAreaElement>) => {
+  //     e.preventDefault();
 
-    blurTimeout = setTimeout(() => setReadOnly(true), 100);
-  }, []);
+  //     // clearTimeoutOnBlur();
+  //     setReadOnly(isMatched);
+  //     console.log('Yo', isMatched);
+
+  //     // console.log('MATCHED', isMatched);
+
+  //     // blurTimeout.current = setTimeout(() => setReadOnly(true), 100);
+  //   },
+  //   [isMatched]
+  // );
 
   const handleClick = useCallback(() => {
-    clearTimeout(blurTimeout);
-    textareaRef.current?.focus();
-    setReadOnly(false);
+    // textareaRef.current?.focus();
+    // setReadOnly(true);
+    // TODO: need to implement add description
   }, []);
+
+  const handleEvent = useCallback(
+    (e) => {
+      const hasId = [
+        TextAreaComboIds.submitButton,
+        TextAreaComboIds.textarea,
+      ].includes(e.target?.id);
+      setReadOnly(!hasId);
+    },
+    [TextAreaComboIds.submitButton, TextAreaComboIds.textarea]
+  );
+
+  useLayoutEffect(() => {
+    document.addEventListener('click', handleEvent, true);
+
+    return () => {
+      document.removeEventListener('click', handleEvent, true);
+    };
+  }, [handleEvent]);
 
   return (
     <div className='descriptionSection'>
@@ -32,33 +73,11 @@ const DescriptionSection = () => {
         className='descriptionSection__textarea'
         placeholder='Add a more detailed description…'
         buttonText='Save'
-        onBlurCapture={handleBlur}
         onFocusCapture={handleFocus}
-        onClose={handleBlur}
         onSubmit={handleClick}
+        textAreaId={TextAreaComboIds.textarea}
+        submitButtonId={TextAreaComboIds.submitButton}
       />
-
-      {/* <textarea
-        readOnly={readOnly}
-        className='descriptionSection__textarea'
-        placeholder='Add a more detailed description…'
-        onFocusCapture={handleFocus}
-        onBlurCapture={handleBlur}
-        value=''
-      />
-
-      {!readOnly && (
-        <div className='d-flex align-items-center mb-3'>
-          <button className='descriptionSection__save' type='submit'>
-            Save
-          </button>
-
-          <i
-            className='bi bi-x-lg descriptionSection__close'
-            onClick={handleBlur}
-          />
-        </div>
-      )} */}
     </div>
   );
 };

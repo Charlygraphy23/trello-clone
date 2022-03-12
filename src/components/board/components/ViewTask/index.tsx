@@ -3,6 +3,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Modal, ModalBody } from 'reactstrap';
 import CheckList from './components/CardList';
+import CardOptions from './components/CardOptions';
+import CommentSection from './components/CommentSection';
 import DescriptionSection from './components/DescriptionSection';
 import TaskLabelsShow from './components/TaskLabelsShow';
 import './style.scss';
@@ -14,29 +16,30 @@ const ViewTask = () => {
 
   const handleTextareaHeight = useCallback(() => {
     if (!textareaRef.current) return;
-
-    console.log('scroll height', textareaRef.current.scrollHeight);
     textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
   }, []);
 
   const handleToggle = useCallback(() => {
     history.goBack();
-  }, []);
+  }, [history]);
 
   const handleHeadChange = useCallback(() => {
     // @ts-ignore
     handleTextareaHeight();
-  }, []);
+  }, [handleTextareaHeight]);
 
-  const handleRef = useCallback((ref: HTMLTextAreaElement) => {
-    // @ts-ignore
-    textareaRef.current = ref;
-    handleTextareaHeight();
-  }, []);
+  const handleRef = useCallback(
+    (ref: HTMLTextAreaElement) => {
+      // @ts-ignore
+      textareaRef.current = ref;
+      handleTextareaHeight();
+    },
+    [handleTextareaHeight]
+  );
 
   useEffect(() => {
     handleTextareaHeight();
-  }, [textareaRef.current, handleTextareaHeight]);
+  }, [handleTextareaHeight]);
 
   return (
     <Modal isOpen toggle={handleToggle} centered className='viewTask' size='lg'>
@@ -67,10 +70,12 @@ const ViewTask = () => {
             <DescriptionSection />
 
             <CheckList />
+
+            <CommentSection />
           </div>
 
-          <div className='col-3'>
-            <h1>Hell</h1>
+          <div className='col-3 p-0 py-2'>
+            <CardOptions />
           </div>
         </div>
       </ModalBody>
