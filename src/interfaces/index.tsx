@@ -22,11 +22,16 @@ export interface TextAreaComboType {
 
 export interface DropDownType {
   buttonId: string;
-  buttonText: string;
+  buttonText: string | JSX.Element;
   title: string;
   children: JSX.Element;
   buttonClass?: string;
   className?: string;
   style?: React.CSSProperties;
   icon?: JSX.Element;
+  hideTitle?: boolean;
+}
+
+export interface LabelSelectionType {
+  clickOnEdit?: boolean;
 }

@@ -1,7 +1,8 @@
 import initialData from 'data';
-import { BoardType, ColumnType } from 'interfaces/board';
+import { BoardType, ColumnType } from 'interfaces/board.interface';
 import { useCallback, useState } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
+import AddList from './components/AddList';
 import BoardCards from './components/Cards';
 import './style.scss';
 
@@ -25,7 +26,7 @@ const BoardIndex = () => {
         destination,
         source,
         draggableId,
-        type,
+        type
       });
 
       const start = data.columns[source?.droppableId];
@@ -38,7 +39,7 @@ const BoardIndex = () => {
 
         return setData({
           ...data,
-          columnOrder: newOrder,
+          columnOrder: newOrder
         });
       }
 
@@ -49,14 +50,14 @@ const BoardIndex = () => {
         taskIds.splice(destination.index, 0, draggableId);
         const newColumn = {
           ...column,
-          taskIds,
+          taskIds
         };
         return setData({
           ...data,
           columns: {
             ...data.columns,
-            [column.id]: newColumn,
-          },
+            [column.id]: newColumn
+          }
         });
       }
 
@@ -68,11 +69,11 @@ const BoardIndex = () => {
 
       const newStartColumn = {
         ...start,
-        taskIds: startTaskIds,
+        taskIds: startTaskIds
       };
       const endTaskColumn = {
         ...end,
-        taskIds: endTaskIds,
+        taskIds: endTaskIds
       };
 
       setData({
@@ -80,8 +81,8 @@ const BoardIndex = () => {
         columns: {
           ...data.columns,
           [start.id]: newStartColumn,
-          [end.id]: endTaskColumn,
-        },
+          [end.id]: endTaskColumn
+        }
       });
     },
     [data]
@@ -120,6 +121,8 @@ const BoardIndex = () => {
                   )
                 );
               })}
+
+              <AddList />
               {provided.placeholder}
             </div>
           )}

@@ -16,7 +16,7 @@ const TextAreaCombo = (
     onSubmit,
     onClick,
     textAreaId,
-    submitButtonId,
+    submitButtonId
   }: TextAreaComboType,
   ref: Ref<HTMLTextAreaElement>
 ) => (

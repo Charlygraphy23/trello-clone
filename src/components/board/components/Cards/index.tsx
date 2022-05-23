@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import { BoardCardType } from 'interfaces/board';
+import { BoardCardType } from 'interfaces/board.interface';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import TasksList from '../Tasks';
 import AddTask from './components/AddTask';
@@ -11,7 +11,7 @@ const BoardCards = ({
   column,
   tasks,
   showAddCard,
-  setShowAddCard,
+  setShowAddCard
 }: BoardCardType) => (
   <Draggable draggableId={column?.id ?? ''} index={index}>
     {(provided) => (

@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import { TaskType } from 'interfaces/board';
+import { TaskType } from 'interfaces/board.interface';
 import { useCallback } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import TaskLabelChips from './Chips';

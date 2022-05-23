@@ -12,7 +12,7 @@ const DescriptionSection = () => {
   const TextAreaComboIds = useMemo(
     () => ({
       textarea: 'DescriptionSection_text',
-      submitButton: 'DescriptionSection_submit',
+      submitButton: 'DescriptionSection_submit'
     }),
     []
   );
@@ -48,7 +48,7 @@ const DescriptionSection = () => {
     (e) => {
       const hasId = [
         TextAreaComboIds.submitButton,
-        TextAreaComboIds.textarea,
+        TextAreaComboIds.textarea
       ].includes(e.target?.id);
       setReadOnly(!hasId);
     },

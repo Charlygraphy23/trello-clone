@@ -1,60 +1,103 @@
 /* eslint-disable new-cap */
 
+import isInViewport from 'hooks/isInViewport';
 import { DropDownType } from 'interfaces';
-import React, { useCallback } from 'react';
-
-declare global {
-  // eslint-disable-next-line no-unused-vars
-  interface Window {
-    bootstrap: any;
-  }
-}
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  // eslint-disable-next-line prettier/prettier
+  useState
+} from 'react';
 
 const DropDown = ({
-  buttonId,
-  buttonText,
-  title,
+  buttonId = '',
+  buttonText = '',
+  title = '',
   children,
-  buttonClass,
-  className,
+  buttonClass = '',
+  className = '',
   style,
   icon,
+  hideTitle = false
 }: DropDownType) => {
-  const onClose = useCallback(() => {
-    const win: Window = window;
-    if (!win?.bootstrap) return;
-    // eslint-disable-next-line prettier/prettier
-    const dropdown = new win.bootstrap.Dropdown(
-      document.getElementById(buttonId)
-    );
+  const [showDropDown, setShowDropdown] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const dropdownBodyRef = useRef<HTMLDivElement>(null);
+  const [isOutsideViewport, setIsOutsideViewport] = useState(false);
 
-    dropdown.toggle();
-  }, [buttonId]);
+  const onClose = useCallback(() => {
+    setShowDropdown(false);
+  }, []);
+
+  const handleButtonClick = useCallback(() => {
+    setShowDropdown((prevState) => !prevState);
+  }, []);
+
+  const handleEvent = useCallback((e) => {
+    if (ref.current && !ref.current?.contains(e.target)) setShowDropdown(false);
+  }, []);
+
+  useEffect(() => {
+    if (!showDropDown) return;
+    if (!dropdownBodyRef.current) return;
+    const { rect } = isInViewport({
+      element: dropdownBodyRef.current
+    });
+
+    if (rect.right >= window.innerWidth) {
+      setIsOutsideViewport(true);
+    } else {
+      setIsOutsideViewport(false);
+    }
+  }, [showDropDown]);
+
+  useLayoutEffect(() => {
+    document.addEventListener('click', handleEvent, true);
+
+    return () => {
+      document.removeEventListener('click', handleEvent, true);
+    };
+  }, [handleEvent]);
 
   return (
-    <div className={`dropdown dropdownComponent ${className}`} style={style}>
+    <div className={`dropdownComponent ${className}`} style={style} ref={ref}>
       <button
-        className={`dropdown-toggle ${buttonClass}`}
+        className={`dropdownComponent__button ${buttonClass}`}
         type='button'
         id={buttonId}
-        data-bs-toggle='dropdown'
-        aria-expanded='true'
+        onClick={handleButtonClick}
       >
         {icon}
-        <span>{buttonText}</span>
+        <span style={{ marginLeft: icon ? '0.3rem' : '0rem' }}>
+          {buttonText}
+        </span>
       </button>
 
-      <div className='dropdown-menu dropdown__body' aria-labelledby={buttonId}>
-        <div className='dropdown__title'>
-          <span>{title}</span>{' '}
-          <i
-            onClick={onClose}
-            className='bi bi-x'
-            style={{ cursor: 'pointer' }}
-          />
+      {showDropDown && (
+        <div
+          ref={dropdownBodyRef}
+          className='dropdown__body'
+          aria-labelledby={buttonId}
+          style={{
+            left: isOutsideViewport ? 0 : 'auto',
+            right: isOutsideViewport ? 'auto' : 0
+          }}
+        >
+          {!hideTitle && (
+            <div className='dropdown__title'>
+              <span>{title}</span>{' '}
+              <i
+                onClick={onClose}
+                className='bi bi-x'
+                style={{ cursor: 'pointer' }}
+              />
+            </div>
+          )}
+          {children}
         </div>
-        {children}
-      </div>
+      )}
     </div>
   );
 };

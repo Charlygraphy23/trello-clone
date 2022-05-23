@@ -1,4 +1,4 @@
-import { TaskType } from 'interfaces/board';
+import { TaskType } from 'interfaces/board.interface';
 import { Draggable } from 'react-beautiful-dnd';
 import TaskBody from './components/TaskBody';
 import './style.scss';

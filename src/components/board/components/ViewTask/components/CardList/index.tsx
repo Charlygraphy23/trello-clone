@@ -14,7 +14,7 @@ const CheckList = () => {
   const TextAreaComboIds = useMemo(
     () => ({
       textarea: 'CheckList_text',
-      submitButton: 'CheckList_submit',
+      submitButton: 'CheckList_submit'
     }),
     []
   );
@@ -46,7 +46,7 @@ const CheckList = () => {
     if (!textareaValue) return;
     const tempData = {
       id: Date.now(),
-      value: textareaValue,
+      value: textareaValue
     };
 
     setCheckListData((prevState) => [...prevState, tempData]);
@@ -64,7 +64,7 @@ const CheckList = () => {
     (e) => {
       const hasId = [
         TextAreaComboIds.submitButton,
-        TextAreaComboIds.textarea,
+        TextAreaComboIds.textarea
       ].includes(e.target?.id);
       handleItemCheckList(hasId);
       console.log(hasId);
@@ -72,7 +72,7 @@ const CheckList = () => {
     [
       TextAreaComboIds.submitButton,
       TextAreaComboIds.textarea,
-      handleItemCheckList,
+      handleItemCheckList
     ]
   );
 

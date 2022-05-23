@@ -37,6 +37,10 @@ const ViewTask = () => {
     [handleTextareaHeight]
   );
 
+  const handleClose = useCallback(() => {
+    handleToggle();
+  }, [handleToggle]);
+
   useEffect(() => {
     handleTextareaHeight();
   }, [handleTextareaHeight]);
@@ -60,7 +64,7 @@ const ViewTask = () => {
         </textarea>
 
         <div className='close__icon'>
-          <i className='bi bi-x-lg' />
+          <i className='bi bi-x-lg' onClick={handleClose} />
         </div>
 
         <div className='row m-0'>

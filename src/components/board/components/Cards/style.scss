@@ -1,11 +1,12 @@
-@import 'config/style/colors.scss';
-@import 'config/style/veriables.scss';
+@import "config/style/colors.scss";
+@import "config/style/veriables.scss";
 
 .boardCards {
   margin: 0.2rem 0.3rem;
   background-color: $card_color;
   padding: 0.5rem 0rem;
   width: 17rem;
+  min-width: 17rem;
   border-radius: 3px;
   height: fit-content;
   overflow: hidden;

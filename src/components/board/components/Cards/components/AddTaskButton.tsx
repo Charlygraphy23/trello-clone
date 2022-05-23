@@ -1,4 +1,4 @@
-import { ColumnType } from 'interfaces/board';
+import { ColumnType } from 'interfaces/board.interface';
 
 type AddTaskButtonType = {
   // eslint-disable-next-line no-unused-vars

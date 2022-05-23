@@ -1,4 +1,4 @@
-@import 'config/style/colors.scss';
+@import "config/style/colors.scss";
 
 .board {
   background-color: lightslategrey;
@@ -10,13 +10,47 @@
   flex-direction: column;
 
   .board__body {
-    overflow: hidden;
+    overflow-y: hidden;
+    overflow-x: auto;
     height: 100%;
+    margin-bottom: 0.3rem;
+    padding-bottom: 0.5rem;
+
+    &::-webkit-scrollbar {
+      height: 0.8rem; /* width of the entire scrollbar */
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(black, 0.1); /* color of the tracking area */
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(white, 0.6); /* color of the scroll thumb */
+      border-radius: 5px; /* roundness of the scroll thumb */
+      border: none; /* creates padding around scroll thumb */
+    }
 
     .boardCards__body {
       padding-top: 0.8rem;
-      overflow: auto;
-      padding: 0rem 0.5rem;
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding: 0rem 0.4rem;
+      margin-right: 0.1rem;
+
+      &::-webkit-scrollbar {
+        width: 0.5rem; /* width of the entire scrollbar */
+      }
+
+      &::-webkit-scrollbar-track {
+        background: rgba(black, 0.05); /* color of the tracking area */
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: rgba(black, 0.2); /* color of the scroll thumb */
+        border-radius: 5px; /* roundness of the scroll thumb */
+        border: none; /* creates padding around scroll thumb */
+        cursor: default;
+      }
 
       .add__task {
         display: flex;
@@ -37,6 +71,49 @@
         &:hover {
           background-color: rgba(black, 0.05);
           color: $task_title_color;
+        }
+      }
+    }
+
+    .addList {
+      @extend .boardCards__body, .addList;
+
+      .addList__body {
+        background-color: $card_color;
+        width: 17rem;
+        margin: 0.2rem 0.3rem;
+        border-radius: 5px;
+
+        & > button {
+          width: 100%;
+          text-align: left;
+          color: $light_shade;
+        }
+
+        .addList__form {
+          padding: 5px;
+
+          & > input {
+            box-shadow: 0px 2px 1px rgba(black, 0.1);
+            border: 2px solid transparent;
+            color: black;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            outline: none;
+            width: 100%;
+            border-radius: 3px;
+            padding: 0.2em;
+
+            &:focus {
+              border-color: $button_color_1;
+            }
+          }
+
+          button {
+            background-color: $button_color_1;
+            color: white;
+            margin-right: 0.5rem;
+          }
         }
       }
     }

@@ -19,7 +19,7 @@ const CheckListItems = ({ data }: CheckListItemType) => {
   const TextAreaComboIds = useMemo(
     () => ({
       textarea: `CheckListItems_text${data.id}`,
-      submitButton: `CheckListItems_submit${data.id}`,
+      submitButton: `CheckListItems_submit${data.id}`
     }),
     [data.id]
   );
@@ -60,14 +60,14 @@ const CheckListItems = ({ data }: CheckListItemType) => {
     (e) => {
       const hasId = [
         TextAreaComboIds.submitButton,
-        TextAreaComboIds.textarea,
+        TextAreaComboIds.textarea
       ].includes(e.target?.id);
       handleShowTextarea(hasId);
     },
     [
       TextAreaComboIds.submitButton,
       TextAreaComboIds.textarea,
-      handleShowTextarea,
+      handleShowTextarea
     ]
   );
 
