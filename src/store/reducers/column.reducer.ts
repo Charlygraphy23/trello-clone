@@ -1,52 +1,62 @@
+/* eslint-disable no-param-reassign */
 import { createReducer } from '@reduxjs/toolkit';
-import { createList } from 'store/actions';
+import {
+  addBulkColumnData,
+  addTaskToColumn,
+  createList,
+  updateColumnsData
+} from 'store/actions';
 
-type ColumnData = {
-  id: string;
+export type ColumnElementType = {
+  _id?: string;
   title: string;
-  taskIds: string[] | [];
+  taskIds: string[];
+  listId: string;
+  createdBy?: string;
+  boardId?: string;
+  createdAt?: string;
 };
 
-type ColumnDataType = {
-  [k: string]: ColumnData;
+export type ColumnDataType = {
+  [k: string]: ColumnElementType;
 };
 
 export type ColumStateType = {
-  columns: ColumnDataType;
+  columns: ColumnDataType | null;
   columnOrder: string[];
 };
 
 const initialState: ColumStateType = {
-  columns: {
-    'column-1': {
-      id: 'column-1',
-      title: 'Todo',
-      taskIds: [
-        'task-1',
-        'task-2',
-        'task-3',
-        'task-4',
-        'task-5',
-        'task-6',
-        'task-7',
-        'task-8'
-      ]
-    },
-    'column-2': {
-      id: 'column-2',
-      title: 'In Progress',
-      taskIds: []
-    }
-  },
-  columnOrder: ['column-1', 'column-2']
+  columns: null,
+  columnOrder: []
 };
 
+export type ColumnReducerType = typeof initialState;
+
 export default createReducer(initialState, (builder) => {
-  builder.addCase(createList, (state, action) => ({
-    ...state,
-    [action.payload.id]: {
-      ...action.payload,
-      taskIds: []
-    }
-  }));
+  builder
+    .addCase(createList, (state, action) => ({
+      ...state,
+      columns: {
+        ...state.columns,
+        [action.payload.listId]: {
+          taskIds: [],
+          ...action.payload
+        }
+      },
+      columnOrder: [...state.columnOrder, action.payload.listId]
+    }))
+    .addCase(updateColumnsData, (state, action) => ({
+      ...state,
+      ...action.payload
+    }))
+    .addCase(addTaskToColumn, (state, action) => {
+      if (!state.columns) return state;
+      if (!state.columns[action.payload.column].taskIds) {
+        state.columns[action.payload.column].taskIds = [action.payload.taskId];
+        return state;
+      }
+      state.columns[action.payload.column].taskIds.push(action.payload.taskId);
+    })
+    .addCase(addBulkColumnData, (state, action) => action.payload);
 });

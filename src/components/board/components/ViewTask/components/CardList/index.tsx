@@ -87,7 +87,10 @@ const CheckList = () => {
   return (
     <div className='checkList'>
       <div className='d-flex justify-content-between align-items-center mb-2'>
-        <p className='checkList__title'>Check List</p>
+        <p className='checkList__title'>
+          <i className='bi bi-justify-left ' style={{ marginRight: '10px' }} />
+          Check List
+        </p>
         <button
           type='button'
           className='bg__secondary text__primary'

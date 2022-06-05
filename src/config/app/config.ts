@@ -2,6 +2,7 @@ import { AxiosError } from 'axios';
 import React from 'react';
 import { GoogleLoginResponse } from 'react-google-login';
 import { toast } from 'react-toastify';
+import { v4 } from 'uuid';
 import validator from 'validator';
 
 type ValidatorMethodType = {
@@ -81,3 +82,5 @@ export const userLoggedIn = (status: boolean) =>
 
 export const titleLettersConvert = (string: string) =>
   string.slice(0, 1).toUpperCase();
+
+export const getId = () => v4();

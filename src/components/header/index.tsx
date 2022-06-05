@@ -23,19 +23,21 @@ const Header = () => {
       </div>
 
       <div className='header__body'>
-        <button
-          type='button'
-          className='add__workspace text-white'
-          style={{ marginRight: '10px' }}
-          onClick={() =>
-            history.push({
-              pathname: 'create-workspace',
-              state: { background: location }
-            })
-          }
-        >
-          Create Workspace
-        </button>
+        {auth && !authLoading && (
+          <button
+            type='button'
+            className='add__workspace text-white'
+            style={{ marginRight: '10px' }}
+            onClick={() =>
+              history.push({
+                pathname: 'create-workspace',
+                state: { background: location }
+              })
+            }
+          >
+            Create Workspace
+          </button>
+        )}
 
         {!auth && !authLoading && (
           <Link

@@ -3,7 +3,7 @@ import ComponentLoader from 'components/Loader/ComponentLoader';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { StoreType } from 'store';
-import { authLoad, homeLoad } from 'store/actions';
+import { homeLoad } from 'store/actions';
 import EmptyHome from './components/EmptyHome';
 import HomeBody from './components/HomeBody';
 import './style.scss';
@@ -16,7 +16,6 @@ const Home = () => {
 
   useEffect(() => {
     dispatch(homeLoad());
-    dispatch(authLoad({}));
   }, [dispatch]);
 
   return (

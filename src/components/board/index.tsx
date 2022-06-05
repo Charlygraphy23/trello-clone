@@ -1,14 +1,32 @@
-import initialData from 'data';
-import { BoardType, ColumnType } from 'interfaces/board.interface';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { StoreType } from 'store';
+import {
+  getBoard,
+  updateColumnsData,
+  updateTaskAndColumnPosition
+} from 'store/actions';
+import { ColumnElementType } from 'store/reducers/column.reducer';
 import AddList from './components/AddList';
 import BoardCards from './components/Cards';
 import './style.scss';
 
 const BoardIndex = () => {
-  const [data, setData] = useState<BoardType>(initialData);
-  const [showAddCard, setShowAddCard] = useState<ColumnType>();
+  const [showAddCard, setShowAddCard] = useState<ColumnElementType | null>();
+  const { columns, columnOrder } = useSelector(
+    (store: StoreType) => store.ColumReducer
+  );
+  const { data } = useSelector((store: StoreType) => store.BoardReducer);
+  const taskList = useSelector((store: StoreType) => store.TaskReducer);
+  const dispatch = useDispatch();
+  const { id = '' } = useParams<{ id: string }>();
+
+  useEffect(() => {
+    if (!id) return;
+    dispatch(getBoard({ boardId: id }));
+  }, [dispatch, id]);
 
   const onDragEnd = useCallback(
     (payload: DropResult) => {
@@ -22,29 +40,44 @@ const BoardIndex = () => {
         return;
       }
 
-      console.log({
+      console.log('Board', {
         destination,
         source,
         draggableId,
         type
       });
 
-      const start = data.columns[source?.droppableId];
-      const end = data.columns[destination?.droppableId];
+      if (!columns) return;
+
+      const start = columns[source?.droppableId];
+      const end = columns[destination?.droppableId];
 
       if (type === 'column') {
-        const newOrder = Array.from(data.columnOrder);
+        const newOrder = Array.from(columnOrder);
         newOrder.splice(source.index, 1);
         newOrder.splice(destination.index, 0, draggableId);
 
-        return setData({
-          ...data,
-          columnOrder: newOrder
-        });
+        dispatch(
+          updateTaskAndColumnPosition({
+            listId: draggableId,
+            order: destination.index,
+            type,
+            boardId: id,
+            source,
+            destination,
+            draggableId
+          })
+        );
+
+        return dispatch(
+          updateColumnsData({
+            columnOrder: newOrder
+          })
+        );
       }
 
       if (start === end) {
-        const column = data.columns[source?.droppableId];
+        const column = columns[source?.droppableId];
         const taskIds = [...column.taskIds];
         taskIds.splice(source.index, 1);
         taskIds.splice(destination.index, 0, draggableId);
@@ -52,17 +85,34 @@ const BoardIndex = () => {
           ...column,
           taskIds
         };
-        return setData({
-          ...data,
-          columns: {
-            ...data.columns,
-            [column.id]: newColumn
-          }
-        });
+
+        if (type === 'task') {
+          dispatch(
+            updateTaskAndColumnPosition({
+              taskId: draggableId,
+              listId: destination.droppableId,
+              order: destination.index,
+              type,
+              boardId: id,
+              source,
+              destination,
+              draggableId
+            })
+          );
+        }
+
+        return dispatch(
+          updateColumnsData({
+            columns: {
+              ...columns,
+              [column.listId]: newColumn
+            }
+          })
+        );
       }
 
-      const startTaskIds = [...start.taskIds];
-      const endTaskIds = [...end.taskIds];
+      const startTaskIds = start.taskIds ? [...start.taskIds] : [];
+      const endTaskIds = end.taskIds ? [...end.taskIds] : [];
 
       startTaskIds.splice(source.index, 1);
       endTaskIds.splice(destination.index, 0, draggableId);
@@ -76,59 +126,81 @@ const BoardIndex = () => {
         taskIds: endTaskIds
       };
 
-      setData({
-        ...data,
-        columns: {
-          ...data.columns,
-          [start.id]: newStartColumn,
-          [end.id]: endTaskColumn
-        }
-      });
+      if (type === 'task') {
+        dispatch(
+          updateTaskAndColumnPosition({
+            taskId: draggableId,
+            listId: destination.droppableId,
+            order: destination.index,
+            type,
+            boardId: id,
+            source,
+            destination,
+            draggableId
+          })
+        );
+      }
+
+      return dispatch(
+        updateColumnsData({
+          columns: {
+            ...columns,
+            [start.listId]: newStartColumn,
+            [end.listId]: endTaskColumn
+          }
+        })
+      );
     },
-    [data]
+    [columnOrder, columns, dispatch, id]
   );
 
   return (
-    <div className='board'>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable
-          droppableId='all-column'
-          type='column'
-          direction='horizontal'
-        >
-          {(provided) => (
-            <div
-              className=' d-flex justify-content-start board__body'
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              {data.columnOrder.map((columnId, index) => {
-                const column = data?.columns[columnId];
-                const tasks: any = column?.taskIds.map(
-                  (taskId) => data.tasks[taskId]
-                );
+    <>
+      <div
+        className='board'
+        style={{ backgroundColor: `${data?.backgroundColor}` }}
+      >
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable
+            droppableId='all-column'
+            type='column'
+            direction='horizontal'
+          >
+            {(provided) => (
+              <div
+                className=' d-flex justify-content-start board__body'
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                {columnOrder.map((columnId, index) => {
+                  const column = columns ? columns[columnId] : null;
+                  const tasks: any = column?.taskIds
+                    ? column?.taskIds.map((taskId: string) => taskList[taskId])
+                    : [];
 
-                return (
-                  column && (
-                    <BoardCards
-                      index={index}
-                      key={column?.id}
-                      column={column}
-                      tasks={tasks}
-                      setShowAddCard={setShowAddCard}
-                      showAddCard={showAddCard?.id === column?.id}
-                    />
-                  )
-                );
-              })}
+                  return (
+                    column?.listId && (
+                      <BoardCards
+                        index={index}
+                        key={column?.listId}
+                        column={column}
+                        tasks={tasks}
+                        setShowAddCard={setShowAddCard}
+                        showAddCard={showAddCard?.listId === column?.listId}
+                        boardId={id}
+                      />
+                    )
+                  );
+                })}
 
-              <AddList />
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-    </div>
+                {provided.placeholder}
+                <AddList boardId={id} />
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </div>
+    </>
   );
 };
 

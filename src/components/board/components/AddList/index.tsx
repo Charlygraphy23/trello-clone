@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import AddListBody from './AddListBody';
 
-const AddList = () => {
-  const [listName, setListName] = useState('');
+type Props = {
+  boardId: string;
+};
+
+const AddList = ({ boardId }: Props) => {
   const [show, setShow] = useState(false);
 
   const hide = () => setShow(false);
@@ -17,7 +20,7 @@ const AddList = () => {
           </button>
         )}
 
-        {show && <AddListBody show={show} hide={hide} />}
+        {show && <AddListBody show={show} hide={hide} boardId={boardId} />}
       </div>
     </div>
   );

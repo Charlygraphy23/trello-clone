@@ -11,9 +11,10 @@ const BoardCards = ({
   column,
   tasks,
   showAddCard,
-  setShowAddCard
+  setShowAddCard,
+  boardId
 }: BoardCardType) => (
-  <Draggable draggableId={column?.id ?? ''} index={index}>
+  <Draggable draggableId={column?.listId ?? ''} index={index}>
     {(provided) => (
       <>
         <section
@@ -28,7 +29,7 @@ const BoardCards = ({
 
             <div />
           </div>
-          <Droppable droppableId={column?.id ?? ''} type='task'>
+          <Droppable droppableId={column?.listId ?? ''} type='task'>
             {(_provided) => (
               <div
                 className='boardCards__body'
@@ -36,20 +37,29 @@ const BoardCards = ({
                 {..._provided.droppableProps}
               >
                 <div>
-                  {tasks.map((task, _index) => (
-                    <TasksList key={task.id} task={task} index={_index} />
-                  ))}
+                  {tasks.length > 0 &&
+                    tasks.map((task, _index) => (
+                      <TasksList
+                        key={task?.taskId}
+                        task={task}
+                        index={_index}
+                      />
+                    ))}
+
+                  {_provided.placeholder}
 
                   {showAddCard ? (
-                    <AddTask setShowAddCard={setShowAddCard} />
+                    <AddTask
+                      setShowAddCard={setShowAddCard}
+                      columnId={column?.listId}
+                      boardId={boardId}
+                    />
                   ) : (
                     <AddTaskButton
                       setShowAddCard={setShowAddCard}
                       column={column}
                     />
                   )}
-
-                  {_provided.placeholder}
                 </div>
               </div>
             )}

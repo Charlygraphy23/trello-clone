@@ -1,18 +1,18 @@
-import { TaskType } from 'interfaces/board.interface';
 import { Draggable } from 'react-beautiful-dnd';
+import { TaskConstant } from 'store/reducers/task.reducer';
 import TaskBody from './components/TaskBody';
 import './style.scss';
 
 type TaskTypeWrap = {
-  task: TaskType;
+  task: TaskConstant;
   index: number;
 };
 
 const TasksList = ({ task, index }: TaskTypeWrap) => (
-  <Draggable draggableId={task.id} index={index}>
+  <Draggable draggableId={task.taskId} index={index}>
     {(provided, snapshot) => (
       <div
-        id={task.id}
+        id={task.taskId}
         ref={provided.innerRef}
         {...provided.dragHandleProps}
         {...provided.draggableProps}

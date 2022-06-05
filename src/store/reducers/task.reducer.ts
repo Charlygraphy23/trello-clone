@@ -1,32 +1,52 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { addTask } from 'store/actions';
+import {
+  addBulkTaskData,
+  addTask,
+  updateTaskInfo,
+  updateTaskLabel
+} from 'store/actions';
 
-type TaskConstant = {
-  id: string;
+export type TaskConstant = {
+  _id?: string;
   content: string;
+  taskId: string;
+  listId: string;
+  createdBy?: string;
+  boardId?: string;
+  createdAt?: string;
+  description?: string;
+  labels?: string[];
 };
 
 export type TaskDataType = {
   [k: string]: TaskConstant;
 };
 
-const initialState: TaskDataType = {
-  'task-1': {
-    id: 'task-1',
-    content: 'I am task 1 Lorem Impsum Lorem Ipsum Lorem Ipsum'
-  },
-  'task-2': { id: 'task-2', content: 'I am task 2' },
-  'task-3': { id: 'task-3', content: 'I am task 3' },
-  'task-4': { id: 'task-4', content: 'I am task 4' },
-  'task-5': { id: 'task-5', content: 'I am task 5' },
-  'task-6': { id: 'task-6', content: 'I am task 6' },
-  'task-7': { id: 'task-7', content: 'I am task 7' },
-  'task-8': { id: 'task-8', content: 'I am task 8' }
-};
+const initialState: TaskDataType = {};
 
 export default createReducer(initialState, (builder) => {
-  builder.addCase(addTask, (state, action) => ({
-    ...state,
-    [action.payload.id]: action.payload
-  }));
+  builder
+    .addCase(addTask, (state, action) => ({
+      ...state,
+      [action.payload.taskId]: action.payload
+    }))
+    .addCase(addBulkTaskData, (state, action) => action.payload)
+    .addCase(updateTaskInfo, (state, action) => ({
+      ...state,
+      [action.payload.taskId]: {
+        ...state[action.payload.taskId],
+        ...action.payload.data
+      }
+    }))
+    .addCase(updateTaskLabel, (state, action) => {
+      const { taskId, labels } = action.payload;
+
+      return {
+        ...state,
+        [taskId]: {
+          ...state[taskId],
+          labels
+        }
+      };
+    });
 });

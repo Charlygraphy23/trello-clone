@@ -1,8 +1,10 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import { authReducer } from './auth.reducer';
-import BoardedReducer from './board.reducer';
+import BoardReducer from './board.reducer';
 import ColumReducer from './column.reducer';
+import CreateBoardedReducer from './createBoard.reducer';
 import HomeReducer from './home.reducer';
+import LabelReducer from './label.reducer';
 import profileReducer from './profile.reducer';
 import TaskReducer from './task.reducer';
 import WorkspaceReducer from './workspace.reducer';
@@ -12,7 +14,9 @@ export default combineReducers({
   ProfileReducer: profileReducer,
   WorkspaceReducer,
   HomeReducer,
-  BoardedReducer,
+  CreateBoardedReducer,
   TaskReducer,
-  ColumReducer
+  ColumReducer,
+  BoardReducer,
+  LabelReducer
 });

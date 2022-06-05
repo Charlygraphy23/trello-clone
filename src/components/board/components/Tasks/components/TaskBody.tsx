@@ -1,31 +1,34 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-import { TaskType } from 'interfaces/board.interface';
 import { useCallback } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import { TaskConstant } from 'store/reducers/task.reducer';
 import TaskLabelChips from './Chips';
 import TaskFooter from './TaskFooter';
 
 type TaskBodyType = {
-  task: TaskType;
+  task: TaskConstant;
   isDragging: boolean;
 };
 
 const TaskBody = ({ isDragging, task }: TaskBodyType) => {
   const history = useHistory();
   const location = useLocation();
+  // const {};
 
   const handleClick = useCallback(() => {
-    history.push({ pathname: '/data', state: { background: location } });
-  }, []);
+    if (!task?.taskId) return;
+
+    history.push({
+      pathname: `/task/${task.taskId}`,
+      state: { background: location }
+    });
+  }, [history, location, task.taskId]);
 
   return (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
       className={isDragging ? 'taskList grab__task' : 'taskList'}
       onClick={handleClick}
     >
-      <TaskLabelChips />
+      {task.labels && task.labels.length > 0 && <TaskLabelChips task={task} />}
       <p>{task.content}</p>
       <TaskFooter />
     </div>

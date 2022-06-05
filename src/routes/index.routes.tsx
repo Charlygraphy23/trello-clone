@@ -14,7 +14,7 @@ import PrivateRoute from './routes';
 const RouteIndex = () => {
   const location = useLocation<any>();
 
-  const { loading: authLoading } = useSelector(
+  const { loading: authLoading, auth } = useSelector(
     (store: StoreType) => store.AuthReducer
   );
 
@@ -31,7 +31,9 @@ const RouteIndex = () => {
 
       {authLoading && <PageLoader />}
 
-      {background && <Route path='/data' component={ViewTask} />}
+      {background && auth && (
+        <Route path='/task/:taskId' component={ViewTask} />
+      )}
       {background && (
         <Route path='/create-workspace' component={WorkSpaceModal} />
       )}

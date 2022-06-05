@@ -1,14 +1,15 @@
+import { addDescriptionToTask } from 'api';
 import TextAreaCombo from 'core/TextAreaCombo';
-import React, {
-  useCallback,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  // eslint-disable-next-line prettier/prettier
-  useState
-} from 'react';
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { updateTaskInfo } from 'store/actions';
+import { TaskConstant } from 'store/reducers/task.reducer';
 
-const DescriptionSection = () => {
+type Props = {
+  task: TaskConstant;
+};
+
+const DescriptionSection = ({ task }: Props) => {
   const TextAreaComboIds = useMemo(
     () => ({
       textarea: 'DescriptionSection_text',
@@ -19,30 +20,32 @@ const DescriptionSection = () => {
 
   const [readOnly, setReadOnly] = useState(true);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const dispatch = useDispatch();
   const handleFocus = useCallback(() => {
     setReadOnly(false);
   }, []);
 
-  // const handleBlur = useCallback(
-  //   (e: React.FocusEvent<HTMLTextAreaElement>) => {
-  //     e.preventDefault();
+  const handleClick = useCallback(async () => {
+    if (!textareaRef.current?.value) return;
 
-  //     // clearTimeoutOnBlur();
-  //     setReadOnly(isMatched);
-  //     console.log('Yo', isMatched);
+    dispatch(
+      updateTaskInfo({
+        taskId: task.taskId,
+        data: {
+          description: textareaRef.current?.value
+        }
+      })
+    );
 
-  //     // console.log('MATCHED', isMatched);
+    setReadOnly(true);
 
-  //     // blurTimeout.current = setTimeout(() => setReadOnly(true), 100);
-  //   },
-  //   [isMatched]
-  // );
-
-  const handleClick = useCallback(() => {
-    // textareaRef.current?.focus();
-    // setReadOnly(true);
-    // TODO: need to implement add description
-  }, []);
+    await addDescriptionToTask({
+      taskId: task.taskId,
+      data: {
+        description: textareaRef.current?.value
+      }
+    });
+  }, [dispatch, task]);
 
   const handleEvent = useCallback(
     (e) => {
@@ -65,7 +68,16 @@ const DescriptionSection = () => {
 
   return (
     <div className='descriptionSection'>
-      <p className='descriptionSection__title'>Description</p>
+      <p className='descriptionSection__title'>
+        <i className='bi bi-justify-left ' style={{ marginRight: '10px' }} />
+        <span style={{ marginRight: '10px' }}>Description</span>
+
+        {task?.description && (
+          <button type='button' onClick={() => setReadOnly(false)}>
+            Edit
+          </button>
+        )}
+      </p>
 
       <TextAreaCombo
         ref={textareaRef}
@@ -77,6 +89,7 @@ const DescriptionSection = () => {
         onSubmit={handleClick}
         textAreaId={TextAreaComboIds.textarea}
         submitButtonId={TextAreaComboIds.submitButton}
+        value={task.description}
       />
     </div>
   );

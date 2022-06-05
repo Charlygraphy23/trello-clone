@@ -1,7 +1,9 @@
 /* eslint-disable quotes */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useHistory, useParams } from 'react-router-dom';
 import { Modal, ModalBody } from 'reactstrap';
+import { StoreType } from 'store';
 import CheckList from './components/CardList';
 import CardOptions from './components/CardOptions';
 import CommentSection from './components/CommentSection';
@@ -13,6 +15,9 @@ const ViewTask = () => {
   const history = useHistory();
   const [readOnlyTitle, setReadOnlyTitle] = useState(true);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const { taskId } = useParams<{ taskId: string }>();
+  const tasks = useSelector((store: StoreType) => store.TaskReducer);
+  const task = tasks[taskId];
 
   const handleTextareaHeight = useCallback(() => {
     if (!textareaRef.current) return;
@@ -56,11 +61,7 @@ const ViewTask = () => {
           onFocusCapture={() => setReadOnlyTitle(false)}
           onBlurCapture={() => setReadOnlyTitle(true)}
         >
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+          {task.content}
         </textarea>
 
         <div className='close__icon'>
@@ -69,9 +70,11 @@ const ViewTask = () => {
 
         <div className='row m-0'>
           <div className='col-9'>
-            <TaskLabelsShow />
+            {task.labels && task.labels.length > 0 && (
+              <TaskLabelsShow task={task} />
+            )}
 
-            <DescriptionSection />
+            <DescriptionSection task={task} />
 
             <CheckList />
 
@@ -79,7 +82,7 @@ const ViewTask = () => {
           </div>
 
           <div className='col-3 p-0 py-2'>
-            <CardOptions />
+            <CardOptions task={task} />
           </div>
         </div>
       </ModalBody>

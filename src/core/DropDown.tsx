@@ -20,7 +20,9 @@ const DropDown = ({
   className = '',
   style,
   icon,
-  hideTitle = false
+  hideTitle = false,
+  render,
+  buttonStyle
 }: DropDownType) => {
   const [showDropDown, setShowDropdown] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -68,6 +70,7 @@ const DropDown = ({
         type='button'
         id={buttonId}
         onClick={handleButtonClick}
+        style={buttonStyle}
       >
         {icon}
         <span style={{ marginLeft: icon ? '0.3rem' : '0rem' }}>
@@ -95,7 +98,7 @@ const DropDown = ({
               />
             </div>
           )}
-          {children}
+          {render ? render(onClose) : children}
         </div>
       )}
     </div>

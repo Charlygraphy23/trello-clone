@@ -1,33 +1,20 @@
-export type ColumnType = {
-  id: string;
-  title: string;
-  taskIds: string[];
-};
-
-export type ColumnGroupType = {
-  [key: string]: ColumnType;
-};
-
-export type TaskType = {
-  id: string;
-  content: string;
-};
-
-export type TaskGroupType = {
-  [key: string]: TaskType;
-};
+import {
+  ColumnDataType,
+  ColumnElementType
+} from 'store/reducers/column.reducer';
+import { TaskConstant, TaskDataType } from 'store/reducers/task.reducer';
 
 export type BoardCardType = {
   index: number;
-  column: ColumnType | undefined;
-  tasks: TaskType[];
-  // eslint-disable-next-line no-unused-vars
-  setShowAddCard: (args: ColumnType | undefined) => any;
+  column: ColumnElementType | undefined | null;
+  tasks: TaskConstant[];
+  setShowAddCard: (args: ColumnElementType | undefined | null) => any;
   showAddCard: boolean;
+  boardId?: string;
 };
 
 export interface BoardType {
-  tasks: TaskGroupType;
-  columns: ColumnGroupType;
+  tasks: TaskDataType;
+  columns: ColumnDataType;
   columnOrder: string[];
 }

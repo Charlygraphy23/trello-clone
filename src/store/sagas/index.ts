@@ -1,8 +1,12 @@
 import { all } from 'redux-saga/effects';
+import addTaskSaga from './addTask.saga';
 import { authSaga } from './auth.saga';
-import boardSaga from './board.saga';
+import createBoardSaga from './createBoard.saga';
+import createList from './createList.saga';
+import getBoardSaga from './getBoard.saga';
 import homeSaga from './home.saga';
 import profileSaga from './profile.saga';
+import UpdateListTaskPosSage from './updateListTaskPos.saga';
 import { workspaceSaga } from './workpase.saga';
 
 export default function* rootSaga() {
@@ -11,6 +15,10 @@ export default function* rootSaga() {
     profileSaga(),
     workspaceSaga(),
     homeSaga(),
-    boardSaga()
+    createBoardSaga(),
+    createList(),
+    addTaskSaga(),
+    getBoardSaga(),
+    UpdateListTaskPosSage()
   ]);
 }

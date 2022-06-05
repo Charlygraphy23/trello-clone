@@ -33,7 +33,10 @@
         padding: 0.2rem;
         overflow: hidden;
         border: 2px solid transparent;
-        min-height: 5rem;
+        // min-height: 5rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
 
         &:read-only {
           background-color: transparent;
@@ -92,10 +95,18 @@
           font-weight: 600;
           color: $task_title_color;
           margin-bottom: 0.5rem;
+
+          button {
+            background-color: $background_color2;
+          }
         }
 
         .descriptionSection__textarea {
           margin-bottom: 1.5rem;
+          & > textarea:read-only {
+            background: transparent;
+            cursor: pointer;
+          }
         }
       }
 

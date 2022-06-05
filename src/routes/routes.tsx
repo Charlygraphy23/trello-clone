@@ -24,6 +24,7 @@ const PrivateRoutes = () => {
       <Switch>
         <Auth path='/home' component={Home} />
         <Auth path='/board/:id' component={BoardIndex} />
+        {/* <Route component={BoardIndex} /> */}
       </Switch>
     </>
   );

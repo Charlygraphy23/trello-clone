@@ -12,7 +12,9 @@ import './style.scss';
 
 const CreateBoard = () => {
   const history = useHistory();
-  const { loading } = useSelector((store: StoreType) => store.BoardedReducer);
+  const { loading } = useSelector(
+    (store: StoreType) => store.CreateBoardedReducer
+  );
   const [color, setColor] = useState<typeof LABEL_COLORS[0] | string>('');
   const [name, setName] = useState('');
   const dispatch = useDispatch();

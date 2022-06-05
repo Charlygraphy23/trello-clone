@@ -1,12 +1,12 @@
 /* eslint-disable prettier/prettier */
-import { getProfile } from 'api/profile';
+import { getProfile } from 'api';
 import { AxiosResponse } from 'axios';
 import { put, takeLatest } from 'redux-saga/effects';
 import {
-    profileLoad,
-    profileLoadFailure,
-    profileLoadSuccess
-} from 'store/actions/user.action';
+  profileLoad,
+  profileLoadFailure,
+  profileLoadSuccess
+} from 'store/actions';
 
 function* loadProfileData() {
   try {

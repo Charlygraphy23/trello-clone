@@ -21,8 +21,10 @@
 
     h5 {
       font-weight: 500;
-      color: $task_title_color;
-      margin: 0;
+      color: $heading__color;
+      margin-bottom: 0.2rem;
+      font-size: 1rem;
+      font-weight: 600;
     }
   }
 

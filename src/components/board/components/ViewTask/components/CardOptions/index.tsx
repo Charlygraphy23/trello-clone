@@ -3,8 +3,13 @@ import DropDown from 'core/DropDown';
 import LabelSelection from 'core/LabelSelection';
 import MemberSelection from 'core/MemberSelection';
 import MoveCardSection from 'core/MoveCardSection';
+import { TaskConstant } from 'store/reducers/task.reducer';
 
-const CardOptions = () => (
+type Props = {
+  task: TaskConstant;
+};
+
+const CardOptions = ({ task }: Props) => (
   <div className='cardOptions'>
     <p className='cardOptions__title'>Add to Card</p>
 
@@ -24,7 +29,7 @@ const CardOptions = () => (
       buttonClass='cardOptions__button'
       icon={<i className='bi bi-tag' />}
     >
-      <LabelSelection clickOnEdit />
+      <LabelSelection boardId={task.boardId} task={task} />
     </DropDown>
 
     <DropDown
