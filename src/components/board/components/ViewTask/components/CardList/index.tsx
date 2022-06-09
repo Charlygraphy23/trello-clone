@@ -1,16 +1,25 @@
+import DropDown from 'core/DropDown';
 import TextAreaCombo from 'core/TextAreaCombo';
+import IsVisibleLayout from 'hooks/isVisibleLayout';
 import React, {
   useCallback,
-  useLayoutEffect,
   useMemo,
-  useRef,
   // eslint-disable-next-line prettier/prettier
   useState
 } from 'react';
+import { useDispatch } from 'react-redux';
+import { addCheckListAction, deleteCheckListGroupAction } from 'store/actions';
+import { TaskCheckListGroupType } from 'store/reducers/task.reducer';
+import { v4 } from 'uuid';
 import CardProgress from './components/CardProgress';
 import CheckListItems from './components/CheckListItems';
 
-const CheckList = () => {
+type Props = {
+  checkListGroup: TaskCheckListGroupType;
+};
+
+const CheckList = ({ checkListGroup }: Props) => {
+  const { checkLists = [], title = '' } = checkListGroup;
   const TextAreaComboIds = useMemo(
     () => ({
       textarea: 'CheckList_text',
@@ -18,11 +27,12 @@ const CheckList = () => {
     }),
     []
   );
+  const [showNewItemCheckList, hide, checkListTextareaRef] =
+    IsVisibleLayout<HTMLTextAreaElement>(TextAreaComboIds);
 
-  const [showNewItemCheckList, setShowNewItemCheckList] = useState(false);
-  const checkListTextareaRef = useRef<HTMLTextAreaElement>(null);
-  const [checkListData, setCheckListData] = useState<any[]>([]);
   const [textareaValue, setTextareaValue] = useState('');
+  const dispatch = useDispatch();
+  // const tasks = useSelector((store : StoreType) => store.TaskReducer)
 
   const clearAll = useCallback(() => {
     setTextareaValue('');
@@ -31,27 +41,41 @@ const CheckList = () => {
   const handleItemCheckList = useCallback(
     (value: boolean) => {
       if (value === true) {
-        setShowNewItemCheckList(value);
+        hide(value);
       } else {
         clearAll();
-        setShowNewItemCheckList(value);
+        hide(value);
       }
     },
-    [clearAll]
+    [clearAll, hide]
   );
 
-  const handleAddItemCheckList = useCallback(() => {
+  const handleAddItemCheckList = useCallback(async () => {
     checkListTextareaRef.current?.focus();
 
     if (!textareaValue) return;
-    const tempData = {
-      id: Date.now(),
-      value: textareaValue
+
+    const payload = {
+      checkListId: v4(),
+      title: textareaValue,
+      isDone: false,
+      taskId: checkListGroup.taskId ?? '',
+      checkListGroupId: checkListGroup?.checkListGroupId ?? ''
     };
 
-    setCheckListData((prevState) => [...prevState, tempData]);
+    await addCheckListAction({
+      dispatch,
+      data: payload
+    });
     handleItemCheckList(false);
-  }, [handleItemCheckList, textareaValue]);
+  }, [
+    checkListGroup?.checkListGroupId,
+    checkListGroup.taskId,
+    checkListTextareaRef,
+    dispatch,
+    handleItemCheckList,
+    textareaValue
+  ]);
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -60,51 +84,55 @@ const CheckList = () => {
     []
   );
 
-  const handleEvent = useCallback(
-    (e) => {
-      const hasId = [
-        TextAreaComboIds.submitButton,
-        TextAreaComboIds.textarea
-      ].includes(e.target?.id);
-      handleItemCheckList(hasId);
-      console.log(hasId);
-    },
-    [
-      TextAreaComboIds.submitButton,
-      TextAreaComboIds.textarea,
-      handleItemCheckList
-    ]
-  );
-
-  useLayoutEffect(() => {
-    document.addEventListener('click', handleEvent, true);
-
-    return () => {
-      document.removeEventListener('click', handleEvent, true);
-    };
-  }, [handleEvent]);
+  const handleDeleteCheckListGroup = useCallback(async () => {
+    await deleteCheckListGroupAction({
+      dispatch,
+      data: {
+        checkListGroupId: checkListGroup.checkListGroupId ?? '',
+        taskId: checkListGroup?.taskId ?? ''
+      }
+    });
+  }, [checkListGroup.checkListGroupId, checkListGroup.taskId, dispatch]);
 
   return (
-    <div className='checkList'>
+    <div className='checkList mt-3'>
       <div className='d-flex justify-content-between align-items-center mb-2'>
         <p className='checkList__title'>
-          <i className='bi bi-justify-left ' style={{ marginRight: '10px' }} />
-          Check List
+          <i className='bi bi-check2-square' style={{ marginRight: '10px' }} />
+
+          {title}
         </p>
-        <button
-          type='button'
-          className='bg__secondary text__primary'
-          style={{ fontSize: '0.9rem' }}
+
+        <DropDown
+          title='Delete Checklist?'
+          buttonId='Checklist-delete-dropdown-button'
+          buttonText='Delete'
+          buttonClass='bg__secondary text__primary'
+          buttonStyle={{ fontSize: '0.9rem' }}
+          stopPropagation
         >
-          Delete
-        </button>
+          <div className='checklist__options'>
+            <p className='my-2'>
+              Deleting a checklist is permanent and there is no way to get it
+              back.
+            </p>
+            <button
+              type='button'
+              className='bg__danger text-white my-2 w-100'
+              onClick={handleDeleteCheckListGroup}
+            >
+              Delete checklist
+            </button>
+          </div>
+        </DropDown>
       </div>
 
-      <CardProgress />
+      <CardProgress checkListGroup={checkListGroup} />
 
-      {checkListData.length > 0 &&
-        checkListData.map((list) => (
-          <CheckListItems key={list?.id} data={list} />
+      {checkLists &&
+        checkLists.length > 0 &&
+        checkLists.map((list) => (
+          <CheckListItems key={list?.checkListId} data={list} />
         ))}
 
       {showNewItemCheckList && (

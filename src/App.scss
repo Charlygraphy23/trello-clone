@@ -428,8 +428,14 @@ input[type="password"] {
         .list__item {
           padding: $moveCardSectionSelectPadding;
           cursor: pointer;
+          margin-bottom: 0.1rem;
 
           &:hover {
+            background-color: rgba($button_color_1, 0.9);
+            color: white;
+          }
+
+          &.active {
             background-color: rgba($button_color_1, 0.9);
             color: white;
           }

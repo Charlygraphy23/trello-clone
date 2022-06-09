@@ -38,9 +38,8 @@ const CardOptions = ({ task }: Props) => (
       buttonText='Checklist'
       buttonClass='cardOptions__button'
       icon={<i className='bi bi-list-check' />}
-    >
-      <CheckListSection />
-    </DropDown>
+      render={(onClose) => <CheckListSection hide={onClose} task={task} />}
+    />
 
     <br />
     <p className='cardOptions__title'>Actions</p>
@@ -52,7 +51,7 @@ const CardOptions = ({ task }: Props) => (
       buttonClass='cardOptions__button'
       icon={<i className='bi bi-arrow-right' />}
     >
-      <MoveCardSection />
+      <MoveCardSection task={task} />
     </DropDown>
   </div>
 );

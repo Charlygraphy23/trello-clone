@@ -19,7 +19,6 @@ export default createReducer(initialState, (builder) => {
       ...state,
       loading: true,
       error: '',
-      data: []
     }))
     .addCase(createWorkspaceSuccess, (state, action) => ({
       ...state,

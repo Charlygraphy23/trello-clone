@@ -22,20 +22,29 @@ const DropDown = ({
   icon,
   hideTitle = false,
   render,
-  buttonStyle
+  buttonStyle,
+  stopPropagation
 }: DropDownType) => {
   const [showDropDown, setShowDropdown] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const dropdownBodyRef = useRef<HTMLDivElement>(null);
   const [isOutsideViewport, setIsOutsideViewport] = useState(false);
 
-  const onClose = useCallback(() => {
-    setShowDropdown(false);
-  }, []);
+  const onClose = useCallback(
+    (e) => {
+      if (stopPropagation) e.stopPropagation();
+      setShowDropdown(false);
+    },
+    [stopPropagation]
+  );
 
-  const handleButtonClick = useCallback(() => {
-    setShowDropdown((prevState) => !prevState);
-  }, []);
+  const handleButtonClick = useCallback(
+    (e) => {
+      if (stopPropagation) e.stopPropagation();
+      setShowDropdown((prevState) => !prevState);
+    },
+    [stopPropagation]
+  );
 
   const handleEvent = useCallback((e) => {
     if (ref.current && !ref.current?.contains(e.target)) setShowDropdown(false);

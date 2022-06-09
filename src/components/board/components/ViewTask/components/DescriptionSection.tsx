@@ -82,7 +82,7 @@ const DescriptionSection = ({ task }: Props) => {
       <TextAreaCombo
         ref={textareaRef}
         readOnly={readOnly}
-        className='descriptionSection__textarea'
+        className='descriptionSection__textarea mb-2'
         placeholder='Add a more detailed description…'
         buttonText='Save'
         onFocusCapture={handleFocus}

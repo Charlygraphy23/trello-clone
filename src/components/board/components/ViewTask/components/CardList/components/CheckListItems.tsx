@@ -1,44 +1,55 @@
+import classNames from 'classnames';
+import DropDown from 'core/DropDown';
 import TextAreaCombo from 'core/TextAreaCombo';
-import React, {
-  useCallback,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  // eslint-disable-next-line prettier/prettier
-  useState
-} from 'react';
+import IsVisibleLayout from 'hooks/isVisibleLayout';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { deleteCheckListAction, updateCheckListAction } from 'store/actions';
+import { TaskCheckListType } from 'store/reducers/task.reducer';
 
 type CheckListItemType = {
-  data: {
-    id: number;
-    value: string;
-  };
+  data: TaskCheckListType;
 };
 
 const CheckListItems = ({ data }: CheckListItemType) => {
+  const dispatch = useDispatch();
   const TextAreaComboIds = useMemo(
     () => ({
-      textarea: `CheckListItems_text${data.id}`,
-      submitButton: `CheckListItems_submit${data.id}`
+      textarea: `CheckListItems_text${data.checkListId}`,
+      submitButton: `CheckListItems_submit${data.checkListId}`
     }),
-    [data.id]
+    [data.checkListId]
   );
-  const [showTextarea, setShowTextarea] = useState(false);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const { value: checkListName } = data;
+  const [showTextarea, handleShowTextarea, textareaRef] =
+    IsVisibleLayout<HTMLTextAreaElement>(TextAreaComboIds);
+  const [checkListName, setCheckListName] = useState(data?.title ?? '');
 
-  const handleShowTextarea = useCallback((value: boolean) => {
-    if (value) {
-      setShowTextarea(value);
-    } else {
-      setShowTextarea(value);
-    }
-  }, []);
+  const handelSave = useCallback(async () => {
+    // textareaRef.current?.focus();
 
-  const handelSave = useCallback(() => {
-    textareaRef.current?.focus();
-  }, []);
+    const payload = {
+      checkListId: data?.checkListId ?? '',
+      title: checkListName,
+      isDone: data?.isDone ?? false,
+      taskId: data?.taskId ?? '',
+      checkListGroupId: data?.checkListGroupId ?? ''
+    };
+
+    await updateCheckListAction({
+      dispatch,
+      data: payload
+    });
+    handleShowTextarea(false);
+  }, [
+    checkListName,
+    data?.checkListGroupId,
+    data?.checkListId,
+    data?.isDone,
+    data?.taskId,
+    dispatch,
+    handleShowTextarea
+  ]);
 
   const handleListClick = useCallback(() => {
     handleShowTextarea(true);
@@ -46,7 +57,7 @@ const CheckListItems = ({ data }: CheckListItemType) => {
       textareaRef.current?.focus();
       textareaRef.current?.select();
     }, 100);
-  }, [handleShowTextarea]);
+  }, [handleShowTextarea, textareaRef]);
 
   const handleTextAreaClick = useCallback(
     (e: React.MouseEvent<HTMLTextAreaElement>) => {
@@ -56,33 +67,57 @@ const CheckListItems = ({ data }: CheckListItemType) => {
     []
   );
 
-  const handleEvent = useCallback(
-    (e) => {
-      const hasId = [
-        TextAreaComboIds.submitButton,
-        TextAreaComboIds.textarea
-      ].includes(e.target?.id);
-      handleShowTextarea(hasId);
+  const handleChange = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      e.stopPropagation();
+
+      const payload = {
+        checkListId: data?.checkListId ?? '',
+        title: data?.title ?? '',
+        isDone: e.target.checked ?? false,
+        taskId: data?.taskId ?? '',
+        checkListGroupId: data?.checkListGroupId ?? ''
+      };
+
+      await updateCheckListAction({
+        dispatch,
+        data: payload
+      });
     },
     [
-      TextAreaComboIds.submitButton,
-      TextAreaComboIds.textarea,
-      handleShowTextarea
+      data?.checkListGroupId,
+      data?.checkListId,
+      data?.taskId,
+      data?.title,
+      dispatch
     ]
   );
 
-  useLayoutEffect(() => {
-    document.addEventListener('click', handleEvent, true);
+  const handleDeleteCheckList = useCallback(() => {
+    const { checkListId = '', checkListGroupId = '', taskId = '' } = data;
 
-    return () => {
-      document.removeEventListener('click', handleEvent, true);
-    };
-  }, [handleEvent]);
+    deleteCheckListAction({
+      dispatch,
+      data: {
+        checkListId,
+        checkListGroupId,
+        taskId
+      }
+    });
+  }, [data, dispatch]);
 
   return (
     <div className='checkListItems row m-0' onClick={handleListClick}>
       <div className='col-1 p-0 d-flex'>
-        <input type='checkbox' className='mt-1' />
+        <input
+          type='checkbox'
+          className='mt-1'
+          onChange={handleChange}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+          defaultChecked={data.isDone}
+        />
       </div>
 
       <div className='col-11'>
@@ -96,12 +131,29 @@ const CheckListItems = ({ data }: CheckListItemType) => {
             onClick={handleTextAreaClick}
             textAreaId={TextAreaComboIds.textarea}
             submitButtonId={TextAreaComboIds.submitButton}
+            onChange={(e) => setCheckListName(e.target.value)}
           />
         ) : (
           <div className='d-flex justify-content-between '>
-            <div className='checkListItems__title'>{checkListName}</div>
+            <div
+              className={classNames('checkListItems__title', {
+                cross: data.isDone
+              })}
+            >
+              {checkListName}
+            </div>
             <div className='checkListItems__options'>
-              <i className='bi bi-three-dots' />
+              <DropDown
+                title='Item Action'
+                buttonId='Checklist-close-dropdown-button'
+                buttonStyle={{ background: 'transparent', padding: 0 }}
+                buttonText={<i className='bi bi-three-dots' />}
+                stopPropagation
+              >
+                <div className='checklist__options'>
+                  <span onClick={handleDeleteCheckList}>Delete</span>
+                </div>
+              </DropDown>
             </div>
           </div>
         )}

@@ -141,16 +141,27 @@
 
         .checkListItems__title {
           color: $task_title_color;
+
+          &.cross {
+            text-decoration: line-through;
+          }
         }
 
         .checkListItems__options {
-          cursor: pointer;
-          padding: 0rem 0.5rem;
-          border-radius: 3px;
-          transition: background-color 0.2s ease-in-out;
+          .checklist__options {
+            cursor: pointer;
+            padding: 0rem 0.5rem;
+            border-radius: 3px;
+            transition: background-color 0.2s ease-in-out;
 
-          &:hover {
-            background-color: rgba(black, 0.05);
+            span {
+              margin: 0.3rem 0rem;
+              display: block;
+            }
+
+            &:hover {
+              background-color: rgba(black, 0.05);
+            }
           }
         }
 

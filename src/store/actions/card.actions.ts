@@ -1,4 +1,11 @@
 import { createAction } from '@reduxjs/toolkit';
+import {
+  addCheckListGroupApi,
+  deleteACheckList,
+  deleteCheckListGroupApi,
+  updateCheckListApi
+} from 'api';
+import { Dispatch } from 'react';
 import { ColumnReducerType } from 'store/reducers/column.reducer';
 import { TaskDataType } from 'store/reducers/task.reducer';
 
@@ -19,6 +26,20 @@ type UpdateColumnAndTaskPosType = {
   draggableId: string;
   source: any;
   destination: any;
+};
+
+type AddCheckListType = {
+  taskId: string;
+  checkListId: string;
+  isDone: boolean;
+  title: string;
+  checkListGroupId: string;
+};
+
+type AddCheckListGroup = {
+  taskId: string;
+  checkListGroupId: string;
+  name: string;
 };
 
 export const createList = createAction<CreateListType>('CREATE_LIST');
@@ -56,3 +77,107 @@ export const updateTaskInfo =
 
 export const updateTaskLabel =
   createAction<{ taskId: string; labels: string[] }>('UPDATE_TASK_LABEL');
+
+export const addCheckList = createAction<AddCheckListType>('ADD_CHECK_LIST');
+export const updateCheckList = createAction<{
+  checkListId: string;
+  isDone: boolean;
+  taskId: string;
+  checkListGroupId: string;
+}>('UPDATE_CHECKLIST');
+export const deleteCheckList = createAction<{
+  checkListId: string;
+  checkListGroupId: string;
+  taskId: string;
+}>('DELETE_CHECKLIST');
+
+export const addCheckListGroup = createAction<AddCheckListGroup>(
+  'ADD_CHECK_LIST_GROUP'
+);
+
+export const deleteCheckListGroup = createAction<{
+  checkListGroupId: string;
+  taskId: string;
+}>('DELETE_CHECK_LIST_GROUP');
+
+export const addCheckListAction = async ({
+  dispatch,
+  data
+}: {
+  dispatch: Dispatch<any>;
+  data: AddCheckListType;
+}) => {
+  dispatch(addCheckList(data));
+
+  await updateCheckListApi(data);
+};
+
+export const updateCheckListAction = async ({
+  dispatch,
+  data
+}: {
+  dispatch: Dispatch<any>;
+  data: AddCheckListType;
+}) => {
+  const { checkListId, isDone, taskId, checkListGroupId } = data;
+
+  dispatch(
+    updateCheckList({
+      checkListId,
+      isDone,
+      taskId,
+      checkListGroupId
+    })
+  );
+
+  await updateCheckListApi(data);
+};
+
+export const addCheckListGroupAction = async ({
+  dispatch,
+  data
+}: {
+  dispatch: Dispatch<any>;
+  data: AddCheckListGroup;
+}) => {
+  dispatch(addCheckListGroup(data));
+  // @ts-expect-error
+  // eslint-disable-next-line no-param-reassign
+  data.title = data.name;
+
+  // @ts-expect-error
+  // eslint-disable-next-line no-param-reassign
+  delete data.name;
+
+  await addCheckListGroupApi(data);
+};
+
+export const deleteCheckListAction = async ({
+  dispatch,
+  data
+}: {
+  dispatch: Dispatch<any>;
+  data: any;
+}) => {
+  dispatch(
+    deleteCheckList({
+      checkListId: data?.checkListId,
+      checkListGroupId: data?.checkListGroupId,
+      taskId: data?.taskId
+    })
+  );
+
+  await deleteACheckList(data?.checkListId);
+};
+
+export const deleteCheckListGroupAction = async ({
+  dispatch,
+  data
+}: {
+  dispatch: Dispatch<any>;
+  data: { checkListGroupId: string; taskId: string };
+}) => {
+  dispatch(deleteCheckListGroup(data));
+
+  await deleteCheckListGroupApi(data.checkListGroupId);
+};

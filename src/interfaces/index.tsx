@@ -33,6 +33,7 @@ export interface DropDownType {
   hideTitle?: boolean;
   render?: (props: any) => JSX.Element;
   buttonStyle?: React.CSSProperties;
+  stopPropagation?: boolean;
 }
 
 export interface LabelSelectionType {

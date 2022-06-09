@@ -76,7 +76,14 @@ const ViewTask = () => {
 
             <DescriptionSection task={task} />
 
-            <CheckList />
+            {task?.checkListGroups &&
+              task.checkListGroups.length > 0 &&
+              task.checkListGroups.map((checkListGroup) => (
+                <CheckList
+                  key={checkListGroup.checkListGroupId}
+                  checkListGroup={checkListGroup}
+                />
+              ))}
 
             <CommentSection />
           </div>
