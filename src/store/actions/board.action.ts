@@ -1,6 +1,7 @@
 import { createAction } from '@reduxjs/toolkit';
 import { addLabelToBoardApi } from 'api';
 import { LabelType } from 'store/reducers/label.reducer';
+import { MemberDataType } from 'store/reducers/members.reducer';
 
 export type BoardPayload = {
   name: string;
@@ -21,6 +22,8 @@ export const addLabels = createAction<LabelType>('ADD_LABELS');
 export const editLabel = createAction<LabelType>('EDIT_LABELS');
 
 export const addBulkLabels = createAction<LabelType[]>('ADD_BULK_LABELS');
+export const addBulkMembers =
+  createAction<MemberDataType[]>('ADD_BULK_MEMBERS');
 
 export const addLabelBatch = async (payload: any) => {
   const { dispatch, name, labelId, backgroundColor, boardId } = payload;

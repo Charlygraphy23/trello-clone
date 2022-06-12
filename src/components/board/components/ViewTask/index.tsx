@@ -8,6 +8,7 @@ import CheckList from './components/CardList';
 import CardOptions from './components/CardOptions';
 import CommentSection from './components/CommentSection';
 import DescriptionSection from './components/DescriptionSection';
+import ViewTaskMemberSection from './components/MemberSection';
 import TaskLabelsShow from './components/TaskLabelsShow';
 import './style.scss';
 
@@ -55,6 +56,7 @@ const ViewTask = () => {
       <ModalBody>
         <textarea
           ref={handleRef}
+          value={task.content}
           className='viewTask__head'
           readOnly={readOnlyTitle}
           onChange={handleHeadChange}
@@ -72,6 +74,10 @@ const ViewTask = () => {
           <div className='col-9'>
             {task.labels && task.labels.length > 0 && (
               <TaskLabelsShow task={task} />
+            )}
+
+            {task.members && task.members?.length > 0 && (
+              <ViewTaskMemberSection task={task} />
             )}
 
             <DescriptionSection task={task} />

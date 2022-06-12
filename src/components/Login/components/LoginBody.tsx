@@ -54,6 +54,8 @@ const LoginBody = ({ state, errors, setState, setErrors }: Props) => {
 
   const googleSuccess = useCallback(
     (_res: GoogleLoginResponse | GoogleLoginResponseOffline) => {
+      console.log(_res);
+
       if (!isGoogleLoginResponse(_res)) {
         return;
       }
@@ -75,6 +77,7 @@ const LoginBody = ({ state, errors, setState, setErrors }: Props) => {
 
   const googleFailure = useCallback(
     (_res: GoogleLoginResponse | GoogleLoginResponseOffline) => {
+      console.error('GOOGLE AUTH ERROR', _res);
       if (!isGoogleLoginResponse(_res)) {
         return;
       }

@@ -3,6 +3,7 @@ import {
   addBulkTaskData,
   addCheckList,
   addCheckListGroup,
+  addMemberToTask,
   addTask,
   deleteCheckList,
   deleteCheckListGroup,
@@ -10,6 +11,13 @@ import {
   updateTaskInfo,
   updateTaskLabel
 } from 'store/actions';
+
+export type TaskMemberType = {
+  firstName: string;
+  lastName: string;
+  _id: string;
+  profileImage: string;
+};
 
 export type TaskCheckListType = {
   _id?: string;
@@ -42,6 +50,7 @@ export type TaskConstant = {
   order?: number;
   labels?: string[];
   checkListGroups?: TaskCheckListGroupType[];
+  members?: TaskMemberType[];
 };
 
 export type TaskDataType = {
@@ -197,6 +206,37 @@ export default createReducer(initialState, (builder) => {
         [taskId]: {
           ...state[taskId],
           checkListGroups: Array.from(groups ?? [])
+        }
+      };
+    })
+    .addCase(addMemberToTask, (state, action) => {
+      const {
+        _id,
+        firstName,
+        lastName,
+        profileImage,
+        taskId,
+        remove = false
+      } = action.payload;
+
+      const members = Array.from(state[taskId]?.members ?? []);
+      const membersAfterFilter = remove
+        ? members.filter((member) => member._id !== _id)
+        : [
+            ...members,
+            {
+              _id,
+              firstName,
+              lastName,
+              profileImage
+            }
+          ];
+
+      return {
+        ...state,
+        [taskId]: {
+          ...state[taskId],
+          members: membersAfterFilter
         }
       };
     });

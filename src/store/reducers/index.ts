@@ -5,6 +5,7 @@ import ColumReducer from './column.reducer';
 import CreateBoardedReducer from './createBoard.reducer';
 import HomeReducer from './home.reducer';
 import LabelReducer from './label.reducer';
+import MemberReducer from './members.reducer';
 import profileReducer from './profile.reducer';
 import TaskReducer from './task.reducer';
 import WorkspaceReducer from './workspace.reducer';
@@ -18,5 +19,6 @@ export default combineReducers({
   TaskReducer,
   ColumReducer,
   BoardReducer,
-  LabelReducer
+  LabelReducer,
+  MemberReducer
 });

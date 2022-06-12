@@ -20,7 +20,7 @@ const CardOptions = ({ task }: Props) => (
       buttonText='Members'
       icon={<i className='bi bi-person' />}
     >
-      <MemberSelection />
+      <MemberSelection task={task} />
     </DropDown>
     <DropDown
       title='Labels'

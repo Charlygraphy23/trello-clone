@@ -1,6 +1,10 @@
 import { Dispatch } from 'react';
 import { DropResult } from 'react-beautiful-dnd';
-import { updateColumnsData, updateTaskAndColumnPosition } from 'store/actions';
+import {
+  updateColumnsData,
+  updateTaskAndColumnPosition,
+  updateTaskInfo
+} from 'store/actions';
 import { ColumnDataType } from 'store/reducers/column.reducer';
 
 type HandleDragEvent = {
@@ -76,6 +80,15 @@ export const handleDragEvent = ({
 
     if (type === 'task') {
       dispatch(
+        updateTaskInfo({
+          taskId: draggableId,
+          data: {
+            listId: destination.droppableId,
+            order: destination.index
+          }
+        })
+      );
+      dispatch(
         updateTaskAndColumnPosition({
           taskId: draggableId,
           listId: destination.droppableId,
@@ -115,6 +128,16 @@ export const handleDragEvent = ({
   };
 
   if (type === 'task') {
+    dispatch(
+      updateTaskInfo({
+        taskId: draggableId,
+        data: {
+          listId: destination.droppableId,
+          order: destination.index
+        }
+      })
+    );
+
     dispatch(
       updateTaskAndColumnPosition({
         taskId: draggableId,

@@ -84,3 +84,10 @@ export const titleLettersConvert = (string: string) =>
   string.slice(0, 1).toUpperCase();
 
 export const getId = () => v4();
+
+export const getTitleName = (firstName: string, lastName: string) => {
+  const firstNameChar = firstName.charAt(0).toUpperCase();
+  const lastNameChar = lastName.charAt(0).toUpperCase();
+
+  return firstNameChar + lastNameChar;
+};

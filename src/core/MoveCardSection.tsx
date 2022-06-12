@@ -1,5 +1,5 @@
 import { handleDragEvent } from 'lib/drag.lib';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { DropResult } from 'react-beautiful-dnd';
 import { useDispatch, useSelector } from 'react-redux';
 import { StoreType } from 'store';
@@ -20,10 +20,6 @@ const MoveCardSection = ({ task }: Props) => {
     (store: StoreType) => store.ColumReducer
   );
 
-  const [selectedColumn, setSelectedColumn] =
-    useState<ColumnElementType | null>(null);
-  const [selectedIndex, setSelectedIndex] = useState(1);
-
   const workspace = useMemo(
     () =>
       list.find(
@@ -31,29 +27,37 @@ const MoveCardSection = ({ task }: Props) => {
       ),
     [data?.workspace, list]
   );
+  const selectedColumn = useMemo(
+    () => (columns ? columns[task.listId] : null),
+    [columns, task.listId]
+  );
+
+  const generatePayload = useCallback(
+    (destination: any): DropResult => ({
+      source: {
+        droppableId: selectedColumn?.listId ?? '',
+        index: task?.order ?? 0
+      },
+      destination: {
+        droppableId: destination.droppableId,
+        index: destination.index
+      },
+      draggableId: task.taskId,
+      reason: 'DROP',
+      type: 'task',
+      mode: 'FLUID'
+    }),
+    [selectedColumn?.listId, task?.order, task.taskId]
+  );
 
   const handleBoardClick = useCallback(
     (columnData: ColumnElementType, hide) => {
-      if (!selectedColumn?.listId) return;
+      const taskIndex = 1;
 
-      const taskIds = columnData?.taskIds ?? [];
-      // if task index is less than active list task length
-      const taskIndex = taskIds.length > selectedIndex ? selectedIndex : 1;
-
-      const payload: DropResult = {
-        source: {
-          droppableId: selectedColumn?.listId,
-          index: task?.order ?? 0
-        },
-        destination: {
-          droppableId: columnData.listId,
-          index: taskIndex - 1
-        },
-        draggableId: task.taskId,
-        reason: 'DROP',
-        type: 'task',
-        mode: 'FLUID'
-      };
+      const payload = generatePayload({
+        droppableId: columnData.listId,
+        index: taskIndex - 1
+      });
 
       handleDragEvent({
         payload,
@@ -63,39 +67,17 @@ const MoveCardSection = ({ task }: Props) => {
         columns
       });
 
-      setSelectedIndex(taskIndex);
-      setSelectedColumn(columns ? columns[columnData.listId] : columnData);
       hide();
     },
-    [
-      columnOrder,
-      columns,
-      dispatch,
-      selectedColumn?.listId,
-      selectedIndex,
-      task?.order,
-      task.taskId
-    ]
+    [columnOrder, columns, dispatch, generatePayload]
   );
 
   const handleIndexClick = useCallback(
     (index: number, hide) => {
-      if (!selectedColumn?.listId) return;
-
-      const payload: DropResult = {
-        source: {
-          droppableId: selectedColumn?.listId,
-          index: task?.order ?? 0
-        },
-        destination: {
-          droppableId: selectedColumn?.listId,
-          index: index - 1
-        },
-        draggableId: task.taskId,
-        reason: 'DROP',
-        type: 'task',
-        mode: 'FLUID'
-      };
+      const payload = generatePayload({
+        droppableId: selectedColumn?.listId ?? '',
+        index: index - 1
+      });
 
       handleDragEvent({
         payload,
@@ -105,40 +87,17 @@ const MoveCardSection = ({ task }: Props) => {
         columns
       });
 
-      const columnData = columns ? columns[task.listId] : null;
-
-      setSelectedIndex(index);
-      setSelectedColumn(columnData);
-
       hide();
     },
     [
       columnOrder,
       columns,
       dispatch,
+      generatePayload,
       selectedColumn?.listId,
-      task.boardId,
-      task.listId,
-      task?.order,
-      task.taskId
+      task.boardId
     ]
   );
-
-  console.log('filter', { selectedColumn });
-  console.log('task', { task });
-
-  useEffect(() => {
-    if (columns) {
-      setSelectedColumn(columns[task.listId]);
-    }
-
-    if (task && columns) {
-      const order = columns[task.listId].taskIds.findIndex(
-        (id) => id === task.taskId
-      );
-      setSelectedIndex(order + 1);
-    }
-  }, []);
 
   return (
     <div className='moveCardSection my-3'>
@@ -205,22 +164,22 @@ const MoveCardSection = ({ task }: Props) => {
           buttonText={
             <div className='moveCardSectionSelect__title'>
               <p className='title'>Position</p>
-              <p className='listName'>{selectedIndex}</p>
+              <p className='listName'>{task?.order ? task.order + 1 : 1}</p>
             </div>
           }
           render={(onClose) => (
             <div className='moveCardSectionSelect__body'>
               {selectedColumn &&
                 selectedColumn?.taskIds &&
-                selectedColumn?.taskIds.map((tasks, i) => (
+                selectedColumn?.taskIds.map((id, i) => (
                   <div
-                    key={tasks}
+                    key={id}
                     className='moveCardSectionSelect__list'
                     onClick={() => handleIndexClick(i + 1, onClose)}
                   >
                     <p className='list__item'>
                       {i + 1}{' '}
-                      {selectedIndex - 1 === i && tasks === task.taskId
+                      {task.order === i && id === task.taskId
                         ? '(Current)'
                         : ''}
                     </p>

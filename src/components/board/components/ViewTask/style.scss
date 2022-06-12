@@ -87,6 +87,30 @@
         }
       }
 
+      .viewTaskMember {
+        flex-direction: column;
+        margin-bottom: 2rem;
+
+        .viewTaskMember__title {
+          color: $text_color_1;
+          font-weight: 600;
+          font-size: 0.8rem;
+          margin-bottom: 0.2rem;
+        }
+
+        .viewTaskMember__addMore {
+          background-color: $card_color;
+          border-radius: 50%;
+          margin-left: 3px;
+          padding: 0.4em 0.5em;
+          cursor: pointer;
+
+          &:hover {
+            background-color: rgba(black, 0.1);
+          }
+        }
+      }
+
       .descriptionSection {
         display: flex;
         flex-direction: column;

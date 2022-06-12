@@ -42,6 +42,15 @@ type AddCheckListGroup = {
   name: string;
 };
 
+type AddTaskMember = {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  profileImage: string;
+  taskId: string;
+  remove?: boolean;
+};
+
 export const createList = createAction<CreateListType>('CREATE_LIST');
 // export const createListSuccess = createAction('CREATE_LIST_SUCCESS');
 // export const createListFailure = createAction('CREATE_LIST_FAILURE');
@@ -99,6 +108,9 @@ export const deleteCheckListGroup = createAction<{
   checkListGroupId: string;
   taskId: string;
 }>('DELETE_CHECK_LIST_GROUP');
+
+export const addMemberToTask =
+  createAction<AddTaskMember>('ADD_MEMBER_TO_TASK');
 
 export const addCheckListAction = async ({
   dispatch,
@@ -180,4 +192,14 @@ export const deleteCheckListGroupAction = async ({
   dispatch(deleteCheckListGroup(data));
 
   await deleteCheckListGroupApi(data.checkListGroupId);
+};
+
+export const addTaskMemberAction = ({
+  dispatch,
+  data
+}: {
+  dispatch: Dispatch<any>;
+  data: AddTaskMember;
+}) => {
+  dispatch(addMemberToTask(data));
 };

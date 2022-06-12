@@ -5,6 +5,7 @@ import { put, takeLatest } from 'redux-saga/effects';
 import {
   addBulkColumnData,
   addBulkLabels,
+  addBulkMembers,
   addBulkTaskData,
   getBoard, getBoardFailure, getBoardSuccess
 } from '../actions';
@@ -43,6 +44,11 @@ function* loadData(action: any) {
             columns : res.columns,
             columnOrder: res.columnOrder
         }
+    });
+
+    yield put({
+      type : addBulkMembers.toString(),
+      payload : res?.members ?? []
     });
 
     yield put({
