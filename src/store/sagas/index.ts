@@ -4,6 +4,7 @@ import { authSaga } from './auth.saga';
 import createBoardSaga from './createBoard.saga';
 import createList from './createList.saga';
 import getBoardSaga from './getBoard.saga';
+import GetCommentSaga from './getComments.saga';
 import homeSaga from './home.saga';
 import profileSaga from './profile.saga';
 import UpdateListTaskPosSage from './updateListTaskPos.saga';
@@ -19,6 +20,7 @@ export default function* rootSaga() {
     createList(),
     addTaskSaga(),
     getBoardSaga(),
-    UpdateListTaskPosSage()
+    UpdateListTaskPosSage(),
+    GetCommentSaga()
   ]);
 }

@@ -1,13 +1,16 @@
 import { createAction } from '@reduxjs/toolkit';
 import {
   addCheckListGroupApi,
+  addCommentToTaskApi,
   deleteACheckList,
   deleteCheckListGroupApi,
+  deleteCommentsApi,
+  toggleMemberTask,
   updateCheckListApi
 } from 'api';
 import { Dispatch } from 'react';
 import { ColumnReducerType } from 'store/reducers/column.reducer';
-import { TaskDataType } from 'store/reducers/task.reducer';
+import { TaskCommentType, TaskDataType } from 'store/reducers/task.reducer';
 
 export type CreateListType = { listId: string; title: string; boardId: string };
 export type AddTaskType = {
@@ -49,6 +52,16 @@ type AddTaskMember = {
   profileImage: string;
   taskId: string;
   remove?: boolean;
+};
+
+type AddMyCommentType = {
+  _id?: string;
+  firstName: string;
+  lastName: string;
+  profileImage: string;
+  message: string;
+  taskId: string;
+  commentId: string;
 };
 
 export const createList = createAction<CreateListType>('CREATE_LIST');
@@ -111,6 +124,20 @@ export const deleteCheckListGroup = createAction<{
 
 export const addMemberToTask =
   createAction<AddTaskMember>('ADD_MEMBER_TO_TASK');
+
+export const addMyComment = createAction<AddMyCommentType>('ADD_MY_COMMENT');
+
+export const loadComments = createAction<{ taskId: string }>('LOAD_COMMENTS');
+export const loadCommentsSuccess = createAction<{
+  taskId: string;
+  data: TaskCommentType[];
+}>('LOAD_COMMENTS_SUCCESS');
+export const loadCommentsFailure = createAction<string>(
+  'LOAD_COMMENTS_FAILURE'
+);
+
+export const deleteComment =
+  createAction<{ taskId: string; commentId: string }>('DELETE_COMMENT');
 
 export const addCheckListAction = async ({
   dispatch,
@@ -202,4 +229,37 @@ export const addTaskMemberAction = ({
   data: AddTaskMember;
 }) => {
   dispatch(addMemberToTask(data));
+
+  toggleMemberTask({
+    taskId: data.taskId,
+    remove: data.remove
+  });
+};
+
+export const addMyCommentAction = ({
+  dispatch,
+  data
+}: {
+  dispatch: Dispatch<any>;
+  data: AddMyCommentType;
+}) => {
+  dispatch(addMyComment(data));
+
+  addCommentToTaskApi({
+    message: data.message,
+    taskId: data.taskId,
+    commentId: data.commentId
+  });
+};
+
+export const deleteCommentAction = ({
+  dispatch,
+  data
+}: {
+  dispatch: Dispatch<any>;
+  data: { taskId: string; commentId: string };
+}) => {
+  dispatch(deleteComment(data));
+
+  deleteCommentsApi(data.commentId);
 };

@@ -15,7 +15,9 @@ const privateAxios = axios.create({
 privateAxios.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
-    toast.error(error.message);
+    // @ts-expect-error
+    const err: any = error?.response?.data?.msg ?? error?.message;
+    toast.error(err);
     if (error.response?.status === 401) {
       userLoggedIn(false);
       window.location.href = '/';

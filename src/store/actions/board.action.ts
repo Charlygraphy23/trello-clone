@@ -1,5 +1,6 @@
 import { createAction } from '@reduxjs/toolkit';
-import { addLabelToBoardApi } from 'api';
+import { addLabelToBoardApi, updateBoardBackgroundApi } from 'api';
+import { Dispatch } from 'react';
 import { LabelType } from 'store/reducers/label.reducer';
 import { MemberDataType } from 'store/reducers/members.reducer';
 
@@ -8,6 +9,11 @@ export type BoardPayload = {
   backgroundColor: string;
   workspace: string;
   [key: string]: string | undefined;
+};
+type ChangeBackgroundType = {
+  backgroundColor: string;
+  boardId: string;
+  workspace: string;
 };
 
 export const createBoard = createAction<BoardPayload>('CREATE_BOARD');
@@ -24,6 +30,8 @@ export const editLabel = createAction<LabelType>('EDIT_LABELS');
 export const addBulkLabels = createAction<LabelType[]>('ADD_BULK_LABELS');
 export const addBulkMembers =
   createAction<MemberDataType[]>('ADD_BULK_MEMBERS');
+export const changeBackground =
+  createAction<ChangeBackgroundType>('CHANGE_BACKGROUND');
 
 export const addLabelBatch = async (payload: any) => {
   const { dispatch, name, labelId, backgroundColor, boardId } = payload;
@@ -35,4 +43,15 @@ export const addLabelBatch = async (payload: any) => {
     backgroundColor,
     boardId
   });
+};
+
+export const changeBackgroundAction = ({
+  dispatch,
+  data
+}: {
+  dispatch: Dispatch<any>;
+  data: ChangeBackgroundType;
+}) => {
+  dispatch(changeBackground(data));
+  updateBoardBackgroundApi(data);
 };

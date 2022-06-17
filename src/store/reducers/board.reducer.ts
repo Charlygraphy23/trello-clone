@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { createReducer } from '@reduxjs/toolkit';
 import {
+  changeBackground,
   getBoard, getBoardFailure, getBoardSuccess
 } from 'store/actions';
 
@@ -10,9 +11,9 @@ type BoardOwnerType = {
   'firstName': string,
   'lastName': string,
   'email': string,
-  'profileImage':string,
-  [key : string] : any
-           
+  'profileImage': string,
+  [key: string]: any
+
 }
 
 // type MembersType = {
@@ -26,20 +27,20 @@ type BoardOwnerType = {
 
 
 export type BoardReducerDataType = {
-    _id: string,
-    name: string,
-    backgroundColor : string,
-    createdBy : string,
-    workspace : string,
-    updatedAt : string,
-    boardOwner : BoardOwnerType | null,
+  _id: string,
+  name: string,
+  backgroundColor: string,
+  createdBy: string,
+  workspace: string,
+  updatedAt: string,
+  boardOwner: BoardOwnerType | null,
 }
 
 
 const initialState = {
   loading: false,
   error: '',
-  data : {} as BoardReducerDataType | null
+  data: {} as BoardReducerDataType | null
 };
 
 export type BoardReducerType = typeof initialState
@@ -55,11 +56,20 @@ export default createReducer(initialState, (builder) => {
       ...state,
       loading: false,
       error: '',
-      data : action.payload ?? null
+      data: action.payload ?? null
     }))
     .addCase(getBoardFailure, (state, action) => ({
       ...state,
       error: action.payload ?? '',
       loading: false
-    }));
+    }))
+    .addCase(changeBackground, (state, action) => {
+      const newState = { ...state };
+      const newData = { ...state.data };
+      newData.backgroundColor = action.payload.backgroundColor;
+      // @ts-expect-error
+      newState.data = newData;
+
+      return newState;
+    });
 });

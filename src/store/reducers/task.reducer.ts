@@ -4,9 +4,12 @@ import {
   addCheckList,
   addCheckListGroup,
   addMemberToTask,
+  addMyComment,
   addTask,
   deleteCheckList,
   deleteCheckListGroup,
+  deleteComment,
+  loadCommentsSuccess,
   updateCheckList,
   updateTaskInfo,
   updateTaskLabel
@@ -17,6 +20,14 @@ export type TaskMemberType = {
   lastName: string;
   _id: string;
   profileImage: string;
+};
+
+export type TaskCommentType = {
+  message: string;
+  taskId: string;
+  time: number;
+  commentId: string;
+  user: TaskMemberType;
 };
 
 export type TaskCheckListType = {
@@ -51,6 +62,7 @@ export type TaskConstant = {
   labels?: string[];
   checkListGroups?: TaskCheckListGroupType[];
   members?: TaskMemberType[];
+  comments?: TaskCommentType[];
 };
 
 export type TaskDataType = {
@@ -237,6 +249,65 @@ export default createReducer(initialState, (builder) => {
         [taskId]: {
           ...state[taskId],
           members: membersAfterFilter
+        }
+      };
+    })
+    .addCase(addMyComment, (state, action) => {
+      const {
+        _id = '',
+        firstName,
+        lastName,
+        profileImage,
+        message,
+        taskId,
+        commentId
+      } = action.payload;
+
+      const comments = Array.from(state[taskId]?.comments ?? []);
+      comments.push({
+        message,
+        taskId,
+        time: Date.now(),
+        commentId,
+        user: {
+          _id,
+          firstName,
+          lastName,
+          profileImage
+        }
+      });
+
+      return {
+        ...state,
+        [taskId]: {
+          ...state[taskId],
+          comments
+        }
+      };
+    })
+    .addCase(loadCommentsSuccess, (state, action) => {
+      const { taskId, data } = action.payload;
+      return {
+        ...state,
+        [taskId]: {
+          ...state[taskId],
+          comments: data
+        }
+      };
+    })
+    .addCase(deleteComment, (state, action) => {
+      const { taskId, commentId } = action.payload;
+
+      const comments =
+        state[taskId].comments?.filter(
+          (comment) => comment.commentId !== commentId
+        ) ?? [];
+
+      return {
+        ...state,
+        [taskId]: {
+          ...state[taskId],
+          comments
         }
       };
     });

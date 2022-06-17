@@ -12,12 +12,20 @@ const Header = () => {
   const { firstName, lastName, profileImage, email } = useSelector(
     (store: StoreType) => store.ProfileReducer
   );
+  const { data } = useSelector((store: StoreType) => store.BoardReducer);
   const { auth, loading: authLoading } = useSelector(
     (store: StoreType) => store.AuthReducer
   );
 
   return (
-    <div className='header'>
+    <header
+      className='header'
+      style={
+        data?.backgroundColor
+          ? { backgroundColor: data.backgroundColor, filter: 'saturate(0.4)' }
+          : {}
+      }
+    >
       <div className='header__brand'>
         <span>Trello</span>
       </div>
@@ -87,7 +95,7 @@ const Header = () => {
           </DropDown>
         )}
       </div>
-    </div>
+    </header>
   );
 };
 

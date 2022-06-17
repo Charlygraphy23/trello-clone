@@ -1,5 +1,5 @@
 import { getTitleName } from 'config/app';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { StoreType } from 'store';
 import { addTaskMemberAction } from 'store/actions';
@@ -68,6 +68,10 @@ const MemberSelection = ({ task }: Props) => {
     },
     [dispatch, task?.members, task?.taskId]
   );
+
+  useEffect(() => {
+    setState(members);
+  }, [members]);
 
   return (
     <div className='memberSelection my-3'>

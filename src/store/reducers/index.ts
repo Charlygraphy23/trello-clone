@@ -2,6 +2,7 @@ import { combineReducers } from '@reduxjs/toolkit';
 import { authReducer } from './auth.reducer';
 import BoardReducer from './board.reducer';
 import ColumReducer from './column.reducer';
+import LoadCommentReducer from './comments.reducer';
 import CreateBoardedReducer from './createBoard.reducer';
 import HomeReducer from './home.reducer';
 import LabelReducer from './label.reducer';
@@ -20,5 +21,6 @@ export default combineReducers({
   ColumReducer,
   BoardReducer,
   LabelReducer,
-  MemberReducer
+  MemberReducer,
+  LoadCommentReducer
 });

@@ -8,6 +8,9 @@
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
+  position: relative;
+  transition: 0.3s ease-in-out;
+  transition-property: background-color, background;
 
   .board__body {
     overflow-y: hidden;

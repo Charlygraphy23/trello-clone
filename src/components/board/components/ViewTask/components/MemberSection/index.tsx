@@ -16,7 +16,7 @@ const ViewTaskMemberSection = ({ task }: Props) => (
       {task.members &&
         task.members.map((member) => (
           <div className='avatar__div' key={member._id}>
-            {getTitleName(member.firstName, member.lastName)}
+            {getTitleName(member?.firstName, member?.lastName)}
           </div>
         ))}
 

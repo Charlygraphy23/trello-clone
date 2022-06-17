@@ -12,7 +12,6 @@ type TaskBodyType = {
 const TaskBody = ({ isDragging, task }: TaskBodyType) => {
   const history = useHistory();
   const location = useLocation();
-  // const {};
 
   const handleClick = useCallback(() => {
     if (!task?.taskId) return;
@@ -30,7 +29,7 @@ const TaskBody = ({ isDragging, task }: TaskBodyType) => {
     >
       {task.labels && task.labels.length > 0 && <TaskLabelChips task={task} />}
       <p>{task.content}</p>
-      <TaskFooter />
+      <TaskFooter task={task} />
     </div>
   );
 };

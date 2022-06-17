@@ -12,3 +12,6 @@ export const addLabelToBoardApi = async (payload: any) =>
 
 export const updateLabelToBoardApi = async (payload: any) =>
   privateAxios.post('/user/update-labels', payload);
+
+export const updateBoardBackgroundApi = async (payload: any) =>
+  privateAxios.put('/user/change-background', payload);

@@ -91,7 +91,7 @@ const ViewTask = () => {
                 />
               ))}
 
-            <CommentSection />
+            <CommentSection task={task} />
           </div>
 
           <div className='col-3 p-0 py-2'>

@@ -26,3 +26,15 @@ export const deleteACheckList = (checkListId: string) =>
 
 export const deleteCheckListGroupApi = (checkListGroupId: string) =>
   privateAxios.delete(`/user/delete-checkList-group/${checkListGroupId}`);
+
+export const toggleMemberTask = (payload: any) =>
+  privateAxios.post('/user/toggle-members-task', payload);
+
+export const addCommentToTaskApi = (payload: any) =>
+  privateAxios.post('/user/add-comment-task', payload);
+
+export const getAllCommentsTaskApi = (taskId: string) =>
+  privateAxios.get(`/user/all-comments-task/${taskId}`);
+
+export const deleteCommentsApi = (commentId: string) =>
+  privateAxios.delete(`/user/delete-comment/${commentId}`);

@@ -8,6 +8,7 @@ import { getBoard } from 'store/actions';
 import { ColumnElementType } from 'store/reducers/column.reducer';
 import AddList from './components/AddList';
 import BoardCards from './components/Cards';
+import SubHeader from './components/subheader';
 import './style.scss';
 
 const BoardIndex = () => {
@@ -51,35 +52,40 @@ const BoardIndex = () => {
             direction='horizontal'
           >
             {(provided) => (
-              <div
-                className=' d-flex justify-content-start board__body'
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-              >
-                {columnOrder.map((columnId, index) => {
-                  const column = columns ? columns[columnId] : null;
-                  const tasks: any = column?.taskIds
-                    ? column?.taskIds.map((taskId: string) => taskList[taskId])
-                    : [];
+              <>
+                <SubHeader />
+                <div
+                  className=' d-flex justify-content-start board__body'
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                >
+                  {columnOrder.map((columnId, index) => {
+                    const column = columns ? columns[columnId] : null;
+                    const tasks: any = column?.taskIds
+                      ? column?.taskIds.map(
+                          (taskId: string) => taskList[taskId]
+                        )
+                      : [];
 
-                  return (
-                    column?.listId && (
-                      <BoardCards
-                        index={index}
-                        key={column?.listId}
-                        column={column}
-                        tasks={tasks}
-                        setShowAddCard={setShowAddCard}
-                        showAddCard={showAddCard?.listId === column?.listId}
-                        boardId={id}
-                      />
-                    )
-                  );
-                })}
+                    return (
+                      column?.listId && (
+                        <BoardCards
+                          index={index}
+                          key={column?.listId}
+                          column={column}
+                          tasks={tasks}
+                          setShowAddCard={setShowAddCard}
+                          showAddCard={showAddCard?.listId === column?.listId}
+                          boardId={id}
+                        />
+                      )
+                    );
+                  })}
 
-                {provided.placeholder}
-                <AddList boardId={id} />
-              </div>
+                  {provided.placeholder}
+                  <AddList boardId={id} />
+                </div>
+              </>
             )}
           </Droppable>
         </DragDropContext>

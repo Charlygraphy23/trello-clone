@@ -2,6 +2,7 @@ import { createReducer } from '@reduxjs/toolkit';
 import {
   addBoardToWorkSpace,
   addWorkspaceToHome,
+  changeBackground,
   homeLoad,
   homeLoadFailure,
   homeLoadSuccess
@@ -60,6 +61,29 @@ export default createReducer(initialState, (builder) => {
         if (workspaceData._id === action.payload?.workspace) {
           const listBoard = workspaceData?.boards ?? [];
           listBoard.push(action.payload);
+
+          // eslint-disable-next-line no-param-reassign
+          workspaceData.boards = listBoard;
+
+          return workspaceData;
+        }
+
+        return workspaceData;
+      });
+    })
+    .addCase(changeBackground, (state, action) => {
+      state.list.map((workspaceData) => {
+        if (workspaceData._id === action.payload?.workspace) {
+          const listBoard = workspaceData?.boards ?? [];
+          listBoard.map((board) => {
+            if (board.id === action.payload.boardId)
+              return {
+                ...board,
+                backgroundColor: action.payload.backgroundColor
+              };
+
+            return board;
+          });
 
           // eslint-disable-next-line no-param-reassign
           workspaceData.boards = listBoard;
