@@ -1,5 +1,5 @@
-import { titleLettersConvert } from 'config/app';
 import DropDown from 'core/DropDown';
+import ProfileImageContainer from 'core/ProfileImageContainer';
 import { useSelector } from 'react-redux';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { StoreType } from 'store';
@@ -74,15 +74,11 @@ const Header = () => {
             buttonClass='avatar__div'
             hideTitle
             buttonText={
-              profileImage ? (
-                <img src={profileImage} alt='dp' />
-              ) : (
-                <div className=''>
-                  <span>{`${titleLettersConvert(
-                    firstName
-                  )}${titleLettersConvert(lastName)}`}</span>
-                </div>
-              )
+              <ProfileImageContainer
+                firstName={firstName}
+                lastName={lastName}
+                profileImage={profileImage}
+              />
             }
             className='header__dropdown'
           >

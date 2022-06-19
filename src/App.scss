@@ -154,6 +154,18 @@ input[type="password"] {
   color: $task_title_color;
   font-size: 0.9rem;
 }
+.avatar__img {
+  width: 2.4em;
+  height: 2.4em;
+  border-radius: 50%;
+  padding: 0.1em;
+  overflow: hidden;
+  object-fit: cover;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .dropdownComponent {
   position: relative;
@@ -225,6 +237,9 @@ input[type="password"] {
       }
 
       .avatar__div {
+        margin-right: 0.5rem;
+      }
+      .avatar__img {
         margin-right: 0.5rem;
       }
 

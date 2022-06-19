@@ -1,4 +1,4 @@
-import { getTitleName } from 'config/app';
+import ProfileImageContainer from 'core/ProfileImageContainer';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { StoreType } from 'store';
@@ -28,9 +28,12 @@ const LeftSubHeaderSection = () => {
       <div className='memberList'>
         {members &&
           members.map((member) => (
-            <div className='avatar__div'>
-              {getTitleName(member.user.firstName, member.user.lastName)}
-            </div>
+            <ProfileImageContainer
+              key={member._id}
+              firstName={member.user.firstName}
+              lastName={member.user.lastName}
+              profileImage={member.user.profileImage ?? ''}
+            />
           ))}
       </div>
     </section>

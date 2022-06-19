@@ -1,6 +1,6 @@
 import { signOut } from 'api';
-import { titleLettersConvert } from 'config/app';
-import React, { useCallback } from 'react';
+import ProfileImageContainer from 'core/ProfileImageContainer';
+import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { signOutAction } from 'store/actions';
@@ -35,15 +35,11 @@ const AvatarDropdown = ({
   return (
     <div className='avatarDropdown'>
       <section className='profile__details'>
-        <div className='avatar__div'>
-          {profileImage ? (
-            <img src={profileImage} alt='dp' />
-          ) : (
-            <span>{`${titleLettersConvert(firstName)}${titleLettersConvert(
-              lastName
-            )}`}</span>
-          )}
-        </div>
+        <ProfileImageContainer
+          firstName={firstName}
+          lastName={lastName}
+          profileImage={profileImage ?? ''}
+        />
 
         <div className='profile__info'>
           <p>{`${firstName} ${lastName}`}</p>

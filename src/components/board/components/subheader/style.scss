@@ -31,16 +31,26 @@
                     margin-left: -10px;
                 }
             }
+
+            .avatar__img {
+                font-size: 0.8rem;
+                box-shadow: 0px 0px 20px rgba(black, 0.1);
+                padding: 0;
+                border: 2px solid rgba(white, 1);
+                &:not(:first-child) {
+                    margin-left: -10px;
+                }
+            }
         }
     }
 
     .right-sub-header {
         .more__option {
-            position: absolute;
+            position: fixed;
             top: 0;
             width: 300px;
             height: 100%;
-            background-color: $card_color;
+            background-color: $task_color-hover;
             right: -100%;
             pointer-events: none;
             transition: all 0.3s ease-in-out;
@@ -129,7 +139,7 @@
                     top: 0;
                     pointer-events: none;
                     transition: all 0.3s ease-in-out;
-                    background: $card_color;
+                    background: $task_color-hover;
 
                     &.show {
                         pointer-events: auto;
@@ -156,6 +166,85 @@
 
                                 &:hover {
                                     opacity: 0.8;
+                                }
+                            }
+                        }
+
+                        .aboutBoard {
+                            padding: 0.5rem 1rem;
+
+                            .title {
+                                display: flex;
+                                font-weight: 600;
+                                font-size: 1rem;
+
+                                i {
+                                    margin-right: 10px;
+                                    font-weight: inherit;
+                                }
+                            }
+
+                            .aboutBoard__info {
+                                display: flex;
+                                width: 100%;
+                                align-items: center;
+                                flex-direction: column;
+
+                                .image__container {
+                                    position: relative;
+                                    margin-bottom: 1rem;
+                                    display: inline-block;
+
+                                    .imageLoader {
+                                        background-color: rgba(white, 1);
+                                        position: absolute;
+                                        top: 0;
+                                        left: 0;
+                                        width: 100%;
+                                        height: 100%;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        border-radius: 50%;
+                                    }
+
+                                    label {
+                                        position: absolute;
+                                        bottom: 0;
+                                        left: 80%;
+                                        background-color: white;
+                                        color: black;
+                                        border-radius: 50%;
+                                        width: 1.4rem;
+                                        height: 1.4rem;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        box-shadow: 0px 0px 30px rgba(black, 0.1);
+                                        cursor: pointer;
+                                        border: 1px solid transparent;
+                                        transition: 0.3s all ease-in-out;
+
+                                        &:hover {
+                                            border-color: gray;
+                                        }
+                                    }
+
+                                    .avatar__div {
+                                        font-size: 1.5rem;
+                                        border: 2px solid white;
+                                    }
+                                    .avatar__img {
+                                        font-size: 1.5rem;
+                                        border: 2px solid white;
+                                    }
+                                }
+
+                                .form__group {
+                                    input {
+                                        margin-bottom: 10px;
+                                        border-radius: 5px;
+                                    }
                                 }
                             }
                         }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import LoginBody from './components/LoginBody';
 import './style.scss';
 

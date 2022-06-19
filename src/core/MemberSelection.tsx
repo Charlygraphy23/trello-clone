@@ -1,10 +1,10 @@
-import { getTitleName } from 'config/app';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { StoreType } from 'store';
 import { addTaskMemberAction } from 'store/actions';
 import { MemberDataType } from 'store/reducers/members.reducer';
 import { TaskConstant } from 'store/reducers/task.reducer';
+import ProfileImageContainer from './ProfileImageContainer';
 
 type Props = {
   task?: TaskConstant;
@@ -87,11 +87,12 @@ const MemberSelection = ({ task }: Props) => {
               key={member._id}
               onClick={() => handleMemberClick(member)}
             >
-              {!member.user.profileImage && (
-                <div className='avatar__div'>
-                  {getTitleName(member.user.firstName, member.user.lastName)}
-                </div>
-              )}
+              <ProfileImageContainer
+                firstName={member.user.firstName}
+                lastName={member.user.lastName}
+                profileImage={member.user.profileImage ?? ''}
+              />
+
               <p>{`${member.user.firstName} ${member.user.lastName}`}</p>
 
               {task &&

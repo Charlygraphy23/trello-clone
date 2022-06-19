@@ -1,7 +1,6 @@
-import { getTitleName } from 'config/app';
 import DropDown from 'core/DropDown';
 import MemberSelection from 'core/MemberSelection';
-import React from 'react';
+import ProfileImageContainer from 'core/ProfileImageContainer';
 import { TaskConstant } from 'store/reducers/task.reducer';
 
 type Props = {
@@ -15,9 +14,11 @@ const ViewTaskMemberSection = ({ task }: Props) => (
     <div className='d-flex align-items-center'>
       {task.members &&
         task.members.map((member) => (
-          <div className='avatar__div' key={member._id}>
-            {getTitleName(member?.firstName, member?.lastName)}
-          </div>
+          <ProfileImageContainer
+            firstName={member.firstName}
+            lastName={member.lastName}
+            profileImage={member.profileImage ?? ''}
+          />
         ))}
 
       <DropDown

@@ -1,9 +1,10 @@
 /* eslint-disable prettier/prettier */
 import { createReducer } from '@reduxjs/toolkit';
 import {
-    profileLoad,
-    profileLoadFailure,
-    profileLoadSuccess
+  profileLoad,
+  profileLoadFailure,
+  profileLoadSuccess,
+  updateProfile
 } from 'store/actions/user.action';
 
 const initialState = {
@@ -57,7 +58,15 @@ const profileReducer = createReducer(initialState, (builder) => {
       ...state,
       loading: false,
       error: action.payload ?? ''
-    }));
+    }))
+    .addCase(updateProfile, (state, action) => {
+      const { firstName, lastName, email, profileImage } = action.payload;
+
+      return {
+        ...state,
+        firstName, lastName, email, profileImage
+      };
+    });
 });
 
 export default profileReducer;

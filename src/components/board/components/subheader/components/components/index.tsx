@@ -1,7 +1,9 @@
 import classNames from 'classnames';
+import LabelSelection from 'core/LabelSelection';
 import { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { StoreType } from 'store';
+import AboutBoard from './components/AboutBoard';
 import ChangeBackground from './components/ChangeBackground';
 
 type Props = {
@@ -16,7 +18,7 @@ const MoreOption = ({ hide }: Props) => {
   const generateTitle = useCallback(() => {
     switch (route) {
       case 'board':
-        return 'Demo';
+        return 'About this board';
       case 'background':
         return 'Colors';
       case 'labels':
@@ -27,7 +29,7 @@ const MoreOption = ({ hide }: Props) => {
   }, [route]);
 
   return (
-    <section style={{ flex: 1, overflow: 'auto' }}>
+    <section style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
       <div className='head'>
         {route && (
           <i className='bi bi-chevron-left' onClick={() => setRoute('')} />
@@ -64,11 +66,15 @@ const MoreOption = ({ hide }: Props) => {
           })}
         >
           <div className='panel__body'>
-            {route === 'board' && <></>}
+            {route === 'board' && <AboutBoard />}
             {route === 'background' && (
               <ChangeBackground boardData={boardData} />
             )}
-            {route === 'labels' && <></>}
+            {route === 'labels' && (
+              <div className='p-2'>
+                <LabelSelection clickOnEdit boardId='asdasdas' />
+              </div>
+            )}
           </div>
         </div>
       </div>

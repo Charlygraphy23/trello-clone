@@ -3,6 +3,7 @@
 export * from './auth';
 export * from './board';
 export * from './card';
+export * from './cloudinary';
 export * from './home';
 export * from './profile';
 export * from './signup';
