@@ -1,9 +1,11 @@
 import BoardIndex from 'components/board';
 import Header from 'components/header';
 import Home from 'components/Home';
+import InvalidPage from 'components/invalid/InvalidPage';
+import InvitePage from 'components/invite';
 import { memo, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { profileLoad } from 'store/actions/user.action';
 import Auth from './auth';
 
@@ -23,9 +25,10 @@ const PrivateRoutes = () => {
       <Header />
 
       <Switch>
+        <Auth path='/invite' component={InvitePage} />
         <Auth path='/home' component={Home} />
         <Auth path='/board/:id' component={BoardIndex} />
-        {/* <Route component={BoardIndex} /> */}
+        <Route component={InvalidPage} />
       </Switch>
     </>
   );

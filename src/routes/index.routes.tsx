@@ -26,6 +26,7 @@ const RouteIndex = () => {
         <PublicRoutes exact path='/' component={LoginPage} />
         <PublicRoutes path='/signup' component={SignUpPage} />
         <PublicRoutes path='/check-email' component={CheckYourMail} />
+
         <Route component={PrivateRoute} />
       </Switch>
 
