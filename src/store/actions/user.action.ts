@@ -8,6 +8,8 @@ type UpdateProfile = {
     lastName: string;
     email: string;
     profileImage: string;
+    id: string,
+    hasImageChange: boolean
 };
 
 export const profileLoad = createAction('PROFILE_LOAD');

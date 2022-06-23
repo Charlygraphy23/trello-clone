@@ -1,20 +1,24 @@
 import classNames from 'classnames';
 import LabelSelection from 'core/LabelSelection';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { StoreType } from 'store';
 import AboutBoard from './components/AboutBoard';
 import ChangeBackground from './components/ChangeBackground';
 
 type Props = {
   hide: () => void;
+  parentShow: boolean;
 };
 
-const MoreOption = ({ hide }: Props) => {
+const MoreOption = ({ hide, parentShow }: Props) => {
   const [route, setRoute] = useState('');
   const { data: boardData } = useSelector(
     (store: StoreType) => store.BoardReducer
   );
+
+  const { id } = useParams<{ id: string }>();
   const generateTitle = useCallback(() => {
     switch (route) {
       case 'board':
@@ -28,8 +32,15 @@ const MoreOption = ({ hide }: Props) => {
     }
   }, [route]);
 
+  useEffect(
+    () => () => {
+      setRoute('');
+    },
+    [parentShow]
+  );
+
   return (
-    <section style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
+    <section style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
       <div className='head'>
         {route && (
           <i className='bi bi-chevron-left' onClick={() => setRoute('')} />
@@ -38,7 +49,7 @@ const MoreOption = ({ hide }: Props) => {
         <i className='bi bi-x-lg ' onClick={hide} />
       </div>
 
-      <div style={{ position: 'relative' }}>
+      <div style={{ position: 'relative', height: '100%' }}>
         <div className='info'>
           <div className='info__menu' onClick={() => setRoute('board')}>
             <i className='bi bi-kanban-fill ' />
@@ -72,7 +83,7 @@ const MoreOption = ({ hide }: Props) => {
             )}
             {route === 'labels' && (
               <div className='p-2'>
-                <LabelSelection clickOnEdit boardId='asdasdas' />
+                <LabelSelection clickOnEdit boardId={id} />
               </div>
             )}
           </div>

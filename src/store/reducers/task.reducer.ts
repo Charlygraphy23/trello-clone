@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable prettier/prettier */
 import { createReducer } from '@reduxjs/toolkit';
 import {
   addBulkTaskData,
@@ -9,6 +11,7 @@ import {
   deleteCheckList,
   deleteCheckListGroup,
   deleteComment,
+  deleteLabel,
   loadCommentsSuccess,
   updateCheckList,
   updateTaskInfo,
@@ -63,6 +66,7 @@ export type TaskConstant = {
   checkListGroups?: TaskCheckListGroupType[];
   members?: TaskMemberType[];
   comments?: TaskCommentType[];
+  taskCommentCount?: number
 };
 
 export type TaskDataType = {
@@ -235,14 +239,14 @@ export default createReducer(initialState, (builder) => {
       const membersAfterFilter = remove
         ? members.filter((member) => member._id !== _id)
         : [
-            ...members,
-            {
-              _id,
-              firstName,
-              lastName,
-              profileImage
-            }
-          ];
+          ...members,
+          {
+            _id,
+            firstName,
+            lastName,
+            profileImage
+          }
+        ];
 
       return {
         ...state,
@@ -281,7 +285,8 @@ export default createReducer(initialState, (builder) => {
         ...state,
         [taskId]: {
           ...state[taskId],
-          comments
+          comments,
+          taskCommentCount: comments.length
         }
       };
     })
@@ -307,8 +312,34 @@ export default createReducer(initialState, (builder) => {
         ...state,
         [taskId]: {
           ...state[taskId],
-          comments
+          comments,
+          taskCommentCount: comments.length
         }
       };
+    })
+    .addCase(deleteLabel, (state, action) => {
+      const { labelId } = action.payload;
+
+      let newState = {};
+
+
+      Object.values(state).forEach((value) => {
+
+        const task = { ...value };
+
+        if (task.labels && task.labels.includes(labelId)) {
+
+          task.labels = task?.labels?.filter(id => id !== labelId);
+        }
+
+
+        newState = {
+          ...newState,
+          [value.taskId]: { ...task }
+        };
+      });
+
+      return newState;
+
     });
 });

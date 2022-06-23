@@ -14,7 +14,7 @@ const LeftSubHeaderSection = () => {
 
   return (
     <section className='left_sub_header'>
-      <div className='white__card' style={{ marginRight: '10px' }}>
+      <div className='white__card boardIcon'>
         <i className='bi bi-card-text' style={{ marginRight: '5px' }} />
         <p>Board</p>
       </div>

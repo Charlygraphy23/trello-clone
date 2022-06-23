@@ -1,5 +1,6 @@
 /* eslint-disable new-cap */
 
+import classNames from 'classnames';
 import isInViewport from 'hooks/isInViewport';
 import { DropDownType } from 'interfaces';
 import {
@@ -87,29 +88,29 @@ const DropDown = ({
         </span>
       </button>
 
-      {showDropDown && (
-        <div
-          ref={dropdownBodyRef}
-          className='dropdown__body'
-          aria-labelledby={buttonId}
-          style={{
-            left: isOutsideViewport ? 0 : 'auto',
-            right: isOutsideViewport ? 'auto' : 0
-          }}
-        >
-          {!hideTitle && (
-            <div className='dropdown__title'>
-              <span>{title}</span>{' '}
-              <i
-                onClick={onClose}
-                className='bi bi-x'
-                style={{ cursor: 'pointer' }}
-              />
-            </div>
-          )}
-          {render ? render(onClose) : children}
-        </div>
-      )}
+      <div
+        ref={dropdownBodyRef}
+        className={classNames('dropdown__body', {
+          show: showDropDown
+        })}
+        aria-labelledby={buttonId}
+        style={{
+          left: isOutsideViewport ? 0 : 'auto',
+          right: isOutsideViewport ? 'auto' : 0
+        }}
+      >
+        {!hideTitle && (
+          <div className='dropdown__title'>
+            <span>{title}</span>{' '}
+            <i
+              onClick={onClose}
+              className='bi bi-x'
+              style={{ cursor: 'pointer' }}
+            />
+          </div>
+        )}
+        {render ? render(onClose) : children}
+      </div>
     </div>
   );
 };

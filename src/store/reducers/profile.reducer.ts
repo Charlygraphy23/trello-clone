@@ -17,7 +17,8 @@ const initialState = {
   profileImage: '',
   isRegistered: false,
   createdAt: '',
-  updatedAt: ''
+  updatedAt: '',
+  _id: ''
 };
 
 export type ProfileType = typeof initialState;
@@ -38,7 +39,8 @@ const profileReducer = createReducer(initialState, (builder) => {
         profileImage = '',
         isRegistered = false,
         createdAt = '',
-        updatedAt = ''
+        updatedAt = '',
+        _id = ''
       }: any = action.payload;
       return {
         ...state,
@@ -51,7 +53,8 @@ const profileReducer = createReducer(initialState, (builder) => {
         profileImage,
         isRegistered,
         createdAt,
-        updatedAt
+        updatedAt,
+        _id
       };
     })
     .addCase(profileLoadFailure, (state, action) => ({

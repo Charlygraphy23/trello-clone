@@ -1,7 +1,8 @@
 import { uploadFileToCloudinary } from 'api';
+import classNames from 'classnames';
 import Button from 'components/button';
 import ProfileImageContainer from 'core/ProfileImageContainer';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BounceLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
@@ -12,6 +13,8 @@ import { updateProfileAction } from 'store/actions';
 const AboutBoard = () => {
   const profile = useSelector((store: StoreType) => store.ProfileReducer);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [hasSaved, setHasSaved] = useState(true);
+  const [hasImageChange, setHasImageChange] = useState(false);
   const dispatch = useDispatch();
   const [user, setUser] = useState({
     firstName: profile.firstName,
@@ -21,6 +24,7 @@ const AboutBoard = () => {
   });
 
   const handleChange = useCallback((e: any) => {
+    setHasSaved(false);
     setUser((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value
@@ -28,18 +32,23 @@ const AboutBoard = () => {
   }, []);
 
   const handleSave = useCallback(() => {
+    setHasSaved(true);
     updateProfileAction({
       dispatch,
-      data: user
+      data: {
+        ...user,
+        id: profile._id,
+        hasImageChange
+      }
     });
-  }, [dispatch, user]);
+  }, [dispatch, user, profile._id, hasImageChange]);
 
   const handleFileChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
 
       if (!file) return toast.warn('No File Selected');
-
+      setHasSaved(false);
       setUploadingImage(true);
       const data = await uploadFileToCloudinary({
         folder: 'rello/profile',
@@ -48,11 +57,25 @@ const AboutBoard = () => {
 
       setUploadingImage(false);
       const url = data.data?.secure_url;
-
+      setHasImageChange(true);
       setUser((prevState) => ({
         ...prevState,
         profileImage: url
       }));
+    },
+    []
+  );
+
+  useEffect(
+    () => () => {
+      setUploadingImage(false);
+      setHasSaved(true);
+      setUser({
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        email: profile.email,
+        profileImage: profile.profileImage
+      });
     },
     []
   );
@@ -119,11 +142,16 @@ const AboutBoard = () => {
           />
           <Button
             type='submit'
-            className='bg__primary  text-white w-100 mt-2'
+            className={classNames('bg__primary text-white w-100 mt-2', {
+              'bg-success': hasSaved
+            })}
             onClick={handleSave}
             disabled={uploadingImage}
           >
-            Save
+            <>
+              <span>{hasSaved ? 'Saved' : 'Save'}</span>
+              {hasSaved && <i className='bi bi-check-lg' />}
+            </>
           </Button>
         </div>
       </div>

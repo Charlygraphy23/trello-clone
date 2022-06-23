@@ -25,7 +25,7 @@ const RightSubHeaderSection = () => {
         })}
       >
         <div className='more__option-body'>
-          <MoreOption hide={hide} />
+          <MoreOption hide={hide} parentShow={show} />
         </div>
       </div>
     </section>

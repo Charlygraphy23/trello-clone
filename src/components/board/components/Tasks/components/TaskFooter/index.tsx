@@ -46,10 +46,12 @@ const TaskFooter = ({ task }: Props) => {
           </p>
         )}
 
-        {task?.comments && task?.comments.length > 0 && (
+        {task?.taskCommentCount && task?.taskCommentCount > 0 ? (
           <p className='light__color '>
-            <i className='bi bi-chat' /> {task?.comments?.length}
+            <i className='bi bi-chat' /> {task?.taskCommentCount}
           </p>
+        ) : (
+          ''
         )}
       </div>
 

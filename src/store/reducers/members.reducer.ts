@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { createReducer } from '@reduxjs/toolkit';
-import { addBulkMembers } from 'store/actions';
+import { addBulkMembers, updateProfile } from 'store/actions';
 
 export type UserType = {
   _id?: string;
@@ -25,8 +25,29 @@ const initialState = {
 export type MemberReducerType = typeof initialState;
 
 export default createReducer(initialState, (builder) => {
-  builder.addCase(addBulkMembers, (state, action) => ({
-    ...state,
-    members: action.payload
-  }));
+  builder
+    .addCase(addBulkMembers, (state, action) => ({
+      ...state,
+      members: action.payload
+    }))
+    .addCase(updateProfile, (state, action) => {
+      const { email, firstName, lastName, profileImage, id } = action.payload;
+
+      const userIndex = state.members.findIndex((user) => user.user._id === id);
+
+      if (userIndex === -1) return state;
+
+      state.members[userIndex] = {
+        ...state.members[userIndex],
+        user: {
+          ...state.members[userIndex].user,
+          email,
+          firstName,
+          lastName,
+          profileImage
+        }
+      };
+
+      return state;
+    });
 });

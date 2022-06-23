@@ -95,7 +95,11 @@ const LabelSelection = ({
                 buttonClass='labelSelection__button'
                 buttonStyle={{ backgroundColor: `${lbl.backgroundColor}` }}
                 render={(onClose) => (
-                  <ChangeLabelSection boardId={boardId} hide={onClose} />
+                  <ChangeLabelSection
+                    boardId={boardId}
+                    hide={onClose}
+                    data={lbl}
+                  />
                 )}
               />
             ) : (
@@ -119,7 +123,11 @@ const LabelSelection = ({
               buttonText={<i className='bi bi-pencil labelSelection__edit' />}
               buttonClass='labelSelection__editButton'
               render={(onClose) => (
-                <ChangeLabelSection boardId={boardId} hide={onClose} />
+                <ChangeLabelSection
+                  boardId={boardId}
+                  hide={onClose}
+                  data={lbl}
+                />
               )}
             />
           </div>

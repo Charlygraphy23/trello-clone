@@ -1,6 +1,12 @@
 /* eslint-disable no-param-reassign */
 import { createReducer } from '@reduxjs/toolkit';
-import { addBulkLabels, addLabels, editLabel } from 'store/actions';
+import {
+  addBulkLabels,
+  addLabels,
+  deleteLabel,
+  editLabel,
+  updateLabel
+} from 'store/actions';
 
 export type LabelType = {
   name: string;
@@ -51,5 +57,35 @@ export default createReducer(initialState, (builder) => {
     .addCase(addBulkLabels, (state, action) => ({
       ...state,
       labels: [...state.labels, ...action.payload]
-    }));
+    }))
+    .addCase(updateLabel, (state, action) => {
+      const { name, backgroundColor, labelId } = action.payload;
+
+      const labelIndex = state.labels.findIndex(
+        (label) => label.labelId === labelId
+      );
+
+      if (labelIndex === -1) return state;
+
+      state.labels[labelIndex] = {
+        ...state.labels[labelIndex],
+        name,
+        backgroundColor,
+        labelId
+      };
+
+      return state;
+    })
+    .addCase(deleteLabel, (state, action) => {
+      const { labelId } = action.payload;
+
+      const updateLabels = state.labels.filter(
+        (label) => label.labelId !== labelId
+      );
+
+      return {
+        ...state,
+        labels: updateLabels
+      };
+    });
 });

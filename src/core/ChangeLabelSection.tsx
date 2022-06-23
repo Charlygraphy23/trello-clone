@@ -2,23 +2,30 @@
 import { LABEL_COLORS } from 'config/app';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { addLabelBatch } from 'store/actions';
+import {
+  addLabelBatch,
+  deleteLabelAction,
+  updateLabelAction
+} from 'store/actions';
+import { LabelType } from 'store/reducers/label.reducer';
 import { v4 } from 'uuid';
 
 type ChangeLabelSectionType = {
   create?: boolean;
   boardId: string;
   hide?: () => void;
+  data?: LabelType;
 };
 
 const ChangeLabelSection = ({
   create,
   boardId,
-  hide
+  hide,
+  data
 }: ChangeLabelSectionType) => {
   const dispatch = useDispatch();
-  const [name, setName] = useState('');
-  const [color, setColor] = useState('');
+  const [name, setName] = useState(data?.name);
+  const [color, setColor] = useState(data?.backgroundColor);
 
   const handleCreate = useCallback(async () => {
     if (!name || !color || !boardId) return;
@@ -33,6 +40,30 @@ const ChangeLabelSection = ({
       boardId
     });
   }, [color, dispatch, hide, name, boardId]);
+
+  const handleUpdate = useCallback(() => {
+    updateLabelAction({
+      dispatch,
+      data: {
+        name: name ?? '',
+        backgroundColor: color ?? '',
+        labelId: data?.labelId ?? ''
+      }
+    });
+
+    if (hide) hide();
+  }, [color, data?.labelId, dispatch, name, hide]);
+
+  const handleDelete = useCallback(() => {
+    deleteLabelAction({
+      dispatch,
+      data: {
+        labelId: data?.labelId ?? ''
+      }
+    });
+
+    if (hide) hide();
+  }, [data?.labelId, dispatch, hide]);
 
   useEffect(
     () => () => {
@@ -68,11 +99,19 @@ const ChangeLabelSection = ({
 
       {!create && (
         <div className='d-flex justify-content-between align-items-center mt-3'>
-          <button type='button' className='bg__primary text-white'>
+          <button
+            type='button'
+            className='bg__primary text-white'
+            onClick={handleUpdate}
+          >
             Save
           </button>
 
-          <button type='button' className='bg__danger text-white'>
+          <button
+            type='button'
+            className='bg__danger text-white'
+            onClick={handleDelete}
+          >
             Delete
           </button>
         </div>

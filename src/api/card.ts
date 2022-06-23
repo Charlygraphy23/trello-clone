@@ -38,3 +38,6 @@ export const getAllCommentsTaskApi = (taskId: string) =>
 
 export const deleteCommentsApi = (commentId: string) =>
   privateAxios.delete(`/user/delete-comment/${commentId}`);
+
+export const deleteTaskLabelApi = (labelId: string) =>
+  privateAxios.post('/user/delete-labels', { labelId });

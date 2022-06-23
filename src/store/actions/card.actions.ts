@@ -5,8 +5,10 @@ import {
   deleteACheckList,
   deleteCheckListGroupApi,
   deleteCommentsApi,
+  deleteTaskLabelApi,
   toggleMemberTask,
-  updateCheckListApi
+  updateCheckListApi,
+  updateLabelToBoardApi
 } from 'api';
 import { Dispatch } from 'react';
 import { ColumnReducerType } from 'store/reducers/column.reducer';
@@ -64,6 +66,12 @@ type AddMyCommentType = {
   commentId: string;
 };
 
+type UpdateLabelType = {
+  labelId: string;
+  backgroundColor: string;
+  name: string;
+};
+
 export const createList = createAction<CreateListType>('CREATE_LIST');
 // export const createListSuccess = createAction('CREATE_LIST_SUCCESS');
 // export const createListFailure = createAction('CREATE_LIST_FAILURE');
@@ -99,6 +107,8 @@ export const updateTaskInfo =
 
 export const updateTaskLabel =
   createAction<{ taskId: string; labels: string[] }>('UPDATE_TASK_LABEL');
+export const updateLabel = createAction<UpdateLabelType>('UPDATE_LABEL');
+export const deleteLabel = createAction<{ labelId: string }>('DELETE_LABEL');
 
 export const addCheckList = createAction<AddCheckListType>('ADD_CHECK_LIST');
 export const updateCheckList = createAction<{
@@ -262,4 +272,27 @@ export const deleteCommentAction = ({
   dispatch(deleteComment(data));
 
   deleteCommentsApi(data.commentId);
+};
+
+export const updateLabelAction = ({
+  dispatch,
+  data
+}: {
+  dispatch: Dispatch<any>;
+  data: UpdateLabelType;
+}) => {
+  dispatch(updateLabel(data));
+  updateLabelToBoardApi(data);
+};
+
+export const deleteLabelAction = ({
+  dispatch,
+  data
+}: {
+  dispatch: Dispatch<any>;
+  data: { labelId: string };
+}) => {
+  dispatch(deleteLabel(data));
+
+  deleteTaskLabelApi(data.labelId);
 };
