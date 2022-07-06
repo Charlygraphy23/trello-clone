@@ -1,4 +1,5 @@
 import { inviteApi } from 'api';
+import Button from 'components/button';
 import DropDown from 'core/DropDown';
 import ProfileImageContainer from 'core/ProfileImageContainer';
 import { useCallback, useMemo, useRef, useState } from 'react';
@@ -17,19 +18,23 @@ const LeftSubHeaderSection = () => {
     [data?.workspace, list]
   );
 
-  const handleShare = useCallback(async () => {
-    // eslint-disable-next-line no-useless-return
-    if (!shareTextRef.current?.value) return;
+  const handleShare = useCallback(
+    async (onClose, e) => {
+      // eslint-disable-next-line no-useless-return
+      if (!shareTextRef.current?.value) return;
 
-    setLoading(true);
+      setLoading(true);
 
-    await inviteApi({
-      email: shareTextRef.current?.value,
-      boardId: data?._id
-    }).catch((err) => setLoading(false));
+      await inviteApi({
+        email: shareTextRef.current?.value,
+        boardId: data?._id
+      }).catch((err) => setLoading(false));
 
-    setLoading(false);
-  }, [data?._id]);
+      setLoading(false);
+      onClose(e);
+    },
+    [data?._id]
+  );
 
   return (
     <section className='left_sub_header'>
@@ -66,24 +71,27 @@ const LeftSubHeaderSection = () => {
           borderRadius: '5px'
         }}
         stopPropagation
-      >
-        <>
-          <input
-            ref={shareTextRef}
-            type='text'
-            placeholder='Enter email'
-            className='my-2'
-          />
-          <button
-            type='button'
-            className='my-1 bg__primary text-white d-flex align-items-center'
-            onClick={handleShare}
-          >
-            {loading && <CircleLoader color='white' size={10} />}
-            <span style={loading ? { marginLeft: '10px' } : {}}>Send</span>
-          </button>
-        </>
-      </DropDown>
+        render={(onClose) => (
+          <>
+            <input
+              ref={shareTextRef}
+              type='text'
+              placeholder='Enter email'
+              className='my-2'
+            />
+            <Button
+              type='button'
+              className='my-1 bg__primary text-white d-flex align-items-center'
+              onClick={(e) => handleShare(onClose, e)}
+            >
+              <>
+                {loading && <CircleLoader color='white' size={10} />}
+                <span style={loading ? { marginLeft: '10px' } : {}}>Send</span>
+              </>
+            </Button>
+          </>
+        )}
+      />
     </section>
   );
 };

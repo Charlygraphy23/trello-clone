@@ -7,11 +7,13 @@ type Props = {
 
 const TaskMemberList = ({ task }: Props) => (
   <div className='taskMemberList'>
-    {task?.members?.map((member) => (
-      <div key={member._id} className='avatar__div'>
-        {getTitleName(member.firstName, member.lastName)}
-      </div>
-    ))}
+    {task?.members &&
+      task?.members?.length > 0 &&
+      task?.members?.map((member) => (
+        <div key={member._id} className='avatar__div'>
+          {getTitleName(member.firstName, member.lastName)}
+        </div>
+      ))}
   </div>
 );
 

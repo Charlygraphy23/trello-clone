@@ -74,7 +74,10 @@ const SignupBody = () => {
         setLoading(false);
         history.push('/check-email');
       })
-      .catch((err) => throwError(err));
+      .catch((err) => {
+        setLoading(false);
+        throwError(err);
+      });
   };
 
   const handleSignup = async () => {
@@ -94,7 +97,10 @@ const SignupBody = () => {
         toast.success('Success');
         history.push('/');
       })
-      .catch((err) => toast.error(err.message));
+      .catch((err) => {
+        setLoading(false);
+        toast.error(err.message);
+      });
   };
 
   useEffect(() => {

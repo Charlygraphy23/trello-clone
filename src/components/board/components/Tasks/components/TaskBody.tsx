@@ -17,18 +17,21 @@ const TaskBody = ({ isDragging, task }: TaskBodyType) => {
     if (!task?.taskId) return;
 
     history.push({
-      pathname: `/task/${task.taskId}`,
+      pathname: `/task/${task?.taskId}`,
       state: { background: location }
     });
-  }, [history, location, task.taskId]);
+  }, [history, location, task?.taskId]);
 
   return (
     <div
       className={isDragging ? 'taskList grab__task' : 'taskList'}
       onClick={handleClick}
     >
-      {task.labels && task.labels.length > 0 && <TaskLabelChips task={task} />}
-      <p>{task.content}</p>
+      {task?.labels && task.labels.length > 0 && <TaskLabelChips task={task} />}
+      <p>{task?.content}</p>
+      <div className='editIcon'>
+        <i className='bi bi-pen-fill' />
+      </div>
       <TaskFooter task={task} />
     </div>
   );

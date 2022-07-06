@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React from 'react';
 import GoogleLogin, {
   GoogleLoginResponse,
@@ -17,14 +18,14 @@ type ButtonType = {
   children?: JSX.Element | string;
   loading?: boolean;
   loaderColor?:
-    | 'primary'
-    | 'secondary'
-    | 'success'
-    | 'danger'
-    | 'warning'
-    | 'info'
-    | 'light'
-    | 'dark';
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'danger'
+  | 'warning'
+  | 'info'
+  | 'light'
+  | 'dark';
   disabled?: boolean;
   google?: boolean;
   handleGoogleSuccess?: (
@@ -61,6 +62,7 @@ const Button = ({
         onSuccess={handleGoogleSuccess}
         onFailure={handleGoogleFailure}
         cookiePolicy='single_host_origin'
+
       />
     );
   }

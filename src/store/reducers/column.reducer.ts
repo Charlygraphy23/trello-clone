@@ -3,6 +3,7 @@ import { createReducer } from '@reduxjs/toolkit';
 import {
   addBulkColumnData,
   addTaskToColumn,
+  clearCard,
   createList,
   updateColumnsData
 } from 'store/actions';
@@ -35,17 +36,21 @@ export type ColumnReducerType = typeof initialState;
 
 export default createReducer(initialState, (builder) => {
   builder
-    .addCase(createList, (state, action) => ({
-      ...state,
-      columns: {
-        ...state.columns,
-        [action.payload.listId]: {
-          taskIds: [],
-          ...action.payload
-        }
-      },
-      columnOrder: [...state.columnOrder, action.payload.listId]
-    }))
+    .addCase(createList, (state, action) => {
+      const co = state?.columnOrder ?? [];
+
+      return {
+        ...state,
+        columns: {
+          ...state.columns,
+          [action.payload.listId]: {
+            taskIds: [],
+            ...action.payload
+          }
+        },
+        columnOrder: [...co, action.payload.listId]
+      };
+    })
     .addCase(updateColumnsData, (state, action) => ({
       ...state,
       ...action.payload
@@ -58,5 +63,6 @@ export default createReducer(initialState, (builder) => {
       }
       state.columns[action.payload.column].taskIds.push(action.payload.taskId);
     })
-    .addCase(addBulkColumnData, (state, action) => action.payload);
+    .addCase(addBulkColumnData, (state, action) => action.payload)
+    .addCase(clearCard, () => initialState);
 });

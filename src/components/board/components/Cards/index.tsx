@@ -37,7 +37,8 @@ const BoardCards = ({
                 {..._provided.droppableProps}
               >
                 <div>
-                  {tasks.length > 0 &&
+                  {tasks &&
+                    tasks.length > 0 &&
                     tasks.map((task, _index) => (
                       <TasksList
                         key={task?.taskId}

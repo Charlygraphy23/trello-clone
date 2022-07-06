@@ -1,10 +1,11 @@
+/* eslint-disable prettier/prettier */
 import { handleDragEvent } from 'lib/drag.lib';
 import { useCallback, useEffect, useState } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { StoreType } from 'store';
-import { getBoard } from 'store/actions';
+import { clearCard, getBoard } from 'store/actions';
 import { ColumnElementType } from 'store/reducers/column.reducer';
 import AddList from './components/AddList';
 import BoardCards from './components/Cards';
@@ -24,6 +25,10 @@ const BoardIndex = () => {
   useEffect(() => {
     if (!id) return;
     dispatch(getBoard({ boardId: id }));
+
+    return () => {
+      dispatch(clearCard());
+    };
   }, [dispatch, id]);
 
   const onDragEnd = useCallback(
@@ -59,28 +64,29 @@ const BoardIndex = () => {
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                 >
-                  {columnOrder.map((columnId, index) => {
-                    const column = columns ? columns[columnId] : null;
-                    const tasks: any = column?.taskIds
-                      ? column?.taskIds.map(
+                  {columnOrder &&
+                    columnOrder.map((columnId, index) => {
+                      const column = columns ? columns[columnId] : null;
+                      const tasks: any = column?.taskIds
+                        ? column?.taskIds.map(
                           (taskId: string) => taskList[taskId]
                         )
-                      : [];
+                        : [];
 
-                    return (
-                      column?.listId && (
-                        <BoardCards
-                          index={index}
-                          key={column?.listId}
-                          column={column}
-                          tasks={tasks}
-                          setShowAddCard={setShowAddCard}
-                          showAddCard={showAddCard?.listId === column?.listId}
-                          boardId={id}
-                        />
-                      )
-                    );
-                  })}
+                      return (
+                        column?.listId && (
+                          <BoardCards
+                            index={index}
+                            key={column?.listId}
+                            column={column}
+                            tasks={tasks}
+                            setShowAddCard={setShowAddCard}
+                            showAddCard={showAddCard?.listId === column?.listId}
+                            boardId={id}
+                          />
+                        )
+                      );
+                    })}
 
                   {provided.placeholder}
                   <AddList boardId={id} />

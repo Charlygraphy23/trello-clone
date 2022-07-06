@@ -8,6 +8,7 @@ import {
   addMemberToTask,
   addMyComment,
   addTask,
+  clearCard,
   deleteCheckList,
   deleteCheckListGroup,
   deleteComment,
@@ -341,5 +342,6 @@ export default createReducer(initialState, (builder) => {
 
       return newState;
 
-    });
+    })
+    .addCase(clearCard, () => initialState);
 });

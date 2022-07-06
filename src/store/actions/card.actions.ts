@@ -101,6 +101,7 @@ export const updateTaskAndColumnPositionSuccess = createAction(
 export const updateTaskAndColumnPositionFailure = createAction(
   'UPDATE_COLUMN_TASK_POSITION_FAILURE'
 );
+export const clearCard = createAction('CREATE_CARD');
 
 export const updateTaskInfo =
   createAction<{ taskId: string; data: any }>('ADD_TASK_INFO');

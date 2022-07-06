@@ -8,7 +8,7 @@ import {
   GoogleLoginResponseOffline
 } from 'react-google-login';
 import { useDispatch } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { addAuthData } from 'store/actions';
 
@@ -33,6 +33,7 @@ type Props = {
 };
 
 const LoginBody = ({ state, errors, setState, setErrors }: Props) => {
+  const location = useLocation<{ prevPathname?: string }>();
   const history = useHistory();
   const [btnLoading, setBtnLoading] = useState(false);
   const dispatch = useDispatch();
@@ -52,6 +53,14 @@ const LoginBody = ({ state, errors, setState, setErrors }: Props) => {
     typeof response === 'object' &&
     !!(response as GoogleLoginResponse).tokenObj;
 
+  const loginSuccessHandler = useCallback(() => {
+    const hasPrevPath = location.state?.prevPathname;
+
+    history.push(hasPrevPath || '/home');
+    toast.success('Logged in');
+    userLoggedIn(true);
+  }, [history, location.state?.prevPathname]);
+
   const googleSuccess = useCallback(
     (_res: GoogleLoginResponse | GoogleLoginResponseOffline) => {
       console.log(_res);
@@ -63,16 +72,13 @@ const LoginBody = ({ state, errors, setState, setErrors }: Props) => {
       signupWithGoogle(_res.tokenObj.id_token)
         .then((response) => {
           dispatch(addAuthData(response.data.data));
-          userLoggedIn(true);
-          history.push('/home');
-          // refreshTokenSetup(_res as GoogleLoginResponse);
-          toast.success('Logged in');
+          loginSuccessHandler();
         })
         .catch((error: any) => {
           toast.error(error.message);
         });
     },
-    [dispatch, history]
+    [dispatch, loginSuccessHandler]
   );
 
   const googleFailure = useCallback(
@@ -95,16 +101,26 @@ const LoginBody = ({ state, errors, setState, setErrors }: Props) => {
     signInWithEmail(state.email, state.password)
       .then((response) => {
         dispatch(addAuthData(response.data.data));
+        // loginSuccessHandler();
+        const hasPrevPath = location.state?.prevPathname;
         userLoggedIn(true);
+        history.push(hasPrevPath || '/home');
+        toast.success('Logged in');
+
         setBtnLoading(false);
-        toast.success('Successfully Login');
-        history.push('/home');
       })
       .catch((err) => {
         setBtnLoading(false);
         throwError(err);
       });
-  }, [dispatch, handleValidate, history, state.email, state.password]);
+  }, [
+    dispatch,
+    handleValidate,
+    history,
+    location.state?.prevPathname,
+    state.email,
+    state.password
+  ]);
 
   const handleChange = useCallback(
     (e) => {

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { HomeDataType } from 'store/reducers/home.reducer';
 
@@ -18,16 +17,17 @@ const HomeBody = ({ list }: Props) => {
             <h3 className='container__title'>WorkSpace {val.name}</h3>
 
             <div className='d-flex mb-3 flex-wrap'>
-              {val.boards.map((board) => (
-                <div
-                  key={board._id}
-                  className='board__container'
-                  onClick={() => history.push(`/board/${board._id}`)}
-                  style={{ backgroundColor: board.backgroundColor }}
-                >
-                  <p className='board__title'>{board.name}</p>
-                </div>
-              ))}
+              {val?.boards &&
+                val.boards.map((board) => (
+                  <div
+                    key={board._id}
+                    className='board__container'
+                    onClick={() => history.push(`/board/${board._id}`)}
+                    style={{ backgroundColor: board.backgroundColor }}
+                  >
+                    <p className='board__title'>{board.name}</p>
+                  </div>
+                ))}
 
               <div
                 className='board__container add'

@@ -238,11 +238,14 @@ input[type="password"] {
   }
 
   .memberSelection__body {
+    flex-direction: column;
+
     .body__container {
       display: flex;
       width: 100%;
       padding-right: 0.5rem;
       margin-bottom: 0.3rem;
+      margin-bottom: 0.4rem;
 
       cursor: pointer;
       border-radius: 3px;

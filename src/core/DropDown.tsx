@@ -24,7 +24,7 @@ const DropDown = ({
   hideTitle = false,
   render,
   buttonStyle,
-  stopPropagation
+  stopPropagation = false
 }: DropDownType) => {
   const [showDropDown, setShowDropdown] = useState(false);
   const ref = useRef<HTMLDivElement>(null);

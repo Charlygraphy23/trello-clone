@@ -9,15 +9,16 @@ type TaskTypeWrap = {
 };
 
 const TasksList = ({ task, index }: TaskTypeWrap) => (
-  <Draggable draggableId={task.taskId} index={index}>
+  <Draggable draggableId={task?.taskId} index={index}>
     {(provided, snapshot) => (
       <div
-        id={task.taskId}
+        id={task?.taskId}
         ref={provided.innerRef}
         {...provided.dragHandleProps}
         {...provided.draggableProps}
       >
         <TaskBody isDragging={snapshot.isDragging} task={task} />
+        <div className='task__backdrop' />
       </div>
     )}
   </Draggable>

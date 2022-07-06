@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, useLocation } from 'react-router-dom';
 import { authLoad } from 'store/actions';
 
 type Props = {
@@ -11,6 +11,7 @@ type Props = {
 
 const Auth = ({ component: Component, path, ...rest }: Props) => {
   const dispatch = useDispatch();
+  const location = useLocation();
   // const { auth } = useSelector((state: StoreType) => state.AuthReducer);
   const isLoggedIn = useMemo(
     () =>
@@ -35,7 +36,7 @@ const Auth = ({ component: Component, path, ...rest }: Props) => {
             to={{
               pathname: '/',
               state: {
-                prevPathname: path
+                prevPathname: path + location.search
               }
             }}
           />
