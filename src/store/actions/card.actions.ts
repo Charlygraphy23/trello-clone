@@ -5,6 +5,7 @@ import {
   deleteACheckList,
   deleteCheckListGroupApi,
   deleteCommentsApi,
+  deleteTaskByIdApi,
   deleteTaskLabelApi,
   toggleMemberTask,
   updateCheckListApi,
@@ -147,6 +148,9 @@ export const loadCommentsFailure = createAction<string>(
   'LOAD_COMMENTS_FAILURE'
 );
 
+export const deleteTask =
+  createAction<{ taskID: string; columnId: string }>('DELETE_TASK');
+
 export const deleteComment =
   createAction<{ taskId: string; commentId: string }>('DELETE_COMMENT');
 
@@ -243,7 +247,8 @@ export const addTaskMemberAction = ({
 
   toggleMemberTask({
     taskId: data.taskId,
-    remove: data.remove
+    remove: data.remove,
+    userId: data._id
   });
 };
 
@@ -296,4 +301,19 @@ export const deleteLabelAction = ({
   dispatch(deleteLabel(data));
 
   deleteTaskLabelApi(data.labelId);
+};
+
+export const deleteTaskAction = ({
+  dispatch,
+  data
+}: {
+  dispatch: Dispatch<any>;
+  data: { taskID: string; columnId: string };
+}) => {
+  dispatch(deleteTask(data));
+
+  deleteTaskByIdApi({
+    taskId: data.taskID,
+    listId: data.columnId
+  });
 };

@@ -1,4 +1,4 @@
-import { getTitleName } from 'config/app';
+import ProfileImageContainer from 'core/ProfileImageContainer';
 import { TaskConstant } from 'store/reducers/task.reducer';
 
 type Props = {
@@ -10,9 +10,11 @@ const TaskMemberList = ({ task }: Props) => (
     {task?.members &&
       task?.members?.length > 0 &&
       task?.members?.map((member) => (
-        <div key={member._id} className='avatar__div'>
-          {getTitleName(member.firstName, member.lastName)}
-        </div>
+        <ProfileImageContainer
+          firstName={member.firstName}
+          lastName={member.lastName}
+          profileImage={member.profileImage ?? ''}
+        />
       ))}
   </div>
 );

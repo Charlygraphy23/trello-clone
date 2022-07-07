@@ -56,14 +56,14 @@ const ViewTask = () => {
       <ModalBody>
         <textarea
           ref={handleRef}
-          value={task.content}
+          value={task?.content}
           className='viewTask__head'
           readOnly={readOnlyTitle}
           onChange={handleHeadChange}
           onFocusCapture={() => setReadOnlyTitle(false)}
           onBlurCapture={() => setReadOnlyTitle(true)}
         >
-          {task.content}
+          {task?.content}
         </textarea>
 
         <div className='close__icon'>
@@ -72,11 +72,11 @@ const ViewTask = () => {
 
         <div className='row m-0'>
           <div className='col-9'>
-            {task.labels && task.labels.length > 0 && (
+            {task?.labels && task.labels.length > 0 && (
               <TaskLabelsShow task={task} />
             )}
 
-            {task.members && task.members?.length > 0 && (
+            {task?.members && task.members?.length > 0 && (
               <ViewTaskMemberSection task={task} />
             )}
 

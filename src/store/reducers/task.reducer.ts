@@ -13,6 +13,7 @@ import {
   deleteCheckListGroup,
   deleteComment,
   deleteLabel,
+  deleteTask,
   loadCommentsSuccess,
   updateCheckList,
   updateTaskInfo,
@@ -343,5 +344,12 @@ export default createReducer(initialState, (builder) => {
       return newState;
 
     })
-    .addCase(clearCard, () => initialState);
+    .addCase(clearCard, () => initialState)
+    .addCase(deleteTask, (state, action) => {
+
+      const newState = { ...state };
+      delete newState[action.payload.taskID];
+
+      return newState;
+    });
 });

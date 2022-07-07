@@ -5,6 +5,7 @@ import {
   addTaskToColumn,
   clearCard,
   createList,
+  deleteTask,
   updateColumnsData
 } from 'store/actions';
 
@@ -64,5 +65,26 @@ export default createReducer(initialState, (builder) => {
       state.columns[action.payload.column].taskIds.push(action.payload.taskId);
     })
     .addCase(addBulkColumnData, (state, action) => action.payload)
-    .addCase(clearCard, () => initialState);
+    .addCase(clearCard, () => initialState)
+    .addCase(deleteTask, (state, action) => {
+      const columData = state.columns
+        ? state.columns[action.payload.columnId]
+        : null;
+
+      if (!columData) return state;
+      if (!columData.taskIds) return state;
+
+      return {
+        ...state,
+        columns: {
+          ...state.columns,
+          [action.payload.columnId]: {
+            ...columData,
+            taskIds: columData.taskIds.filter(
+              (taskId) => taskId !== action.payload.taskID
+            )
+          }
+        }
+      };
+    });
 });
