@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 export * from './config';
-// eslint-disable-next-line prettier/prettier
+export * from './socket.io';
 

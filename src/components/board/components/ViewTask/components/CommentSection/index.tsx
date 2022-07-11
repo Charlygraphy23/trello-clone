@@ -1,8 +1,11 @@
+/* eslint-disable prettier/prettier */
+import ProfileImageContainer from 'core/ProfileImageContainer';
+import socketEvents from 'hooks/socketEvents';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { PropagateLoader } from 'react-spinners';
 import { StoreType } from 'store';
-import { addMyCommentAction, loadComments } from 'store/actions';
+import { addMyCommentAction, deleteCommentAction, loadComments } from 'store/actions';
 import { TaskConstant } from 'store/reducers/task.reducer';
 import { v4 } from 'uuid';
 import UserComments from './components/UserComments';
@@ -12,6 +15,7 @@ type Props = {
 };
 
 const CommentSection = ({ task }: Props) => {
+  const { socket, userProfile } = socketEvents();
   const [comment, setComment] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const dispatch = useDispatch();
@@ -25,9 +29,8 @@ const CommentSection = ({ task }: Props) => {
 
   const handleTextareaHeight = useCallback((height?) => {
     if (!textareaRef.current) return;
-    textareaRef.current.style.height = `${
-      height ?? textareaRef.current.scrollHeight
-    }px`;
+    textareaRef.current.style.height = `${height ?? textareaRef.current.scrollHeight
+      }px`;
   }, []);
 
   const handleRef = useCallback(
@@ -62,26 +65,65 @@ const CommentSection = ({ task }: Props) => {
         profileImage,
         taskId: task?.taskId ?? '',
         message: comment,
-        commentId: v4()
+        commentId: v4(),
+        boardId: task?.boardId ?? ''
       }
     });
 
     handleTextareaHeight();
 
     setComment('');
-  }, [
-    comment,
-    dispatch,
-    firstName,
-    handleTextareaHeight,
-    lastName,
-    profileImage,
-    task?.taskId
-  ]);
+  }, [comment, dispatch, firstName, handleTextareaHeight, lastName, profileImage, task?.boardId, task?.taskId]);
 
   useEffect(() => {
     dispatch(loadComments({ taskId: task?.taskId ?? '' }));
-  }, [dispatch, task.taskId]);
+  }, [dispatch, task?.taskId]);
+
+  useEffect(() => {
+
+    if (!socket.connected) return;
+
+    socket.off('add-comment').on('add-comment', (_data: any) => {
+
+      const { userId, taskId, commentId, message, boardId } = _data;
+
+      if (userId === userProfile._id) return;
+
+      addMyCommentAction({
+        dispatch,
+        data: {
+          firstName: _data.firstName,
+          lastName: _data.lastName,
+          profileImage: _data.profileImage,
+          taskId,
+          message,
+          commentId,
+          boardId,
+          avoidApiCall: true
+        }
+      });
+
+    });
+
+
+    socket.off('delete-comment').on('delete-comment', (_data: any) => {
+
+      const { userId, taskId, commentId, boardId } = _data;
+
+      if (userId === userProfile._id) return;
+
+      deleteCommentAction({
+        dispatch,
+        data: {
+          taskId,
+          commentId,
+          boardId,
+          avoidApiCall: true
+        }
+      });
+
+    });
+  }, [dispatch, socket, userProfile?._id]);
 
   return (
     <div className='commentSection'>
@@ -90,13 +132,18 @@ const CommentSection = ({ task }: Props) => {
           Activity
         </p>
 
-        <button type='button' className='commentSection__showDetails'>
+        {/* <button type='button' className='com  mentSection__showDetails'>
           Show Details
-        </button>
+        </button> */}
       </div>
 
       <div className='commentSection__comment'>
-        <div className='avatar__div'>DB</div>
+        <div className='d-flex align-items-center'>
+          <ProfileImageContainer
+            firstName={userProfile?.firstName}
+            lastName={userProfile?.lastName}
+            profileImage={userProfile?.profileImage} />
+        </div>
 
         <div className='textarea__wrapper'>
           <textarea

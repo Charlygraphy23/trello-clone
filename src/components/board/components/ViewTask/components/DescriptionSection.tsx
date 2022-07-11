@@ -1,6 +1,7 @@
 import { addDescriptionToTask } from 'api';
 import TextAreaCombo from 'core/TextAreaCombo';
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import IsVisibleLayout from 'hooks/isVisibleLayout';
+import { useCallback, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateTaskInfo } from 'store/actions';
 import { TaskConstant } from 'store/reducers/task.reducer';
@@ -10,6 +11,7 @@ type Props = {
 };
 
 const DescriptionSection = ({ task }: Props) => {
+  const [description, setDescription] = useState(task?.description ?? '');
   const TextAreaComboIds = useMemo(
     () => ({
       textarea: 'DescriptionSection_text',
@@ -18,53 +20,37 @@ const DescriptionSection = ({ task }: Props) => {
     []
   );
 
-  const [readOnly, setReadOnly] = useState(true);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [readOnly, setReadOnly, textareaRef] =
+    IsVisibleLayout<HTMLTextAreaElement>(TextAreaComboIds);
+
   const dispatch = useDispatch();
   const handleFocus = useCallback(() => {
+    setDescription(task?.description ?? '');
     setReadOnly(false);
-  }, []);
+  }, [setReadOnly, task?.description]);
 
   const handleClick = useCallback(async () => {
-    if (!textareaRef.current?.value) return;
+    if (!description) return;
 
     dispatch(
       updateTaskInfo({
         taskId: task.taskId,
         data: {
-          description: textareaRef.current?.value
+          description
         }
       })
     );
 
-    setReadOnly(true);
+    setReadOnly(false);
 
     await addDescriptionToTask({
       taskId: task.taskId,
       data: {
-        description: textareaRef.current?.value
-      }
+        description
+      },
+      boardId: task.boardId
     });
-  }, [dispatch, task]);
-
-  const handleEvent = useCallback(
-    (e) => {
-      const hasId = [
-        TextAreaComboIds.submitButton,
-        TextAreaComboIds.textarea
-      ].includes(e.target?.id);
-      setReadOnly(!hasId);
-    },
-    [TextAreaComboIds.submitButton, TextAreaComboIds.textarea]
-  );
-
-  useLayoutEffect(() => {
-    document.addEventListener('click', handleEvent, true);
-
-    return () => {
-      document.removeEventListener('click', handleEvent, true);
-    };
-  }, [handleEvent]);
+  }, [description, dispatch, setReadOnly, task?.boardId, task?.taskId]);
 
   return (
     <div className='descriptionSection'>
@@ -73,7 +59,7 @@ const DescriptionSection = ({ task }: Props) => {
         <span style={{ marginRight: '10px' }}>Description</span>
 
         {task?.description && (
-          <button type='button' onClick={() => setReadOnly(false)}>
+          <button type='button' onClick={() => setReadOnly(true)}>
             Edit
           </button>
         )}
@@ -81,7 +67,7 @@ const DescriptionSection = ({ task }: Props) => {
 
       <TextAreaCombo
         ref={textareaRef}
-        readOnly={readOnly}
+        readOnly={!readOnly}
         className='descriptionSection__textarea mb-2'
         placeholder='Add a more detailed description…'
         buttonText='Save'
@@ -89,7 +75,8 @@ const DescriptionSection = ({ task }: Props) => {
         onSubmit={handleClick}
         textAreaId={TextAreaComboIds.textarea}
         submitButtonId={TextAreaComboIds.submitButton}
-        value={task.description}
+        value={!readOnly ? task?.description : description}
+        onChange={(e) => setDescription(e.target.value)}
       />
     </div>
   );

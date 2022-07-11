@@ -36,11 +36,14 @@ export const addCommentToTaskApi = (payload: any) =>
 export const getAllCommentsTaskApi = (taskId: string) =>
   privateAxios.get(`/user/all-comments-task/${taskId}`);
 
-export const deleteCommentsApi = (commentId: string) =>
-  privateAxios.delete(`/user/delete-comment/${commentId}`);
+export const deleteCommentsApi = (payload: any) =>
+  privateAxios.post('/user/delete-comment', payload);
 
 export const deleteTaskLabelApi = (labelId: string) =>
   privateAxios.post('/user/delete-labels', { labelId });
 
 export const deleteTaskByIdApi = (payload: any) =>
   privateAxios.post('/user/delete-task-by-id', payload);
+
+export const deleteColumnByIdApi = (payload: any) =>
+  privateAxios.post('/user/delete-list', payload);

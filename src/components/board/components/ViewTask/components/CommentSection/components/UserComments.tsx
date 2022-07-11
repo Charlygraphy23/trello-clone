@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import { getTitleName } from 'config/app';
+import ProfileImageContainer from 'core/ProfileImageContainer';
 import moment from 'moment';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
@@ -19,20 +19,24 @@ const UserComments = ({ task }: Props) => {
         dispatch,
         data: {
           taskId: task?.taskId ?? '',
-          commentId
+          commentId,
+          boardId: task?.boardId ?? ''
         }
       });
     },
-    [dispatch, task?.taskId]
+    [dispatch, task?.boardId, task?.taskId]
   );
 
   return (
     <>
       {task?.comments?.map((comment, i) => (
         <div className='userComments'>
-          <div className='avatar__div'>
-            {getTitleName(comment.user.firstName, comment.user.lastName)}
-          </div>
+          <ProfileImageContainer
+            firstName={comment.user.firstName}
+            lastName={comment.user.lastName}
+            profileImage={comment.user?.profileImage}
+          />
+
           <div className='userComments__body'>
             <p className='userComments__title'>
               <span>{`${comment.user.firstName} ${comment.user.lastName}`}</span>

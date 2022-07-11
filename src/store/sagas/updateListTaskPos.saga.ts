@@ -3,16 +3,16 @@ import { updateTaskAndColumnPosApi } from 'api';
 import { AnyAction } from 'redux';
 import { put, takeLatest } from 'redux-saga/effects';
 import {
-    updateTaskAndColumnPosition,
-    updateTaskAndColumnPositionFailure,
-    updateTaskAndColumnPositionSuccess
+  updateTaskAndColumnPosition,
+  updateTaskAndColumnPositionFailure,
+  updateTaskAndColumnPositionSuccess
 } from 'store/actions';
 
 function* loadData(action: AnyAction) {
   try {
-    const { draggableId = '', order = 0, listId = '', type = ''  , source = '' , destination = '', boardId = '' } = action.payload;
+    const { draggableId = '', order = 0, listId = '', type = '', source = '', destination = '', boardId = '', avoidApiCall = false } = action.payload;
     const payload = {
-        draggableId,
+      draggableId,
       order,
       listId,
       type,
@@ -20,7 +20,9 @@ function* loadData(action: AnyAction) {
       destination,
       boardId
     };
-    yield updateTaskAndColumnPosApi(payload);
+
+    if (!avoidApiCall)
+      yield updateTaskAndColumnPosApi(payload);
 
     yield put({
       type: updateTaskAndColumnPositionSuccess.toString()

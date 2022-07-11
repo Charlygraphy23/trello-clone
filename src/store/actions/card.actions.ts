@@ -4,6 +4,7 @@ import {
   addCommentToTaskApi,
   deleteACheckList,
   deleteCheckListGroupApi,
+  deleteColumnByIdApi,
   deleteCommentsApi,
   deleteTaskByIdApi,
   deleteTaskLabelApi,
@@ -15,12 +16,18 @@ import { Dispatch } from 'react';
 import { ColumnReducerType } from 'store/reducers/column.reducer';
 import { TaskCommentType, TaskDataType } from 'store/reducers/task.reducer';
 
-export type CreateListType = { listId: string; title: string; boardId: string };
+export type CreateListType = {
+  listId: string;
+  title: string;
+  boardId: string;
+  avoidApiCall?: boolean;
+};
 export type AddTaskType = {
   taskId: string;
   content: string;
   boardId: string;
   listId: string;
+  avoidApiCall?: boolean;
 };
 
 type UpdateColumnAndTaskPosType = {
@@ -32,6 +39,7 @@ type UpdateColumnAndTaskPosType = {
   draggableId: string;
   source: any;
   destination: any;
+  avoidApiCall: boolean;
 };
 
 type AddCheckListType = {
@@ -46,6 +54,8 @@ type AddCheckListGroup = {
   taskId: string;
   checkListGroupId: string;
   name: string;
+  avoidApiCall?: boolean;
+  boardId: string;
 };
 
 type AddTaskMember = {
@@ -65,6 +75,8 @@ type AddMyCommentType = {
   message: string;
   taskId: string;
   commentId: string;
+  avoidApiCall?: boolean;
+  boardId: string;
 };
 
 type UpdateLabelType = {
@@ -150,6 +162,8 @@ export const loadCommentsFailure = createAction<string>(
 
 export const deleteTask =
   createAction<{ taskID: string; columnId: string }>('DELETE_TASK');
+export const deleteColumn =
+  createAction<{ listId: string; boardId: string }>('DELETE_COLUMN');
 
 export const deleteComment =
   createAction<{ taskId: string; commentId: string }>('DELETE_COMMENT');
@@ -199,11 +213,14 @@ export const addCheckListGroupAction = async ({
   // eslint-disable-next-line no-param-reassign
   data.title = data.name;
 
-  // @ts-expect-error
-  // eslint-disable-next-line no-param-reassign
-  delete data.name;
-
-  await addCheckListGroupApi(data);
+  if (!data.avoidApiCall) {
+    // @ts-expect-error
+    // eslint-disable-next-line no-param-reassign
+    delete data.name;
+    // eslint-disable-next-line no-param-reassign
+    delete data.avoidApiCall;
+    await addCheckListGroupApi(data);
+  }
 };
 
 export const deleteCheckListAction = async ({
@@ -261,11 +278,13 @@ export const addMyCommentAction = ({
 }) => {
   dispatch(addMyComment(data));
 
-  addCommentToTaskApi({
-    message: data.message,
-    taskId: data.taskId,
-    commentId: data.commentId
-  });
+  if (!data.avoidApiCall)
+    addCommentToTaskApi({
+      message: data.message,
+      taskId: data.taskId,
+      commentId: data.commentId,
+      boardId: data.boardId
+    });
 };
 
 export const deleteCommentAction = ({
@@ -273,11 +292,21 @@ export const deleteCommentAction = ({
   data
 }: {
   dispatch: Dispatch<any>;
-  data: { taskId: string; commentId: string };
+  data: {
+    taskId: string;
+    commentId: string;
+    avoidApiCall?: boolean;
+    boardId: string;
+  };
 }) => {
   dispatch(deleteComment(data));
 
-  deleteCommentsApi(data.commentId);
+  if (!data.avoidApiCall)
+    deleteCommentsApi({
+      taskId: data.taskId,
+      boardId: data.boardId,
+      commentId: data.commentId
+    });
 };
 
 export const updateLabelAction = ({
@@ -308,12 +337,31 @@ export const deleteTaskAction = ({
   data
 }: {
   dispatch: Dispatch<any>;
-  data: { taskID: string; columnId: string };
+  data: {
+    taskID: string;
+    columnId: string;
+    boardId: string;
+    avoidApiCall?: boolean;
+  };
 }) => {
   dispatch(deleteTask(data));
 
-  deleteTaskByIdApi({
-    taskId: data.taskID,
-    listId: data.columnId
-  });
+  if (!data.avoidApiCall)
+    deleteTaskByIdApi({
+      taskId: data.taskID,
+      listId: data.columnId,
+      boardId: data.boardId
+    });
+};
+
+export const deleteColumnAction = ({
+  dispatch,
+  data
+}: {
+  dispatch: Dispatch<any>;
+  data: { listId: string; boardId: string; avoidApiCall?: boolean };
+}) => {
+  dispatch(deleteColumn(data));
+
+  if (!data.avoidApiCall) deleteColumnByIdApi(data);
 };

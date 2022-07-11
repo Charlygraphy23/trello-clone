@@ -13,6 +13,7 @@ type HandleDragEvent = {
   columns: ColumnDataType | null;
   columnOrder: string[];
   boardId: string;
+  avoidApiCall: boolean;
 };
 
 export const handleDragEvent = ({
@@ -20,7 +21,8 @@ export const handleDragEvent = ({
   payload,
   columns,
   columnOrder,
-  boardId
+  boardId,
+  avoidApiCall = false
 }: HandleDragEvent) => {
   const { destination, source, draggableId, type } = payload;
 
@@ -57,7 +59,8 @@ export const handleDragEvent = ({
         boardId,
         source,
         destination,
-        draggableId
+        draggableId,
+        avoidApiCall
       })
     );
 
@@ -97,7 +100,8 @@ export const handleDragEvent = ({
           boardId,
           source,
           destination,
-          draggableId
+          draggableId,
+          avoidApiCall
         })
       );
     }
@@ -147,7 +151,8 @@ export const handleDragEvent = ({
         boardId,
         source,
         destination,
-        draggableId
+        draggableId,
+        avoidApiCall
       })
     );
   }

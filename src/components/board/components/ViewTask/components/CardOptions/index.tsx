@@ -29,7 +29,7 @@ const CardOptions = ({ task }: Props) => (
       buttonClass='cardOptions__button'
       icon={<i className='bi bi-tag' />}
     >
-      <LabelSelection boardId={task.boardId} task={task} />
+      <LabelSelection boardId={task?.boardId} task={task} />
     </DropDown>
 
     <DropDown

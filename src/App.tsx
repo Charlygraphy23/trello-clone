@@ -1,3 +1,8 @@
+import getSocket, {
+  connectSocket,
+  disconnectSocket
+} from 'config/app/socket.io';
+import { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -6,15 +11,27 @@ import RouteIndex from 'routes/index.routes';
 import store from 'store';
 import './App.scss';
 
-const App = () => (
-  <div className='w-100 app'>
-    <Provider store={store}>
-      <BrowserRouter>
-        <RouteIndex />
-        <ToastContainer position='top-right' />
-      </BrowserRouter>
-    </Provider>
-  </div>
-);
+const App = () => {
+  const socket = getSocket();
+
+  useEffect(() => {
+    connectSocket();
+
+    return () => {
+      if (socket.connected) disconnectSocket();
+    };
+  }, [socket.connect, socket.connected]);
+
+  return (
+    <div className='w-100 app'>
+      <Provider store={store}>
+        <BrowserRouter>
+          <RouteIndex />
+          <ToastContainer position='top-right' />
+        </BrowserRouter>
+      </Provider>
+    </div>
+  );
+};
 
 export default App;

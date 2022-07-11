@@ -1,5 +1,5 @@
 import { handleDragEvent } from 'lib/drag.lib';
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { DropResult } from 'react-beautiful-dnd';
 import { useDispatch, useSelector } from 'react-redux';
 import { StoreType } from 'store';
@@ -64,7 +64,8 @@ const MoveCardSection = ({ task }: Props) => {
         dispatch,
         boardId: columnData.boardId ?? '',
         columnOrder,
-        columns
+        columns,
+        avoidApiCall: false
       });
 
       hide();
@@ -84,7 +85,8 @@ const MoveCardSection = ({ task }: Props) => {
         dispatch,
         boardId: task.boardId ?? '',
         columnOrder,
-        columns
+        columns,
+        avoidApiCall: false
       });
 
       hide();

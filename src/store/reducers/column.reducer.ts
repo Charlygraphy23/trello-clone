@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable no-param-reassign */
 import { createReducer } from '@reduxjs/toolkit';
 import {
@@ -5,6 +6,7 @@ import {
   addTaskToColumn,
   clearCard,
   createList,
+  deleteColumn,
   deleteTask,
   updateColumnsData
 } from 'store/actions';
@@ -85,6 +87,20 @@ export default createReducer(initialState, (builder) => {
             )
           }
         }
+      };
+    })
+    .addCase(deleteColumn, (state, action) => {
+      const newState: ColumStateType = { ...state };
+      const cols = newState?.columns ? { ...newState?.columns } : {};
+
+      delete cols[action.payload.listId];
+
+
+      return {
+        columns: cols,
+        columnOrder: [
+          ...state.columnOrder.filter((id) => id !== action.payload.listId)
+        ]
       };
     });
 });

@@ -24,7 +24,8 @@ const DropDown = ({
   hideTitle = false,
   render,
   buttonStyle,
-  stopPropagation = false
+  stopPropagation = false,
+  pos
 }: DropDownType) => {
   const [showDropDown, setShowDropdown] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -95,8 +96,8 @@ const DropDown = ({
         })}
         aria-labelledby={buttonId}
         style={{
-          left: isOutsideViewport ? 0 : 'auto',
-          right: isOutsideViewport ? 'auto' : 0
+          left: isOutsideViewport ? 0 + (pos ?? 0) : 'auto',
+          right: isOutsideViewport ? 'auto' : 0 + (pos ?? 0)
         }}
       >
         {!hideTitle && (

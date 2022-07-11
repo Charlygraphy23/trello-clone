@@ -34,6 +34,7 @@ export interface DropDownType {
   render?: (props: any) => JSX.Element;
   buttonStyle?: React.CSSProperties;
   stopPropagation?: boolean;
+  pos?: number;
 }
 
 export interface LabelSelectionType {

@@ -37,6 +37,7 @@
         display: -webkit-box;
         -webkit-line-clamp: 4;
         -webkit-box-orient: vertical;
+        margin-bottom: 0.5rem;
 
         &:read-only {
           background-color: transparent;

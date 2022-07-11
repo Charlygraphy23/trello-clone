@@ -1,4 +1,7 @@
+/* eslint-disable no-useless-return */
 /* eslint-disable prettier/prettier */
+import { join, leaveRoom } from 'config/app';
+import socketEvents from 'hooks/socketEvents';
 import { handleDragEvent } from 'lib/drag.lib';
 import { useCallback, useEffect, useState } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
@@ -13,6 +16,7 @@ import SubHeader from './components/subheader';
 import './style.scss';
 
 const BoardIndex = () => {
+  const { socket, userProfile } = socketEvents();
   const [showAddCard, setShowAddCard] = useState<ColumnElementType | null>();
   const { columns, columnOrder } = useSelector(
     (store: StoreType) => store.ColumReducer
@@ -24,12 +28,53 @@ const BoardIndex = () => {
 
   useEffect(() => {
     if (!id) return;
+    if (id.includes(':id')) return;
     dispatch(getBoard({ boardId: id }));
 
     return () => {
       dispatch(clearCard());
     };
   }, [dispatch, id]);
+
+  useEffect(() => {
+    // SOCKET JOIN and LEAVE ROOM
+    if (!id) return;
+
+    join(id);
+
+    return () => {
+      leaveRoom(id);
+    };
+  }, [id]);
+
+  useEffect(() => {
+
+    if (!socket.connected) return;
+
+    socket.off('update-card-position').on('update-card-position', (_data: any) => {
+
+      const { type, source, destination, draggableId, boardId, listId, userId } = _data;
+
+      if (userProfile._id === userId) return;
+
+      const _payload: any = {
+        destination,
+        source,
+        draggableId,
+        type
+      };
+
+      handleDragEvent({
+        payload: _payload,
+        dispatch,
+        boardId: boardId.toString(),
+        columnOrder,
+        columns,
+        avoidApiCall: true
+      });
+    });
+
+  }, [columnOrder, columns, dispatch, socket, userProfile._id]);
 
   const onDragEnd = useCallback(
     (payload: DropResult) => {
@@ -38,7 +83,8 @@ const BoardIndex = () => {
         dispatch,
         boardId: id ?? '',
         columnOrder,
-        columns
+        columns,
+        avoidApiCall: false
       });
     },
     [columnOrder, columns, dispatch, id]

@@ -8,13 +8,15 @@ import {
 
 function* loadData(action: AnyAction) {
   try {
-    const { listId = '', title = '', boardId = '' } = action.payload;
+    const { listId = '', title = '', boardId = '', avoidApiCall = false } = action.payload;
     const payload = {
       title,
       listId,
       boardId
     };
-    yield addList(payload);
+
+    if (!avoidApiCall)
+      yield addList(payload);
 
     // yield put({ type: createListSuccess.toString(), payload: data.data });
   } catch (err: any) {

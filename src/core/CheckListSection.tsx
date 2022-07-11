@@ -19,12 +19,13 @@ const CheckListSection = ({ hide, task }: Props) => {
       data: {
         name: title,
         checkListGroupId: v4(),
-        taskId: task.taskId
+        taskId: task.taskId,
+        boardId: task?.boardId ?? ''
       }
     });
 
     if (hide) hide();
-  }, [dispatch, hide, task.taskId, title]);
+  }, [dispatch, hide, task?.boardId, task?.taskId, title]);
 
   return (
     <div className='checklistSection my-3'>

@@ -1,9 +1,14 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable quotes */
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { addDescriptionToTask } from 'api';
+import socketEvents from 'hooks/socketEvents';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import { useHistory, useParams } from 'react-router-dom';
 import { Modal, ModalBody } from 'reactstrap';
 import { StoreType } from 'store';
+import { addCheckListGroupAction, updateTaskInfo } from 'store/actions';
 import CheckList from './components/CardList';
 import CardOptions from './components/CardOptions';
 import CommentSection from './components/CommentSection';
@@ -13,26 +18,39 @@ import TaskLabelsShow from './components/TaskLabelsShow';
 import './style.scss';
 
 const ViewTask = () => {
+  const { socket, userProfile } = socketEvents();
   const history = useHistory();
   const [readOnlyTitle, setReadOnlyTitle] = useState(true);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { taskId } = useParams<{ taskId: string }>();
   const tasks = useSelector((store: StoreType) => store.TaskReducer);
-  const task = tasks[taskId];
+  const task = useMemo(() => tasks[taskId], [taskId, tasks]);
+  const dispatch = useDispatch();
+  const [content, setContent] = useState(task?.content ?? '');
 
-  const handleTextareaHeight = useCallback(() => {
+  const handleTextareaHeight = useCallback((empty?: boolean) => {
     if (!textareaRef.current) return;
-    textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    textareaRef.current.style.height = `${empty ? 48 : textareaRef.current.scrollHeight
+      }px`;
   }, []);
 
   const handleToggle = useCallback(() => {
     history.goBack();
   }, [history]);
 
-  const handleHeadChange = useCallback(() => {
-    // @ts-ignore
-    handleTextareaHeight();
-  }, [handleTextareaHeight]);
+  const handleHeadChange = useCallback(
+    (e) => {
+
+      const _val = e.target.value;
+
+      if (!_val) handleTextareaHeight(true);
+      else handleTextareaHeight();
+
+
+      setContent(_val);
+    },
+    [handleTextareaHeight]
+  );
 
   const handleRef = useCallback(
     (ref: HTMLTextAreaElement) => {
@@ -47,24 +65,89 @@ const ViewTask = () => {
     handleToggle();
   }, [handleToggle]);
 
+  const handleOnBlur = useCallback(() => {
+    setReadOnlyTitle(true);
+
+    if (content === task?.content) return;
+
+    dispatch(
+      updateTaskInfo({
+        taskId: task.taskId,
+        data: {
+          content
+        }
+      })
+    );
+
+    addDescriptionToTask({
+      taskId: task.taskId,
+      data: {
+        content
+      },
+      boardId: task.boardId
+    });
+  }, [content, dispatch, task?.boardId, task?.content, task?.taskId]);
+
   useEffect(() => {
     handleTextareaHeight();
   }, [handleTextareaHeight]);
+
+  useEffect(() => {
+
+    if (!socket.connected) return;
+
+    socket.off('update-task-info').on('update-task-info', (_data: any) => {
+      const { userId } = _data;
+
+      // eslint-disable-next-line no-useless-return
+      if (userProfile._id === userId) return;
+
+      dispatch(
+        updateTaskInfo({
+          taskId: task.taskId,
+          data: _data?.data
+        })
+      );
+    });
+
+    socket.off('add-checklist-group').on('add-checklist-group', (_data: any) => {
+      const { boardId, userId, title, checkListGroupId } = _data;
+
+      // eslint-disable-next-line no-useless-return
+      if (userProfile._id === userId) return;
+
+      addCheckListGroupAction({
+        dispatch,
+        data: {
+          name: title,
+          checkListGroupId,
+          taskId: _data.taskId,
+          boardId,
+          avoidApiCall: true
+        }
+      });
+    });
+  }, [dispatch, socket, task?.taskId, userProfile?._id]);
+
+  useEffect(() => {
+    handleTextareaHeight();
+  }, [handleTextareaHeight, task?.content]);
 
   return (
     <Modal isOpen toggle={handleToggle} centered className='viewTask' size='lg'>
       <ModalBody>
         <textarea
           ref={handleRef}
-          value={task?.content}
-          className='viewTask__head'
+          value={readOnlyTitle ? task?.content : content}
+          className='viewTask__head py-2'
           readOnly={readOnlyTitle}
           onChange={handleHeadChange}
-          onFocusCapture={() => setReadOnlyTitle(false)}
-          onBlurCapture={() => setReadOnlyTitle(true)}
-        >
-          {task?.content}
-        </textarea>
+          onFocusCapture={() => {
+            setReadOnlyTitle(false);
+            setContent(task?.content);
+          }}
+          onBlurCapture={handleOnBlur}
+        />
 
         <div className='close__icon'>
           <i className='bi bi-x-lg' onClick={handleClose} />

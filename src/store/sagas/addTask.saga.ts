@@ -9,7 +9,8 @@ function* loadData(action: AnyAction) {
       taskId = '',
       content = '',
       boardId = '',
-      listId = ''
+      listId = '',
+      avoidApiCall = false
     } = action.payload;
     const payload = {
       content,
@@ -17,7 +18,8 @@ function* loadData(action: AnyAction) {
       boardId,
       taskId
     };
-    yield addTaskApi(payload);
+
+    if (!avoidApiCall) yield addTaskApi(payload);
   } catch (err: any) {
     console.error(err);
   }

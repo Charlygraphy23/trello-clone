@@ -20,10 +20,11 @@ const TaskOptions = ({ toggleBackdrop, position, task }: Props) => {
             dispatch,
             data: {
                 taskID: task.taskId,
-                columnId: task.listId
+                columnId: task.listId,
+                boardId: task?.boardId ?? ''
             }
         });
-    }, [dispatch, task.listId, task.taskId]);
+    }, [dispatch, task?.boardId, task?.listId, task?.taskId]);
 
 
     return (
