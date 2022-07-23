@@ -29,12 +29,12 @@ const UserComments = ({ task }: Props) => {
 
   return (
     <>
-      {task?.comments?.map((comment, i) => (
-        <div className='userComments'>
+      {task?.comments?.map((comment) => (
+        <div className='userComments' key={comment?.user?._id}>
           <ProfileImageContainer
-            firstName={comment.user.firstName}
-            lastName={comment.user.lastName}
-            profileImage={comment.user?.profileImage}
+            firstName={comment?.user?.firstName}
+            lastName={comment?.user?.lastName}
+            profileImage={comment?.user?.profileImage}
           />
 
           <div className='userComments__body'>

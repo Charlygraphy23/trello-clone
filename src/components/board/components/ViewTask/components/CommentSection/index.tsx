@@ -76,7 +76,8 @@ const CommentSection = ({ task }: Props) => {
   }, [comment, dispatch, firstName, handleTextareaHeight, lastName, profileImage, task?.boardId, task?.taskId]);
 
   useEffect(() => {
-    dispatch(loadComments({ taskId: task?.taskId ?? '' }));
+    if (!task?.taskId) return;
+    dispatch(loadComments({ taskId: task?.taskId }));
   }, [dispatch, task?.taskId]);
 
   useEffect(() => {

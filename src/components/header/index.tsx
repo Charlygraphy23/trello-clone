@@ -1,7 +1,8 @@
+import { darkenColor } from 'config/app';
 import DropDown from 'core/DropDown';
 import ProfileImageContainer from 'core/ProfileImageContainer';
 import { useSelector } from 'react-redux';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link, useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { StoreType } from 'store';
 import AvatarDropdown from './components/AvatarDropdown';
 import './style.scss';
@@ -16,13 +17,14 @@ const Header = () => {
   const { auth, loading: authLoading } = useSelector(
     (store: StoreType) => store.AuthReducer
   );
+  const isHome = useRouteMatch('/home')?.isExact;
 
   return (
     <header
       className='header'
       style={
         data?.backgroundColor
-          ? { backgroundColor: data.backgroundColor, filter: 'saturate(0.4)' }
+          ? { backgroundColor: darkenColor(data.backgroundColor, -50) }
           : {}
       }
     >
@@ -31,7 +33,7 @@ const Header = () => {
       </div>
 
       <div className='header__body'>
-        {auth && !authLoading && (
+        {auth && !authLoading && isHome && (
           <button
             type='button'
             className='add__workspace text-white'

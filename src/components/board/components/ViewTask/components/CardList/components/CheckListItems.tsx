@@ -9,9 +9,10 @@ import { TaskCheckListType } from 'store/reducers/task.reducer';
 
 type CheckListItemType = {
   data: TaskCheckListType;
+  boardId: string;
 };
 
-const CheckListItems = ({ data }: CheckListItemType) => {
+const CheckListItems = ({ data, boardId }: CheckListItemType) => {
   const dispatch = useDispatch();
   const TextAreaComboIds = useMemo(
     () => ({
@@ -33,7 +34,8 @@ const CheckListItems = ({ data }: CheckListItemType) => {
       title: checkListName,
       isDone: data?.isDone ?? false,
       taskId: data?.taskId ?? '',
-      checkListGroupId: data?.checkListGroupId ?? ''
+      checkListGroupId: data?.checkListGroupId ?? '',
+      boardId
     };
 
     await updateCheckListAction({
@@ -42,6 +44,7 @@ const CheckListItems = ({ data }: CheckListItemType) => {
     });
     handleShowTextarea(false);
   }, [
+    boardId,
     checkListName,
     data?.checkListGroupId,
     data?.checkListId,
@@ -53,11 +56,12 @@ const CheckListItems = ({ data }: CheckListItemType) => {
 
   const handleListClick = useCallback(() => {
     handleShowTextarea(true);
+    setCheckListName(data?.title ?? '');
     setTimeout(() => {
       textareaRef.current?.focus();
       textareaRef.current?.select();
     }, 100);
-  }, [handleShowTextarea, textareaRef]);
+  }, [data?.title, handleShowTextarea, textareaRef]);
 
   const handleTextAreaClick = useCallback(
     (e: React.MouseEvent<HTMLTextAreaElement>) => {
@@ -76,7 +80,8 @@ const CheckListItems = ({ data }: CheckListItemType) => {
         title: data?.title ?? '',
         isDone: e.target.checked ?? false,
         taskId: data?.taskId ?? '',
-        checkListGroupId: data?.checkListGroupId ?? ''
+        checkListGroupId: data?.checkListGroupId ?? '',
+        boardId
       };
 
       await updateCheckListAction({
@@ -85,6 +90,7 @@ const CheckListItems = ({ data }: CheckListItemType) => {
       });
     },
     [
+      boardId,
       data?.checkListGroupId,
       data?.checkListId,
       data?.taskId,
@@ -101,10 +107,11 @@ const CheckListItems = ({ data }: CheckListItemType) => {
       data: {
         checkListId,
         checkListGroupId,
-        taskId
+        taskId,
+        boardId
       }
     });
-  }, [data, dispatch]);
+  }, [boardId, data, dispatch]);
 
   return (
     <div className='checkListItems row m-0' onClick={handleListClick}>
@@ -116,7 +123,7 @@ const CheckListItems = ({ data }: CheckListItemType) => {
           onClick={(e) => {
             e.stopPropagation();
           }}
-          defaultChecked={data.isDone}
+          checked={data.isDone}
         />
       </div>
 
@@ -140,7 +147,7 @@ const CheckListItems = ({ data }: CheckListItemType) => {
                 cross: data.isDone
               })}
             >
-              {checkListName}
+              {data?.title}
             </div>
             <div className='checkListItems__options'>
               <DropDown

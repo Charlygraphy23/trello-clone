@@ -2,13 +2,13 @@ import { inviteApi } from 'api';
 import Button from 'components/button';
 import DropDown from 'core/DropDown';
 import ProfileImageContainer from 'core/ProfileImageContainer';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { CircleLoader } from 'react-spinners';
 import { StoreType } from 'store';
 
 const LeftSubHeaderSection = () => {
-  const shareTextRef = useRef<HTMLInputElement | null>(null);
+  const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const { data } = useSelector((store: StoreType) => store.BoardReducer);
   const { members } = useSelector((store: StoreType) => store.MemberReducer);
@@ -21,25 +21,26 @@ const LeftSubHeaderSection = () => {
   const handleShare = useCallback(
     async (onClose, e) => {
       // eslint-disable-next-line no-useless-return
-      if (!shareTextRef.current?.value) return;
+      if (!email) return;
 
       setLoading(true);
 
       await inviteApi({
-        email: shareTextRef.current?.value,
+        email,
         boardId: data?._id
       }).catch((err) => setLoading(false));
 
       setLoading(false);
       onClose(e);
+      setEmail('');
     },
-    [data?._id]
+    [data?._id, email]
   );
 
   return (
     <section className='left_sub_header'>
       <div className='white__card boardIcon'>
-        <i className='bi bi-card-text' style={{ marginRight: '5px' }} />
+        <i className='bi bi-kanban-fill ' style={{ marginRight: '5px' }} />
         <p>Board</p>
       </div>
 
@@ -70,11 +71,13 @@ const LeftSubHeaderSection = () => {
           backgroundColor: 'white',
           borderRadius: '5px'
         }}
+        buttonClass='share__button'
         stopPropagation
         render={(onClose) => (
           <>
             <input
-              ref={shareTextRef}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               type='text'
               placeholder='Enter email'
               className='my-2'

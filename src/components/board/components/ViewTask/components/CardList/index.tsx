@@ -16,9 +16,10 @@ import CheckListItems from './components/CheckListItems';
 
 type Props = {
   checkListGroup: TaskCheckListGroupType;
+  boardId: string;
 };
 
-const CheckList = ({ checkListGroup }: Props) => {
+const CheckList = ({ checkListGroup, boardId }: Props) => {
   const { checkLists = [], title = '' } = checkListGroup;
   const TextAreaComboIds = useMemo(
     () => ({
@@ -60,7 +61,8 @@ const CheckList = ({ checkListGroup }: Props) => {
       title: textareaValue,
       isDone: false,
       taskId: checkListGroup.taskId ?? '',
-      checkListGroupId: checkListGroup?.checkListGroupId ?? ''
+      checkListGroupId: checkListGroup?.checkListGroupId ?? '',
+      boardId
     };
 
     await addCheckListAction({
@@ -69,6 +71,7 @@ const CheckList = ({ checkListGroup }: Props) => {
     });
     handleItemCheckList(false);
   }, [
+    boardId,
     checkListGroup?.checkListGroupId,
     checkListGroup.taskId,
     checkListTextareaRef,
@@ -89,10 +92,16 @@ const CheckList = ({ checkListGroup }: Props) => {
       dispatch,
       data: {
         checkListGroupId: checkListGroup.checkListGroupId ?? '',
-        taskId: checkListGroup?.taskId ?? ''
+        taskId: checkListGroup?.taskId ?? '',
+        boardId
       }
     });
-  }, [checkListGroup.checkListGroupId, checkListGroup.taskId, dispatch]);
+  }, [
+    boardId,
+    checkListGroup.checkListGroupId,
+    checkListGroup?.taskId,
+    dispatch
+  ]);
 
   return (
     <div className='checkList mt-3'>
@@ -132,7 +141,11 @@ const CheckList = ({ checkListGroup }: Props) => {
       {checkLists &&
         checkLists.length > 0 &&
         checkLists.map((list) => (
-          <CheckListItems key={list?.checkListId} data={list} />
+          <CheckListItems
+            key={list?.checkListId}
+            data={list}
+            boardId={boardId}
+          />
         ))}
 
       {showNewItemCheckList && (
@@ -150,7 +163,7 @@ const CheckList = ({ checkListGroup }: Props) => {
       )}
 
       {!showNewItemCheckList && (
-        <div className='d-flex mt-4'>
+        <div className='d-flex mt-3'>
           <button
             type='button'
             className='bg__secondary text__primary addNewItem'

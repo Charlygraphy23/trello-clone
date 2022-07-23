@@ -76,6 +76,13 @@ const BoardIndex = () => {
 
   }, [columnOrder, columns, dispatch, socket, userProfile._id]);
 
+  const onDragStart = useCallback(() => {
+
+    if (window.navigator.vibrate) {
+      window.navigator.vibrate(50);
+    }
+  }, []);
+
   const onDragEnd = useCallback(
     (payload: DropResult) => {
       handleDragEvent({
@@ -96,7 +103,7 @@ const BoardIndex = () => {
         className='board'
         style={{ backgroundColor: `${data?.backgroundColor}` }}
       >
-        <DragDropContext onDragEnd={onDragEnd}>
+        <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
           <Droppable
             droppableId='all-column'
             type='column'

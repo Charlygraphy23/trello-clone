@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { Modal, ModalBody } from 'reactstrap';
 import { StoreType } from 'store';
-import { addCheckListGroupAction, updateTaskInfo } from 'store/actions';
+import { addCheckListAction, addCheckListGroupAction, deleteCheckListAction, deleteCheckListGroupAction, updateCheckListAction, updateTaskInfo } from 'store/actions';
 import CheckList from './components/CardList';
 import CardOptions from './components/CardOptions';
 import CommentSection from './components/CommentSection';
@@ -30,7 +30,7 @@ const ViewTask = () => {
 
   const handleTextareaHeight = useCallback((empty?: boolean) => {
     if (!textareaRef.current) return;
-    textareaRef.current.style.height = `${empty ? 48 : textareaRef.current.scrollHeight
+    textareaRef.current.style.height = `${empty ? 48 : (textareaRef.current.scrollHeight + 15)
       }px`;
   }, []);
 
@@ -93,45 +93,135 @@ const ViewTask = () => {
   }, [handleTextareaHeight]);
 
   useEffect(() => {
+    handleTextareaHeight();
+  }, [handleTextareaHeight, task?.content]);
 
+  useEffect(() => {
     if (!socket.connected) return;
 
     socket.off('update-task-info').on('update-task-info', (_data: any) => {
-      const { userId } = _data;
+      const { userId, } = _data;
 
       // eslint-disable-next-line no-useless-return
       if (userProfile._id === userId) return;
 
       dispatch(
         updateTaskInfo({
-          taskId: task.taskId,
+          taskId: _data.taskId,
           data: _data?.data
         })
       );
     });
 
-    socket.off('add-checklist-group').on('add-checklist-group', (_data: any) => {
-      const { boardId, userId, title, checkListGroupId } = _data;
+    socket
+      .off('add-checklist-group')
+      .on('add-checklist-group', (_data: any) => {
+        const { boardId, userId, title, checkListGroupId } = _data;
 
-      // eslint-disable-next-line no-useless-return
-      if (userProfile._id === userId) return;
+        // eslint-disable-next-line no-useless-return
+        if (userProfile._id === userId) return;
 
-      addCheckListGroupAction({
-        dispatch,
-        data: {
-          name: title,
+        addCheckListGroupAction({
+          dispatch,
+          data: {
+            name: title,
+            checkListGroupId,
+            taskId: _data.taskId,
+            boardId,
+            avoidApiCall: true
+          }
+        });
+      });
+
+    socket
+      .off('delete-checklist-group')
+      .on('delete-checklist-group', (_data: any) => {
+        const { userId, checkListGroupId, boardId } = _data;
+
+        // eslint-disable-next-line no-useless-return
+        if (userProfile._id === userId) return;
+
+        deleteCheckListGroupAction({
+          dispatch,
+          data: {
+            checkListGroupId,
+            taskId: _data?.taskId,
+            avoidApiCall: true,
+            boardId
+          }
+        });
+      });
+
+    socket
+      .off('add-checklist')
+      .on('add-checklist', (_data: any) => {
+        const { title, checkListId, userId, isDone, checkListGroupId, boardId } = _data;
+
+        // eslint-disable-next-line no-useless-return
+        if (userProfile._id === userId) return;
+
+        const payload = {
+          checkListId,
+          title,
+          isDone,
+          taskId: _data.taskId ?? '',
           checkListGroupId,
-          taskId: _data.taskId,
+          avoidApiCall: true,
+          boardId
+        };
+
+        addCheckListAction({
+          dispatch,
+          data: payload
+        });
+      });
+
+    socket
+      .off('update-checklist')
+      .on('update-checklist', (_data: any) => {
+        const { title, checkListId, userId, isDone, checkListGroupId, boardId } = _data;
+
+        // eslint-disable-next-line no-useless-return
+        if (userProfile._id === userId) return;
+
+        const payload = {
+          checkListId,
+          title,
+          isDone,
+          taskId: _data?.taskId ?? '',
+          checkListGroupId,
           boardId,
           avoidApiCall: true
-        }
-      });
-    });
-  }, [dispatch, socket, task?.taskId, userProfile?._id]);
+        };
 
-  useEffect(() => {
-    handleTextareaHeight();
-  }, [handleTextareaHeight, task?.content]);
+        updateCheckListAction({
+          dispatch,
+          data: payload
+        });
+      });
+    socket
+      .off('delete-checklist')
+      .on('delete-checklist', (_data: any) => {
+        const { checkListId, boardId, userId, checkListGroupId } = _data;
+
+        // eslint-disable-next-line no-useless-return
+        if (userProfile._id === userId) return;
+
+
+
+        deleteCheckListAction({
+          dispatch,
+          data: {
+            checkListId,
+            checkListGroupId,
+            taskId: _data?.taskId ?? '',
+            boardId,
+            avoidApiCall: true
+          }
+        });
+      });
+  }, [dispatch, socket, taskId, userProfile._id]);
+
 
   return (
     <Modal isOpen toggle={handleToggle} centered className='viewTask' size='lg'>
@@ -171,6 +261,7 @@ const ViewTask = () => {
                 <CheckList
                   key={checkListGroup.checkListGroupId}
                   checkListGroup={checkListGroup}
+                  boardId={task?.boardId ?? ""}
                 />
               ))}
 

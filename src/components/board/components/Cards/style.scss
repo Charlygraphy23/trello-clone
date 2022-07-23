@@ -41,3 +41,22 @@
     }
   }
 }
+
+@media screen and (max-width: 601px) {
+  .boardCards {
+    width: 15rem;
+    min-width: 15rem;
+
+    .title {
+      h5 {
+        font-size: 0.9rem;
+      }
+    }
+
+    .addTask__body {
+      button {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}

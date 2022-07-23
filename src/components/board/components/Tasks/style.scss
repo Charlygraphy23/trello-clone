@@ -87,3 +87,29 @@
     }
   }
 }
+
+@media screen and (max-width: 601px) {
+  .taskList {
+    font-size: 0.8rem;
+
+    .editIcon {
+      font-size: 0.9rem;
+    }
+
+    & > p {
+      font-size: 0.9rem;
+    }
+  }
+
+  .task__options {
+    .task__options-body {
+      .task__options-option {
+        font-size: 0.9rem;
+
+        i {
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+}

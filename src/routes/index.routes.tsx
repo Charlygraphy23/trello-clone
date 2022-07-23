@@ -6,6 +6,7 @@ import LoginPage from 'components/Login';
 import SignUpPage from 'components/signup';
 import WorkSpaceModal from 'components/Workspace';
 import { useSelector } from 'react-redux';
+
 import { Route, Switch, useLocation } from 'react-router-dom';
 import { StoreType } from 'store';
 import PublicRoutes from './public';

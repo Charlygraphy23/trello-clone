@@ -75,44 +75,46 @@ const DropDown = ({
   }, [handleEvent]);
 
   return (
-    <div className={`dropdownComponent ${className}`} style={style} ref={ref}>
-      <button
-        className={`dropdownComponent__button ${buttonClass}`}
-        type='button'
-        id={buttonId}
-        onClick={handleButtonClick}
-        style={buttonStyle}
-      >
-        {icon}
-        <span style={{ marginLeft: icon ? '0.3rem' : '0rem' }}>
-          {buttonText}
-        </span>
-      </button>
+    <>
+      <div className={`dropdownComponent ${className}`} style={style} ref={ref}>
+        <button
+          className={`dropdownComponent__button ${buttonClass}`}
+          type='button'
+          id={buttonId}
+          onClick={handleButtonClick}
+          style={buttonStyle}
+        >
+          {icon}
+          <span style={{ marginLeft: icon ? '0.3rem' : '0rem' }}>
+            {buttonText}
+          </span>
+        </button>
 
-      <div
-        ref={dropdownBodyRef}
-        className={classNames('dropdown__body', {
-          show: showDropDown
-        })}
-        aria-labelledby={buttonId}
-        style={{
-          left: isOutsideViewport ? 0 + (pos ?? 0) : 'auto',
-          right: isOutsideViewport ? 'auto' : 0 + (pos ?? 0)
-        }}
-      >
-        {!hideTitle && (
-          <div className='dropdown__title'>
-            <span>{title}</span>{' '}
-            <i
-              onClick={onClose}
-              className='bi bi-x'
-              style={{ cursor: 'pointer' }}
-            />
-          </div>
-        )}
-        {render ? render(onClose) : children}
+        <div
+          ref={dropdownBodyRef}
+          className={classNames('dropdown__body', {
+            show: showDropDown
+          })}
+          aria-labelledby={buttonId}
+          style={{
+            left: isOutsideViewport ? 0 + (pos ?? 0) : pos ?? 'auto',
+            right: isOutsideViewport ? 'auto' : 0 + (pos ?? 0)
+          }}
+        >
+          {!hideTitle && (
+            <div className='dropdown__title'>
+              <span>{title}</span>{' '}
+              <i
+                onClick={onClose}
+                className='bi bi-x'
+                style={{ cursor: 'pointer' }}
+              />
+            </div>
+          )}
+          {render ? render(onClose) : children}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

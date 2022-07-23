@@ -41,3 +41,33 @@
     }
   }
 }
+
+@media screen and (max-width: 601px) {
+  .taskFooter {
+    margin-top: 0.3rem;
+
+    .info {
+      & > p {
+        margin: 0;
+        font-size: 0.7rem;
+        margin-right: 0.5rem;
+
+        & > i {
+          font-size: inherit;
+        }
+      }
+    }
+
+    .taskMemberList {
+      max-width: 100px;
+
+      .avatar__div {
+        font-size: 0.6rem;
+      }
+
+      .avatar__img {
+        font-size: 0.6rem;
+      }
+    }
+  }
+}

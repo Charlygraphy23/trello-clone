@@ -28,10 +28,10 @@ const MoveCardSection = ({ task }: Props) => {
     [data?.workspace, list]
   );
   const selectedColumn = useMemo(
-    () => (columns ? columns[task.listId] : null),
-    [columns, task.listId]
+    // eslint-disable-next-line no-nested-ternary
+    () => (task?.listId ? (columns ? columns[task?.listId] : null) : null),
+    [columns, task?.listId]
   );
-
   const generatePayload = useCallback(
     (destination: any): DropResult => ({
       source: {
@@ -47,7 +47,7 @@ const MoveCardSection = ({ task }: Props) => {
       type: 'task',
       mode: 'FLUID'
     }),
-    [selectedColumn?.listId, task?.order, task.taskId]
+    [selectedColumn?.listId, task?.order, task?.taskId]
   );
 
   const handleBoardClick = useCallback(
@@ -62,7 +62,7 @@ const MoveCardSection = ({ task }: Props) => {
       handleDragEvent({
         payload,
         dispatch,
-        boardId: columnData.boardId ?? '',
+        boardId: columnData?.boardId ?? '',
         columnOrder,
         columns,
         avoidApiCall: false
@@ -83,7 +83,7 @@ const MoveCardSection = ({ task }: Props) => {
       handleDragEvent({
         payload,
         dispatch,
-        boardId: task.boardId ?? '',
+        boardId: task?.boardId ?? '',
         columnOrder,
         columns,
         avoidApiCall: false
@@ -97,7 +97,7 @@ const MoveCardSection = ({ task }: Props) => {
       dispatch,
       generatePayload,
       selectedColumn?.listId,
-      task.boardId
+      task?.boardId
     ]
   );
 
@@ -145,7 +145,7 @@ const MoveCardSection = ({ task }: Props) => {
               {columns &&
                 Object.values(columns).map((column) => (
                   <div
-                    key={column.listId}
+                    key={column?.listId}
                     className='moveCardSectionSelect__list'
                     onClick={() => handleBoardClick(column, onClose)}
                   >
@@ -181,7 +181,7 @@ const MoveCardSection = ({ task }: Props) => {
                   >
                     <p className='list__item'>
                       {i + 1}{' '}
-                      {task.order === i && id === task.taskId
+                      {task?.order === i && id === task?.taskId
                         ? '(Current)'
                         : ''}
                     </p>

@@ -14,6 +14,7 @@ const TaskMemberList = ({ task }: Props) => (
           firstName={member.firstName}
           lastName={member.lastName}
           profileImage={member.profileImage ?? ''}
+          key={member?._id}
         />
       ))}
   </div>

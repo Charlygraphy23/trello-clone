@@ -21,11 +21,11 @@ export const updateCheckListApi = (payload: any) =>
 export const addCheckListGroupApi = (payload: any) =>
   privateAxios.post('/user/add-checklist-group', payload);
 
-export const deleteACheckList = (checkListId: string) =>
-  privateAxios.delete(`/user/delete-checkList/${checkListId}`);
+export const deleteACheckList = (payload: any) =>
+  privateAxios.post('/user/delete-checkList', payload);
 
-export const deleteCheckListGroupApi = (checkListGroupId: string) =>
-  privateAxios.delete(`/user/delete-checkList-group/${checkListGroupId}`);
+export const deleteCheckListGroupApi = (payload: any) =>
+  privateAxios.post('/user/delete-checkList-group', payload);
 
 export const toggleMemberTask = (payload: any) =>
   privateAxios.post('/user/toggle-members-task', payload);

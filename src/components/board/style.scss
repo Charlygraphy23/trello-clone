@@ -128,3 +128,34 @@
     }
   }
 }
+
+@media screen and (max-width: 601px) {
+  .board {
+    .board__body {
+      .boardCards__body {
+        .add__task {
+          & > i {
+            font-size: 0.9rem;
+          }
+          & > p {
+            font-size: 0.9rem;
+          }
+        }
+      }
+
+      .addList {
+        .addList__body {
+          & > button {
+            font-size: 0.8rem;
+          }
+
+          .addList__form {
+            button {
+              font-size: 0.8rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}

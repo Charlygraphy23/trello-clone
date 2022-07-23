@@ -48,6 +48,8 @@ type AddCheckListType = {
   isDone: boolean;
   title: string;
   checkListGroupId: string;
+  avoidApiCall?: boolean;
+  boardId: string;
 };
 
 type AddCheckListGroup = {
@@ -130,6 +132,7 @@ export const updateCheckList = createAction<{
   isDone: boolean;
   taskId: string;
   checkListGroupId: string;
+  title: string;
 }>('UPDATE_CHECKLIST');
 export const deleteCheckList = createAction<{
   checkListId: string;
@@ -177,7 +180,11 @@ export const addCheckListAction = async ({
 }) => {
   dispatch(addCheckList(data));
 
-  await updateCheckListApi(data);
+  if (!data?.avoidApiCall) {
+    // eslint-disable-next-line no-param-reassign
+    delete data?.avoidApiCall;
+    await updateCheckListApi(data);
+  }
 };
 
 export const updateCheckListAction = async ({
@@ -187,18 +194,23 @@ export const updateCheckListAction = async ({
   dispatch: Dispatch<any>;
   data: AddCheckListType;
 }) => {
-  const { checkListId, isDone, taskId, checkListGroupId } = data;
+  const { checkListId, isDone, taskId, checkListGroupId, title } = data;
 
   dispatch(
     updateCheckList({
       checkListId,
       isDone,
       taskId,
-      checkListGroupId
+      checkListGroupId,
+      title
     })
   );
 
-  await updateCheckListApi(data);
+  if (!data?.avoidApiCall) {
+    // eslint-disable-next-line no-param-reassign
+    delete data?.avoidApiCall;
+    await updateCheckListApi(data);
+  }
 };
 
 export const addCheckListGroupAction = async ({
@@ -238,7 +250,12 @@ export const deleteCheckListAction = async ({
     })
   );
 
-  await deleteACheckList(data?.checkListId);
+  if (!data.avoidApiCall) {
+    // eslint-disable-next-line no-param-reassign
+    delete data?.avoidApiCall;
+
+    await deleteACheckList(data);
+  }
 };
 
 export const deleteCheckListGroupAction = async ({
@@ -246,11 +263,16 @@ export const deleteCheckListGroupAction = async ({
   data
 }: {
   dispatch: Dispatch<any>;
-  data: { checkListGroupId: string; taskId: string };
+  data: {
+    checkListGroupId: string;
+    taskId: string;
+    avoidApiCall?: boolean;
+    boardId: string;
+  };
 }) => {
   dispatch(deleteCheckListGroup(data));
 
-  await deleteCheckListGroupApi(data.checkListGroupId);
+  if (!data.avoidApiCall) await deleteCheckListGroupApi(data);
 };
 
 export const addTaskMemberAction = ({

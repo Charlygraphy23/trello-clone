@@ -356,3 +356,130 @@
     }
   }
 }
+
+@media screen and (max-width: 601px) {
+  .viewTask {
+    margin: 0px !important;
+    height: auto !important;
+    max-height: auto !important;
+    max-width: 100% !important;
+
+    .modal-content {
+      .modal-body {
+        border-radius: 0px;
+        padding: 1.2em 1.5em;
+        position: relative;
+        min-height: 100vh;
+
+        .close__icon {
+          top: 1.6rem;
+          right: 1.5rem;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 421px) {
+  .viewTask {
+    .modal-content {
+      .modal-body {
+        .viewTask__head {
+          font-weight: 600;
+          font-size: 1.1rem;
+        }
+
+        .taskLabelShow {
+          flex-direction: column;
+          margin-bottom: 2rem;
+
+          .taskLabelShow__label {
+            padding: 0.3em 0.5em;
+          }
+        }
+
+        .descriptionSection {
+          .descriptionSection__title {
+            margin-bottom: 0.3rem;
+
+            button {
+              font-size: 0.8rem;
+            }
+          }
+        }
+
+        .checkList {
+          .checkList__title {
+            font-size: 0.9rem;
+          }
+
+          & > .progress {
+            height: 0.75rem;
+            font-size: 0.7rem;
+          }
+
+          #Checklist-delete-dropdown-button {
+            font-size: 0.8rem !important;
+          }
+
+          .addNewItem {
+            font-size: 0.8rem !important;
+          }
+        }
+
+        .checkListItems {
+          .checkListItems__title {
+            font-size: 0.9rem;
+            font-weight: 500;
+          }
+
+          .checkListItems__textarea {
+            textarea {
+              background-color: $background_color2;
+              border: 1px solid rgba(black, 0.1);
+            }
+
+            button {
+              font-size: 0.8rem;
+            }
+          }
+        }
+
+        .commentSection {
+          margin-top: 1rem;
+          $avatarGap: 0.5rem;
+
+          .commentSection__comment {
+            .textarea__wrapper {
+              button {
+                font-size: 0.8rem;
+              }
+            }
+          }
+
+          .userComments {
+            .userComments__body {
+              .userComments__title {
+                font-size: 0.8rem;
+              }
+
+              & > .options {
+                padding: 0rem 0.3rem;
+              }
+
+              .userComments__text {
+                font-size: 0.8rem;
+              }
+            }
+          }
+        }
+
+        .cardOptions {
+          .cardOptions__button {
+            font-size: 0.7rem;
+          }
+        }
+      }
+    }
+  }
+}

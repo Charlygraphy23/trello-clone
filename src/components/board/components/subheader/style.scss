@@ -285,7 +285,7 @@
     }
 }
 
-@media screen and (max-width: 420px) {
+@media screen and (max-width: 601px) {
     .sub-header {
         .white__card {
             font-size: 0.7rem;
@@ -304,8 +304,13 @@
                 margin-right: 4px;
             }
 
+            .share__button {
+                font-size: 0.7rem;
+            }
+
             .memberList {
                 display: flex;
+                margin-top: 0.5rem;
 
                 .avatar__div {
                     font-size: 0.7rem;
@@ -333,6 +338,25 @@
 
         .vr {
             margin: auto 5px;
+        }
+    }
+}
+
+@media screen and (max-width: 455px) {
+    .sub-header {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .left_sub_header {
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .right-sub-header {
+            margin-bottom: 0.5rem;
+            .more__option {
+                margin-bottom: 0.5rem;
+            }
         }
     }
 }

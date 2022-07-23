@@ -25,7 +25,10 @@ const TaskFooter = ({ task }: Props) => {
       });
     });
 
-    return `${completedCheckLists}/${totalCheckLists}`;
+    return {
+      text: `${completedCheckLists}/${totalCheckLists}`,
+      count: totalCheckLists
+    };
   }, [task?.checkListGroups]);
 
   return (
@@ -40,11 +43,13 @@ const TaskFooter = ({ task }: Props) => {
           </p>
         )}
 
-        {task?.checkListGroups && task?.checkListGroups.length > 0 && (
-          <p className='light__color '>
-            <i className='bi bi-check2-square ' /> {generateText()}
-          </p>
-        )}
+        {task?.checkListGroups &&
+          task?.checkListGroups.length > 0 &&
+          generateText().count > 0 && (
+            <p className='light__color '>
+              <i className='bi bi-check2-square ' /> {generateText().text}
+            </p>
+          )}
 
         {task?.taskCommentCount && task?.taskCommentCount > 0 ? (
           <p className='light__color '>

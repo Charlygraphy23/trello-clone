@@ -6,6 +6,7 @@ import InvitePage from 'components/invite';
 import { memo, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
+import { homeLoad } from 'store/actions';
 import { profileLoad } from 'store/actions/user.action';
 import Auth from './auth';
 
@@ -17,6 +18,7 @@ const PrivateRoutes = () => {
 
     if (!auth) return;
     dispatch(profileLoad());
+    dispatch(homeLoad());
   }, [dispatch]);
 
   return (

@@ -1,5 +1,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
+
 import DropDown from 'core/DropDown';
+import isMobileView from 'hooks/isMobileView';
 import socketEvents from 'hooks/socketEvents';
 import { BoardCardType } from 'interfaces/board.interface';
 import { useCallback, useEffect } from 'react';
@@ -21,6 +23,7 @@ const BoardCards = ({
 }: BoardCardType) => {
   const { socket, userProfile } = socketEvents();
   const dispatch = useDispatch();
+  const width = isMobileView();
 
   const handleDelete = useCallback(() => {
     if (!column) return;
@@ -92,7 +95,7 @@ const BoardCards = ({
                 title='List Actions'
                 buttonId='List-action-dropdown-button'
                 buttonText={<i className='bi bi-three-dots' />}
-                pos={-100}
+                pos={width ? 0 : -100}
                 render={() => (
                   <span
                     className='py-1 d-flex'
