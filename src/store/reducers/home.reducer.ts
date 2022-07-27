@@ -5,7 +5,8 @@ import {
   changeBackground,
   homeLoad,
   homeLoadFailure,
-  homeLoadSuccess
+  homeLoadSuccess,
+  resetState
 } from 'store/actions';
 
 export type BoardDataType = {
@@ -93,5 +94,6 @@ export default createReducer(initialState, (builder) => {
 
         return workspaceData;
       });
-    });
+    })
+    .addCase(resetState, (state) => initialState);
 });

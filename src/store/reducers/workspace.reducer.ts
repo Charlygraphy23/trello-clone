@@ -3,7 +3,8 @@ import { createReducer } from '@reduxjs/toolkit';
 import {
   createWorkspace,
   createWorkspaceFailure,
-  createWorkspaceSuccess
+  createWorkspaceSuccess,
+  resetState
 } from 'store/actions';
 
 
@@ -29,5 +30,6 @@ export default createReducer(initialState, (builder) => {
       ...state,
       error: action.payload ?? '',
       loading: false
-    }));
+    }))
+    .addCase(resetState, (state) => initialState);
 });

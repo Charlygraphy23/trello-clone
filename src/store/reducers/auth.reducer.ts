@@ -5,6 +5,7 @@ import {
   authLoad,
   authLoadFailure,
   authLoadSuccess,
+  resetState,
   signOutAction
 } from 'store/actions';
 
@@ -63,5 +64,6 @@ export const authReducer = createReducer(initialState, (builder) => {
         accessToken: '',
         refreshToken: ''
       };
-    });
+    })
+    .addCase(resetState, (state) => initialState);
 });

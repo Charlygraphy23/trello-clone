@@ -1,3 +1,4 @@
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import getSocket, {
   connectSocket,
   disconnectSocket
@@ -5,7 +6,7 @@ import getSocket, {
 import { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import RouteIndex from 'routes/index.routes';
 import store from 'store';
@@ -25,10 +26,15 @@ const App = () => {
   return (
     <div className='w-100 app'>
       <Provider store={store}>
-        <BrowserRouter>
-          <RouteIndex />
-          <ToastContainer position='top-right' />
-        </BrowserRouter>
+        <GoogleOAuthProvider
+          clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID as string}
+          onScriptLoadError={() => toast.error('Error in Google Login')}
+        >
+          <BrowserRouter>
+            <RouteIndex />
+            <ToastContainer position='top-right' />
+          </BrowserRouter>
+        </GoogleOAuthProvider>
       </Provider>
     </div>
   );

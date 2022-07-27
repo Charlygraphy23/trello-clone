@@ -15,7 +15,7 @@ const LoginPage = () => {
   return (
     <>
       <div className='loginPage'>
-        <h1>Trello</h1>
+        <h1>Rello</h1>
 
         <div className='loginPage__body'>
           <LoginBody

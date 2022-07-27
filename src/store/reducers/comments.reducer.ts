@@ -2,9 +2,10 @@
 /* eslint-disable no-param-reassign */
 import { createReducer } from '@reduxjs/toolkit';
 import {
-    loadComments,
-    loadCommentsFailure,
-    loadCommentsSuccess
+  loadComments,
+  loadCommentsFailure,
+  loadCommentsSuccess,
+  resetState
 } from 'store/actions';
 
 const initialState = {
@@ -29,5 +30,6 @@ export default createReducer(initialState, (builder) => {
       ...state,
       loading: false,
       error: action.payload
-    }));
+    }))
+    .addCase(resetState, (state) => initialState);
 });

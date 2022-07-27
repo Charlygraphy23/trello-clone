@@ -15,6 +15,7 @@ import {
   deleteLabel,
   deleteTask,
   loadCommentsSuccess,
+  resetState,
   updateCheckList,
   updateTaskInfo,
   updateTaskLabel
@@ -351,5 +352,6 @@ export default createReducer(initialState, (builder) => {
       delete newState[action.payload.taskID];
 
       return newState;
-    });
+    })
+    .addCase(resetState, (state) => initialState);
 });

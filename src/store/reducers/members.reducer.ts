@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { createReducer } from '@reduxjs/toolkit';
-import { addBulkMembers, updateProfile } from 'store/actions';
+import { addBulkMembers, resetState, updateProfile } from 'store/actions';
 
 export type UserType = {
   _id?: string;
@@ -49,5 +49,6 @@ export default createReducer(initialState, (builder) => {
       };
 
       return state;
-    });
+    })
+    .addCase(resetState, (state) => initialState);
 });

@@ -1,6 +1,12 @@
+import ScanAnimation from 'assets/lottie/scan.json';
+import LottieContainer from 'core/LottieContainer';
 import { PropagateLoader } from 'react-spinners';
 
-const PageLoader = () => (
+type Props = {
+  useLottie?: boolean;
+};
+
+const PageLoader = ({ useLottie }: Props) => (
   <div
     className='d-flex justify-content-center align-items-center'
     style={{
@@ -14,7 +20,11 @@ const PageLoader = () => (
       pointerEvents: 'none'
     }}
   >
-    <PropagateLoader color='black' loading size={10} />
+    {useLottie ? (
+      <LottieContainer json={ScanAnimation} width={200} height={200} />
+    ) : (
+      <PropagateLoader color='black' loading size={10} />
+    )}
   </div>
 );
 

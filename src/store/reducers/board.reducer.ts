@@ -2,7 +2,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import {
   changeBackground,
-  getBoard, getBoardFailure, getBoardSuccess
+  getBoard, getBoardFailure, getBoardSuccess, resetState
 } from 'store/actions';
 
 
@@ -71,5 +71,6 @@ export default createReducer(initialState, (builder) => {
       newState.data = newData;
 
       return newState;
-    });
+    })
+    .addCase(resetState, (state) => initialState);
 });

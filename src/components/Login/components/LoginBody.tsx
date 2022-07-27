@@ -1,12 +1,9 @@
+import { CodeResponse, useGoogleLogin } from '@react-oauth/google';
 import { signInWithEmail, signupWithGoogle } from 'api';
 import classNames from 'classnames';
 import Button from 'components/button';
 import { handleValidator, throwError, userLoggedIn } from 'config/app';
 import { useCallback, useState } from 'react';
-import {
-  GoogleLoginResponse,
-  GoogleLoginResponseOffline
-} from 'react-google-login';
 import { useDispatch } from 'react-redux';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -46,30 +43,21 @@ const LoginBody = ({ state, errors, setState, setErrors }: Props) => {
     return handleValidator({ state, setErrors });
   }, [setErrors, state]);
 
-  const isGoogleLoginResponse = (
-    response: GoogleLoginResponse | GoogleLoginResponseOffline
-  ): response is GoogleLoginResponse =>
-    !!response &&
-    typeof response === 'object' &&
-    !!(response as GoogleLoginResponse).tokenObj;
-
   const loginSuccessHandler = useCallback(() => {
     const hasPrevPath = location.state?.prevPathname;
 
-    history.push(hasPrevPath || '/home');
-    toast.success('Logged in');
     userLoggedIn(true);
+    setTimeout(() => {
+      history.push(hasPrevPath || '/home');
+      toast.success('Logged in');
+    });
   }, [history, location.state?.prevPathname]);
 
   const googleSuccess = useCallback(
-    (_res: GoogleLoginResponse | GoogleLoginResponseOffline) => {
+    (_res: CodeResponse) => {
       console.log(_res);
 
-      if (!isGoogleLoginResponse(_res)) {
-        return;
-      }
-
-      signupWithGoogle(_res.tokenObj.id_token)
+      signupWithGoogle(_res.code)
         .then((response) => {
           dispatch(addAuthData(response.data.data));
           loginSuccessHandler();
@@ -81,17 +69,9 @@ const LoginBody = ({ state, errors, setState, setErrors }: Props) => {
     [dispatch, loginSuccessHandler]
   );
 
-  const googleFailure = useCallback(
-    (_res: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-      console.error('GOOGLE AUTH ERROR', _res);
-      if (!isGoogleLoginResponse(_res)) {
-        return;
-      }
-      _res.disconnect();
-      console.error('GOOGLE AUTH ERROR');
-    },
-    []
-  );
+  const googleFailure = useCallback(() => {
+    toast.error('GOOGLE ERROR');
+  }, []);
 
   const handleLogin = useCallback(() => {
     const hasError = handleValidate();
@@ -101,11 +81,7 @@ const LoginBody = ({ state, errors, setState, setErrors }: Props) => {
     signInWithEmail(state.email, state.password)
       .then((response) => {
         dispatch(addAuthData(response.data.data));
-        // loginSuccessHandler();
-        const hasPrevPath = location.state?.prevPathname;
-        userLoggedIn(true);
-        history.push(hasPrevPath || '/home');
-        toast.success('Logged in');
+        loginSuccessHandler();
 
         setBtnLoading(false);
       })
@@ -116,8 +92,7 @@ const LoginBody = ({ state, errors, setState, setErrors }: Props) => {
   }, [
     dispatch,
     handleValidate,
-    history,
-    location.state?.prevPathname,
+    loginSuccessHandler,
     state.email,
     state.password
   ]);
@@ -132,9 +107,15 @@ const LoginBody = ({ state, errors, setState, setErrors }: Props) => {
     [setState]
   );
 
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: googleSuccess,
+    onError: googleFailure,
+    flow: 'auth-code'
+  });
+
   return (
     <>
-      <p className='login__title mb-3'>Log in to Trello</p>
+      <p className='login__title mb-3'>Log in to Rello</p>
 
       <input
         name='email'
@@ -170,9 +151,7 @@ const LoginBody = ({ state, errors, setState, setErrors }: Props) => {
 
       <Button
         className='w-100 mb-3 login__google mt-4 justify-content-center'
-        google
-        handleGoogleSuccess={googleSuccess}
-        handleGoogleFailure={googleFailure}
+        onClick={handleGoogleLogin}
         value='Continue with Google'
       />
 

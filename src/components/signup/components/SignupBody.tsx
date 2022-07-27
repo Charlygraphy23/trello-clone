@@ -1,14 +1,19 @@
-import { generateSignupEmail, signupWithEmail } from 'api';
+import { CodeResponse, useGoogleLogin } from '@react-oauth/google';
+import { generateSignupEmail, signupWithEmail, signupWithGoogle } from 'api';
 import Button from 'components/button';
 import InvalidSignUp from 'components/invalid/InvalidSignUp';
-import { throwError } from 'config/app';
+import { throwError, userLoggedIn } from 'config/app';
 import getQuery from 'hooks/getQuery';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Link, useHistory, useRouteMatch } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Link, useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { addAuthData } from 'store/actions';
 import { SignUpPageHelper } from '../helper/index';
 
 const SignupBody = () => {
+  const location = useLocation<{ prevPathname?: string }>();
+
   const history = useHistory();
   const secondStage = useRouteMatch('/signup/welcome');
   const params = getQuery('token');
@@ -26,6 +31,17 @@ const SignupBody = () => {
     password: false
   });
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  const loginSuccessHandler = useCallback(() => {
+    const hasPrevPath = location.state?.prevPathname;
+
+    userLoggedIn(true);
+    setTimeout(() => {
+      history.push(hasPrevPath || '/home');
+      toast.success('Logged in');
+    });
+  }, [history, location.state?.prevPathname]);
 
   const validateForm = () => {
     setErrors({
@@ -103,6 +119,26 @@ const SignupBody = () => {
       });
   };
 
+  const googleSuccess = useCallback(
+    (_res: CodeResponse) => {
+      console.log(_res);
+
+      signupWithGoogle(_res.code)
+        .then((response) => {
+          dispatch(addAuthData(response.data.data));
+          loginSuccessHandler();
+        })
+        .catch((error: any) => {
+          toast.error(error.message);
+        });
+    },
+    [dispatch, loginSuccessHandler]
+  );
+
+  const googleFailure = useCallback(() => {
+    toast.error('GOOGLE ERROR');
+  }, []);
+
   useEffect(() => {
     if (params) {
       const decoded = SignUpPageHelper.decodeJWTToken(params);
@@ -124,11 +160,17 @@ const SignupBody = () => {
     };
   }, [params]);
 
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: googleSuccess,
+    onError: googleFailure,
+    flow: 'auth-code'
+  });
+
   if (invalidToken) return <InvalidSignUp />;
 
   return (
     <>
-      <p className='login__title mb-3'>Sign up to Trello</p>
+      <p className='login__title mb-3'>Sign up to Rello</p>
 
       <input
         name='email'
@@ -187,10 +229,10 @@ const SignupBody = () => {
 
       <Button
         className='w-100 mb-3 login__google mt-4'
-        onClick={() => history.push('/home')}
+        onClick={handleGoogleLogin}
       >
         <>
-          <i className='bi bi-google' /> <span>Continue with Google</span>
+          <i className='bi bi-google' /> <span>Sign up with Google</span>
         </>
       </Button>
 

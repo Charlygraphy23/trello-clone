@@ -17,9 +17,12 @@ const isMobileView = () => {
         resize();
 
         window.addEventListener('load', resize);
+        window.addEventListener('resize', resize);
 
         return () => {
             window.removeEventListener('resize', resize);
+            window.removeEventListener('load', resize);
+
             resize();
         };
     }, []);

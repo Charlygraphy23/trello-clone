@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { createReducer } from '@reduxjs/toolkit';
+import { resetState } from 'store/actions';
 import {
   profileLoad,
   profileLoadFailure,
@@ -69,7 +70,8 @@ const profileReducer = createReducer(initialState, (builder) => {
         ...state,
         firstName, lastName, email, profileImage
       };
-    });
+    })
+    .addCase(resetState, (state) => initialState);
 });
 
 export default profileReducer;

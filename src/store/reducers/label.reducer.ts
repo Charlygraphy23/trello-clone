@@ -5,6 +5,7 @@ import {
   addLabels,
   deleteLabel,
   editLabel,
+  resetState,
   updateLabel
 } from 'store/actions';
 
@@ -87,5 +88,6 @@ export default createReducer(initialState, (builder) => {
         ...state,
         labels: updateLabels
       };
-    });
+    })
+    .addCase(resetState, (state) => initialState);
 });

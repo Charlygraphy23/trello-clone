@@ -3,7 +3,7 @@ import ProfileImageContainer from 'core/ProfileImageContainer';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { signOutAction } from 'store/actions';
+import { resetState, signOutAction } from 'store/actions';
 
 type Props = {
   email: string;
@@ -28,9 +28,10 @@ const AvatarDropdown = ({
       })
       .finally(() => {
         dispatch(signOutAction());
+        dispatch(resetState());
         history.replace('/');
       });
-  }, []);
+  }, [dispatch, history]);
 
   return (
     <div className='avatarDropdown'>

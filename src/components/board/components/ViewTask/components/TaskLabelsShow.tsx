@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import DropDown from 'core/DropDown';
 import LabelSelection from 'core/LabelSelection';
 import { useCallback } from 'react';
@@ -21,7 +22,7 @@ const TaskLabelsShow = ({ task }: Props) => {
     <div className=' d-flex taskLabelShow'>
       <p className='taskLabelShow__title'> Labels</p>
 
-      <div className='d-flex align-items-center'>
+      <div className='d-flex align-items-center flex-wrap'>
         {task?.labels &&
           task?.labels.map((labelId) => (
             <DropDown
@@ -31,9 +32,8 @@ const TaskLabelsShow = ({ task }: Props) => {
               buttonText={findLabelData(labelId)?.name ?? ''}
               buttonClass='taskLabelShow__label'
               buttonStyle={{
-                backgroundColor: `${
-                  findLabelData(labelId)?.backgroundColor ?? ''
-                }`,
+                backgroundColor: `${findLabelData(labelId)?.backgroundColor ?? ''
+                  }`,
                 marginRight: '5px'
               }}
             >

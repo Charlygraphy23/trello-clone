@@ -8,6 +8,7 @@ import {
   createList,
   deleteColumn,
   deleteTask,
+  resetState,
   updateColumnsData
 } from 'store/actions';
 
@@ -102,5 +103,6 @@ export default createReducer(initialState, (builder) => {
           ...state.columnOrder.filter((id) => id !== action.payload.listId)
         ]
       };
-    });
+    })
+    .addCase(resetState, (state) => initialState);
 });

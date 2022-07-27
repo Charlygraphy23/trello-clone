@@ -29,7 +29,7 @@ const Header = () => {
       }
     >
       <div className='header__brand'>
-        <span>Trello</span>
+        <span>Rello</span>
       </div>
 
       <div className='header__body'>

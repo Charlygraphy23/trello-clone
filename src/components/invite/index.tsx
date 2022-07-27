@@ -22,7 +22,7 @@ const InvitePage = () => {
 
   useEffect(() => {
 
-    if (!params) return;
+    if (!params) return history.replace('/');;
     setComponentLoader(true);
     getInviteInfo({ token: params }).then(({ data: res }) => {
       setComponentLoader(false);
@@ -31,7 +31,7 @@ const InvitePage = () => {
       .catch(err => setComponentLoader(false));
 
 
-  }, [params]);
+  }, [history, params]);
 
   const handleAccept = useCallback(() => {
 
@@ -49,15 +49,14 @@ const InvitePage = () => {
 
   }, [history, params]);
 
-
-  if (!componentLoader && data?.email && data.email !== email) return <Redirect to='/' />;
+  if (!componentLoader && data?.email && data?.email !== email) return <Redirect to='/' />;
 
   if (!componentLoader && data?.accepted) return <Redirect to='/' />;
 
 
   return (
     <div className='invite'>
-      {componentLoader ? <ComponentLoader /> : <div className='invite__body'>
+      {componentLoader ? <ComponentLoader useLottie /> : <div className='invite__body'>
 
         <div className='invite__info'>
           <h3>
