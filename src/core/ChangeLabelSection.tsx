@@ -27,11 +27,17 @@ const ChangeLabelSection = ({
   const [name, setName] = useState(data?.name);
   const [color, setColor] = useState(data?.backgroundColor);
 
+  const clearState = useCallback(() => {
+    setName('');
+    setColor('');
+  }, []);
+
   const handleCreate = useCallback(async () => {
     if (!name || !color || !boardId) return;
 
     const id = v4();
     if (hide) hide();
+    clearState();
     await addLabelBatch({
       name,
       backgroundColor: color,
@@ -39,7 +45,7 @@ const ChangeLabelSection = ({
       labelId: id,
       boardId
     });
-  }, [color, dispatch, hide, name, boardId]);
+  }, [name, color, boardId, hide, dispatch, clearState]);
 
   const handleUpdate = useCallback(() => {
     updateLabelAction({
@@ -52,7 +58,8 @@ const ChangeLabelSection = ({
     });
 
     if (hide) hide();
-  }, [color, data?.labelId, dispatch, name, hide]);
+    clearState();
+  }, [dispatch, name, color, data?.labelId, hide, clearState]);
 
   const handleDelete = useCallback(() => {
     deleteLabelAction({
@@ -61,16 +68,15 @@ const ChangeLabelSection = ({
         labelId: data?.labelId ?? ''
       }
     });
-
+    clearState();
     if (hide) hide();
-  }, [data?.labelId, dispatch, hide]);
+  }, [clearState, data?.labelId, dispatch, hide]);
 
   useEffect(
     () => () => {
-      setName('');
-      setColor('');
+      clearState();
     },
-    []
+    [clearState]
   );
 
   return (

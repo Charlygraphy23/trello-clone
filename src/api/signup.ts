@@ -15,3 +15,12 @@ export const signupWithGoogle = (tokenId: string) =>
 
 export const signInWithEmail = async (email: string, password: string) =>
   publicAxios.post('/user/signin-with-email', { email, password });
+
+export const generateOtpApi = async (payload: any) =>
+  publicAxios.post('/user/otp-generate', payload);
+
+export const verifyOtpApi = async (payload: any) =>
+  publicAxios.post('/user/verify-otp', payload);
+
+export const resetPasswordApi = async (payload: any) =>
+  publicAxios.post('/user/reset-password', payload);

@@ -27,6 +27,17 @@ privateAxios.interceptors.response.use(
   }
 );
 
+publicAxios.interceptors.response.use(
+  (response) => response,
+  (error: AxiosError) => {
+    // @ts-expect-error
+    const err: any = error?.response?.data?.msg ?? error?.message;
+    toast.error(err);
+
+    return Promise.reject(error);
+  }
+);
+
 export { publicAxios, privateAxios };
 // eslint-disable-next-line prettier/prettier
 

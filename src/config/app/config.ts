@@ -25,6 +25,13 @@ export const LABEL_COLORS = [
   '#344563'
 ];
 
+// eslint-disable-next-line no-shadow
+export enum STEPS {
+  email = 'email',
+  otp = 'otp',
+  password = 'password'
+}
+
 export const throwError = (err: AxiosError<any, any>) => {
   const message = err?.response?.data?.msg ?? err.message;
   return toast.error(message);

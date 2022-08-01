@@ -1,5 +1,6 @@
 /* eslint-disable no-useless-return */
 /* eslint-disable prettier/prettier */
+import CardSkeletonLoader from 'components/Loader/CardSkeletonLoader';
 import { join, leaveRoom } from 'config/app';
 import socketEvents from 'hooks/socketEvents';
 import { handleDragEvent } from 'lib/drag.lib';
@@ -21,7 +22,7 @@ const BoardIndex = () => {
   const { columns, columnOrder } = useSelector(
     (store: StoreType) => store.ColumReducer
   );
-  const { data } = useSelector((store: StoreType) => store.BoardReducer);
+  const { data, loading } = useSelector((store: StoreType) => store.BoardReducer);
   const taskList = useSelector((store: StoreType) => store.TaskReducer);
   const dispatch = useDispatch();
   const { id = '' } = useParams<{ id: string }>();
@@ -117,32 +118,40 @@ const BoardIndex = () => {
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                 >
-                  {columnOrder &&
-                    columnOrder.map((columnId, index) => {
-                      const column = columns ? columns[columnId] : null;
-                      const tasks: any = column?.taskIds
-                        ? column?.taskIds.map(
-                          (taskId: string) => taskList[taskId]
-                        )
-                        : [];
+                  {loading ? <>
+                    <CardSkeletonLoader taskCount={6} />
+                    <CardSkeletonLoader taskCount={3} />
+                    <CardSkeletonLoader taskCount={5} />
+                    <CardSkeletonLoader taskCount={1} />
+                  </>
+                    : <>
+                      {columnOrder &&
+                        columnOrder.map((columnId, index) => {
+                          const column = columns ? columns[columnId] : null;
+                          const tasks: any = column?.taskIds
+                            ? column?.taskIds.map(
+                              (taskId: string) => taskList[taskId]
+                            )
+                            : [];
 
-                      return (
-                        column?.listId && (
-                          <BoardCards
-                            index={index}
-                            key={column?.listId}
-                            column={column}
-                            tasks={tasks}
-                            setShowAddCard={setShowAddCard}
-                            showAddCard={showAddCard?.listId === column?.listId}
-                            boardId={id}
-                          />
-                        )
-                      );
-                    })}
-
+                          return (
+                            column?.listId && (
+                              <BoardCards
+                                index={index}
+                                key={column?.listId}
+                                column={column}
+                                tasks={tasks}
+                                setShowAddCard={setShowAddCard}
+                                showAddCard={showAddCard?.listId === column?.listId}
+                                boardId={id}
+                              />
+                            )
+                          );
+                        })}
+                    </>
+                  }
                   {provided.placeholder}
-                  <AddList boardId={id} />
+                  {!loading && <AddList boardId={id} />}
                 </div>
               </>
             )}

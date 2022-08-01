@@ -1,17 +1,20 @@
 import ViewTask from 'components/board/components/ViewTask';
 import CreateBoard from 'components/createBoard/CreateBoard';
-import CheckYourMail from 'components/invalid/CheckYourMail';
 import ErrorBoundary from 'components/invalid/ErrorBoundary';
 import PageLoader from 'components/Loader/PageLoader';
 import LoginPage from 'components/Login';
 import SignUpPage from 'components/signup';
 import WorkSpaceModal from 'components/Workspace';
+import { lazy, Suspense } from 'react';
 import { useSelector } from 'react-redux';
 
 import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { StoreType } from 'store';
 import PublicRoutes from './public';
-import PrivateRoute from './routes';
+
+const CheckYourMail = lazy(() => import('components/invalid/CheckYourMail'));
+const PrivateRoute = lazy(() => import('./routes'));
+const ForgotPassword = lazy(() => import('components/ForgotPassword'));
 
 const RouteIndex = () => {
   const location = useLocation<any>();
@@ -25,13 +28,16 @@ const RouteIndex = () => {
 
   return (
     <ErrorBoundary history={history}>
-      <Switch location={background || location}>
-        <PublicRoutes exact path='/' component={LoginPage} />
-        <PublicRoutes path='/signup' component={SignUpPage} />
-        <PublicRoutes path='/check-email' component={CheckYourMail} />
+      <Suspense fallback={PageLoader}>
+        <Switch location={background || location}>
+          <PublicRoutes exact path='/' component={LoginPage} />
+          <PublicRoutes path='/signup' component={SignUpPage} />
+          <PublicRoutes path='/forgot-password' component={ForgotPassword} />
 
-        <Route component={PrivateRoute} />
-      </Switch>
+          <PublicRoutes path='/check-email' component={CheckYourMail} />
+          <Route component={PrivateRoute} />
+        </Switch>
+      </Suspense>
 
       {authLoading && <PageLoader useLottie />}
 
