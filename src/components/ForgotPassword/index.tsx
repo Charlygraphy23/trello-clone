@@ -37,7 +37,7 @@ const ForgotPassword = () => {
                 <div className='box__container w-100'>
                     <EmailInput className={steps === STEPS.email ? 'active' : ''} updateStep={updateStep} onChange={updateEmail} value={email} setProgress={setProgress} />
                     <OtpInputs className={steps === STEPS.otp ? 'active' : ''} updateStep={updateStep} email={email} setProgress={setProgress} />
-                    <PasswordContainer className={steps === STEPS.password ? 'active' : ''} updateStep={updateStep} />
+                    <PasswordContainer className={steps === STEPS.password ? 'active' : ''} updateStep={updateStep} email={email} setProgress={setProgress} />
                 </div>
             </div>
 

@@ -1,8 +1,10 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable prettier/prettier */
-import { verifyOtpApi } from 'api';
+import { generateOtpApi, verifyOtpApi } from 'api';
 import Button from 'components/button';
 import { STEPS } from 'config/app';
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
 
 
 
@@ -28,6 +30,8 @@ const OtpInputs = ({ className, updateStep, email, setProgress }: Props) => {
     const input6Ref = useRef<HTMLInputElement>(null);
 
     const [loading, setLoading] = useState(false);
+    const [resendLoading, setResendLoading] = useState(false);
+
 
     const [errors, setErrors] = useState({
         one: false, two: false, three: false, four: false, five: false, six: false
@@ -143,6 +147,8 @@ const OtpInputs = ({ className, updateStep, email, setProgress }: Props) => {
 
     const handleSubmit = useCallback(() => {
 
+        if (loading) return;
+
         const hasError = validationCheck();
         if (hasError) return;
 
@@ -168,7 +174,25 @@ const OtpInputs = ({ className, updateStep, email, setProgress }: Props) => {
 
 
 
-    }, [email, setProgress, updateStep, validationCheck]);
+    }, [email, loading, setProgress, updateStep, validationCheck]);
+
+
+    const resendOtp = useCallback(() => {
+
+        if (!email) return;
+
+        setResendLoading(true);
+        generateOtpApi({ email }).then(() => {
+            toast.success('Otp Re-Sent!');
+
+
+            setResendLoading(false);
+
+        })
+            .catch(err => {
+                setResendLoading(false);
+            });
+    }, [email]);
 
 
 
@@ -193,7 +217,7 @@ const OtpInputs = ({ className, updateStep, email, setProgress }: Props) => {
             </div>
 
             <Button
-                className='bg-success text-white w-100 mb-3 login__submit'
+                className='bg-success text-white w-100 mb-2 login__submit'
                 type='button'
                 onClick={handleSubmit}
                 loaderColor='light'
@@ -202,6 +226,14 @@ const OtpInputs = ({ className, updateStep, email, setProgress }: Props) => {
             >
                 Submit
             </Button>
+
+            <p onClick={resendOtp} className='login__title'>
+                <span style={{ marginRight: '10px' }}>Render Otp ?
+                </span>
+                {resendLoading && <div style={{ fontSize: '0.6rem', width: '10px', height: '10px' }} className='spinner-border' role='status'>
+                    <span className='visually-hidden'>Loading...</span>
+                </div>}
+            </p>
         </div>
     );
 };

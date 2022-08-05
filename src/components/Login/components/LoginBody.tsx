@@ -2,7 +2,7 @@ import { CodeResponse, useGoogleLogin } from '@react-oauth/google';
 import { signInWithEmail, signupWithGoogle } from 'api';
 import classNames from 'classnames';
 import Button from 'components/button';
-import { handleValidator, throwError, userLoggedIn } from 'config/app';
+import { handleValidator, userLoggedIn } from 'config/app';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useHistory, useLocation } from 'react-router-dom';
@@ -87,7 +87,6 @@ const LoginBody = ({ state, errors, setState, setErrors }: Props) => {
       })
       .catch((err) => {
         setBtnLoading(false);
-        throwError(err);
       });
   }, [
     dispatch,
