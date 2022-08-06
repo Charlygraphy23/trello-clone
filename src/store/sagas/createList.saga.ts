@@ -20,7 +20,7 @@ function* loadData(action: AnyAction) {
 
     // yield put({ type: createListSuccess.toString(), payload: data.data });
   } catch (err: any) {
-    console.error(err);
+    // console.error(err);
     // yield put({ type: createListFailure.toString(), payload: err.message });
   }
 }

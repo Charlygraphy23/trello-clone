@@ -121,8 +121,6 @@ const SignupBody = () => {
 
   const googleSuccess = useCallback(
     (_res: CodeResponse) => {
-      console.log(_res);
-
       signupWithGoogle(_res.code)
         .then((response) => {
           dispatch(addAuthData(response.data.data));

@@ -26,7 +26,6 @@ const ForgotPassword = () => {
     const updateStep = useCallback((step: STEPS) => {
         setSteps(step);
     }, []);
-    console.log({ steps });
 
     return (
         <div className='forgotPassword'>

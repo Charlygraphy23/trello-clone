@@ -21,7 +21,7 @@ function* loadData(action: AnyAction) {
 
     if (!avoidApiCall) yield addTaskApi(payload);
   } catch (err: any) {
-    console.error(err);
+    // console.error(err);
   }
 }
 

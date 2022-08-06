@@ -15,7 +15,7 @@ const Options = ({ name, icon, toggleBackdrop, onClick }: Props) => {
     const handleClick = useCallback(() => {
         toggleBackdrop();
         onClick();
-    }, [toggleBackdrop]);
+    }, [onClick, toggleBackdrop]);
 
     return (
         <li className='task__options-option' onClick={handleClick}>

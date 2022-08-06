@@ -77,6 +77,7 @@ const AboutBoard = () => {
         profileImage: profile.profileImage
       });
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 

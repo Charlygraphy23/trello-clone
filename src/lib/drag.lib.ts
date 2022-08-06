@@ -34,13 +34,6 @@ export const handleDragEvent = ({
     return;
   }
 
-  console.log('Board', {
-    destination,
-    source,
-    draggableId,
-    type
-  });
-
   if (!columns) return;
 
   const start = columns[source?.droppableId];

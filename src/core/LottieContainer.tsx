@@ -18,7 +18,7 @@ const LottieContainer = ({ width = 400, height = 400, json }: Props) => {
                 preserveAspectRatio: 'xMidYMid slice'
             }
         }),
-        []
+        [json]
     );
 
     return <Lottie options={defaultOptions} height={height} width={width} />;

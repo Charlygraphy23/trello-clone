@@ -1,4 +1,5 @@
 import { signOut } from 'api';
+import { throwError } from 'config/app';
 import ProfileImageContainer from 'core/ProfileImageContainer';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
@@ -24,7 +25,8 @@ const AvatarDropdown = ({
   const handleLogout = useCallback(() => {
     signOut()
       .catch((err) => {
-        console.error(err);
+        // console.error(err);
+        throwError(err);
       })
       .finally(() => {
         dispatch(signOutAction());
