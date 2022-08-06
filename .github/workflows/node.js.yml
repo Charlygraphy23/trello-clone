@@ -20,11 +20,18 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+    - name: Set up and build React app
+    - run: npm ci && npm run build
+    - uses: FirebaseExtended/action-hosting-deploy@v0
       with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
+          repoToken: "${{ secrets.TOKEN_G }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
+          projectId: trello-clone-76971
+          channelId: live
+      env:
+        REACT_APP_BASE_URL: https://rello-backend.herokuapp.com
+        REACT_APP_GOOGLE_CLIENT_ID: ${{ secrets.REACT_APP_GOOGLE_CLIENT_ID }}
+        REACT_APP_GOOGLE_SECRET: ${{ secrets.REACT_APP_GOOGLE_SECRET }}
+        REACT_APP_CLOUDINARY_API_KEY: ${{ secrets.REACT_APP_CLOUDINARY_API_KEY }}
+        REACT_APP_CLOUDINARY_CLOUD_NAME: ${{ secrets.REACT_APP_CLOUDINARY_CLOUD_NAME }}
+        REACT_APP_CLOUDINARY_PRESET: ${{ secrets.REACT_APP_CLOUDINARY_PRESET }}
