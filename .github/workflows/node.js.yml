@@ -21,7 +21,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Set up and build React app
-    - run: npm ci && npm run build
+    # - run: npm ci && npm run build
     - uses: FirebaseExtended/action-hosting-deploy@v0
       with:
           repoToken: "${{ secrets.TOKEN_G }}"
