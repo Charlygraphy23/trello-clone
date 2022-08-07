@@ -16,7 +16,7 @@ jobs:
             REACT_APP_CLOUDINARY_API_KEY: ${{ secrets.REACT_APP_CLOUDINARY_API_KEY }}
             REACT_APP_CLOUDINARY_CLOUD_NAME: ${{ secrets.REACT_APP_CLOUDINARY_CLOUD_NAME }}
             REACT_APP_CLOUDINARY_PRESET: ${{ secrets.REACT_APP_CLOUDINARY_PRESET }}
-      - run: npm ci && npm run build
+      - run: npm ci && npm run build --force
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
