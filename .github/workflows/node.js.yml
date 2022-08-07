@@ -21,17 +21,18 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Set up and build React app
-    # - run: npm ci && npm run build
+      env:
+          REACT_APP_BASE_URL: https://rello-backend.herokuapp.com
+          REACT_APP_GOOGLE_CLIENT_ID: ${{ secrets.REACT_APP_GOOGLE_CLIENT_ID }}
+          REACT_APP_GOOGLE_SECRET: ${{ secrets.REACT_APP_GOOGLE_SECRET }}
+          REACT_APP_CLOUDINARY_API_KEY: ${{ secrets.REACT_APP_CLOUDINARY_API_KEY }}
+          REACT_APP_CLOUDINARY_CLOUD_NAME: ${{ secrets.REACT_APP_CLOUDINARY_CLOUD_NAME }}
+          REACT_APP_CLOUDINARY_PRESET: ${{ secrets.REACT_APP_CLOUDINARY_PRESET }}
+    - run: npm ci && npm run build
     - uses: FirebaseExtended/action-hosting-deploy@v0
       with:
           repoToken: "${{ secrets.TOKEN_G }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
           projectId: trello-clone-76971
 
-      env:
-        REACT_APP_BASE_URL: https://rello-backend.herokuapp.com
-        REACT_APP_GOOGLE_CLIENT_ID: ${{ secrets.REACT_APP_GOOGLE_CLIENT_ID }}
-        REACT_APP_GOOGLE_SECRET: ${{ secrets.REACT_APP_GOOGLE_SECRET }}
-        REACT_APP_CLOUDINARY_API_KEY: ${{ secrets.REACT_APP_CLOUDINARY_API_KEY }}
-        REACT_APP_CLOUDINARY_CLOUD_NAME: ${{ secrets.REACT_APP_CLOUDINARY_CLOUD_NAME }}
-        REACT_APP_CLOUDINARY_PRESET: ${{ secrets.REACT_APP_CLOUDINARY_PRESET }}
+      
