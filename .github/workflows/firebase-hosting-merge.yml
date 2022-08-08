@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Setting Up Env
+     
       - run: |
             touch .env
             echo REACT_APP_BASE_URL=${{ secrets.REACT_APP_BASE_URL }} >> .env
@@ -21,7 +21,7 @@ jobs:
             echo REACT_APP_CLOUDINARY_CLOUD_NAME=${{ secrets.REACT_APP_CLOUDINARY_CLOUD_NAME }} >> .env
             echo REACT_APP_CLOUDINARY_PRESET=${{ secrets.REACT_APP_CLOUDINARY_PRESET }} >> .env
             cat .env
-      - name: Start Building
+     
       - run: npm ci --legacy-peer-deps  && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
