@@ -14,6 +14,7 @@ const CheckListSection = ({ hide, task }: Props) => {
   const dispatch = useDispatch();
 
   const handleAdd = useCallback(async () => {
+    if (hide) hide();
     await addCheckListGroupAction({
       dispatch,
       data: {
@@ -23,8 +24,7 @@ const CheckListSection = ({ hide, task }: Props) => {
         boardId: task?.boardId ?? ''
       }
     });
-
-    if (hide) hide();
+    setTitle('');
   }, [dispatch, hide, task?.boardId, task?.taskId, title]);
 
   return (

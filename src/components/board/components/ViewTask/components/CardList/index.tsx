@@ -23,8 +23,8 @@ const CheckList = ({ checkListGroup, boardId }: Props) => {
   const { checkLists = [], title = '' } = checkListGroup;
   const TextAreaComboIds = useMemo(
     () => ({
-      textarea: 'CheckList_text',
-      submitButton: 'CheckList_submit'
+      textarea: `CheckList_text_${checkListGroup?.checkListGroupId}`,
+      submitButton: `CheckList_submit_${checkListGroup?.checkListGroupId}`
     }),
     []
   );
@@ -64,12 +64,13 @@ const CheckList = ({ checkListGroup, boardId }: Props) => {
       checkListGroupId: checkListGroup?.checkListGroupId ?? '',
       boardId
     };
-
+    handleItemCheckList(false);
     await addCheckListAction({
       dispatch,
       data: payload
     });
-    handleItemCheckList(false);
+
+    setTextareaValue('');
   }, [
     boardId,
     checkListGroup?.checkListGroupId,

@@ -77,6 +77,7 @@ const WorkSpaceForm = () => {
         type='button'
         className='bg__primary text-white'
         onClick={onSubmit}
+        loaderColor='light'
       >
         Continue
       </Button>

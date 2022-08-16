@@ -26,33 +26,36 @@ const CheckListItems = ({ data, boardId }: CheckListItemType) => {
     IsVisibleLayout<HTMLTextAreaElement>(TextAreaComboIds);
   const [checkListName, setCheckListName] = useState(data?.title ?? '');
 
-  const handelSave = useCallback(async () => {
-    // textareaRef.current?.focus();
-
-    const payload = {
-      checkListId: data?.checkListId ?? '',
-      title: checkListName,
-      isDone: data?.isDone ?? false,
-      taskId: data?.taskId ?? '',
-      checkListGroupId: data?.checkListGroupId ?? '',
-      boardId
-    };
-
-    await updateCheckListAction({
+  const handelSave = useCallback(
+    async (e: any) => {
+      // textareaRef.current?.focus();
+      e.preventDefault();
+      e.stopPropagation();
+      const payload = {
+        checkListId: data?.checkListId ?? '',
+        title: checkListName,
+        isDone: data?.isDone ?? false,
+        taskId: data?.taskId ?? '',
+        checkListGroupId: data?.checkListGroupId ?? '',
+        boardId
+      };
+      handleShowTextarea(false);
+      await updateCheckListAction({
+        dispatch,
+        data: payload
+      });
+    },
+    [
+      boardId,
+      checkListName,
+      data?.checkListGroupId,
+      data?.checkListId,
+      data?.isDone,
+      data?.taskId,
       dispatch,
-      data: payload
-    });
-    handleShowTextarea(false);
-  }, [
-    boardId,
-    checkListName,
-    data?.checkListGroupId,
-    data?.checkListId,
-    data?.isDone,
-    data?.taskId,
-    dispatch,
-    handleShowTextarea
-  ]);
+      handleShowTextarea
+    ]
+  );
 
   const handleListClick = useCallback(() => {
     handleShowTextarea(true);
