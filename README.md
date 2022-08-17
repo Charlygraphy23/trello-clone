@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# Tello Clone (For Learning Purpose only)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -14,11 +14,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
 ### `npm run build`
 
 Builds the app for production to the `build` folder.\
@@ -29,19 +24,35 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+## Stack
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- React Js
+- Redux Toolkit / Saga
+- Bootstrap
+- Scss
+- Typescript
+- Socket Io
+- Cloudinary
+- Git Action CI/CD
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Demo -
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+here is the Demo Link - [Demo App](https://trello-clone-76971.web.app/)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Future Modifications 
 
-## Learn More
+- Task file and image support
+- Board background image support
+- Advance commenting on task
+.. etc
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-# trello-clone
+## Preview
+![image](https://user-images.githubusercontent.com/46165735/185036506-1db7d6ab-b58f-4354-aff4-85e459a77b71.png)
+![image](https://user-images.githubusercontent.com/46165735/185036554-900cb389-37af-4d93-b523-91146d173730.png)
+![image](https://user-images.githubusercontent.com/46165735/185036577-345e9077-399b-4f04-9677-08116e73d4a5.png)
+![image](https://user-images.githubusercontent.com/46165735/185036622-ef7d76ef-fdb8-41db-aa67-d51e751a889a.png)
+![image](https://user-images.githubusercontent.com/46165735/185036670-f65a2f43-62a2-495a-80fc-482a8d783b21.png)
+![image](https://user-images.githubusercontent.com/46165735/185036748-2ae2505b-b02a-4fbe-bcd1-fa1f721d1c16.png)
+![image](https://user-images.githubusercontent.com/46165735/185036790-2535de6a-e311-47f4-81c2-f60433cba073.png)
+![image](https://user-images.githubusercontent.com/46165735/185036885-6acd0fb2-55a2-4c08-a3d7-ed9bd7238896.png)
+![image](https://user-images.githubusercontent.com/46165735/185036926-b36f3122-d930-48f7-bb19-a333bc4e0472.png)
