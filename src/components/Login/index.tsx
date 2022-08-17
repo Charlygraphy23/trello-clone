@@ -25,6 +25,9 @@ const LoginPage = () => {
             setErrors={setErrors}
           />
         </div>
+        <p>
+          <b>**This Project is only for learning purposes!!**</b>
+        </p>
       </div>
     </>
   );
