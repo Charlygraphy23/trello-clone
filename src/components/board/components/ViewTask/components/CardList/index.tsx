@@ -26,7 +26,7 @@ const CheckList = ({ checkListGroup, boardId }: Props) => {
       textarea: `CheckList_text_${checkListGroup?.checkListGroupId}`,
       submitButton: `CheckList_submit_${checkListGroup?.checkListGroupId}`
     }),
-    []
+    [checkListGroup?.checkListGroupId]
   );
   const [showNewItemCheckList, hide, checkListTextareaRef] =
     IsVisibleLayout<HTMLTextAreaElement>(TextAreaComboIds);
